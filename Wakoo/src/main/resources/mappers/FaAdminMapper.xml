@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wakoo.mapper.FaAdminMapper">
+    
+    <resultMap id="FaAdminMap" type="wakoo.pojo.FaAdmin">
+        <id column="id" property="id"/>
+        <result column="username" property="userName"/>
+        <result column="nickname" property="nickName"/>
+        <result column="password" property="password"/>
+        <result column="salt" property="salt"/>
+        <result column="avatar" property="avatar"/>
+        <result column="email" property="email"/>
+        <result column="campus_id" property="campusId"/>
+        <result column="mobile" property="mobile"/>
+        <result column="loginfailure" property="loginFailure"/>
+        <result column="logintime" property="loginTime"/>
+        <result column="loginip" property="loginIp"/>
+        <result column="createtime" property="createTime"/>
+        <result column="updatetime" property="updateTime"/>
+        <result column="deletetime" property="deleteTime"/>
+        <result column="token" property="token"/>
+        <result column="status" property="status"/>
+
+    </resultMap>
+    <update id="UpdToken">
+        update fa_admin
+        set token = #{Token}
+        where id=#{id};
+    </update>
+
+    <select id="faAdmin" resultMap="FaAdminMap">
+        select id,username,nickname,password,avatar,email,campus_id,mobile,loginfailure,token,status
+        from fa_admin
+        <where>
+            <if test="account != null">
+                AND username = #{account, jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+</mapper>

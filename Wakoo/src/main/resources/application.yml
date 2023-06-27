@@ -1,0 +1,28 @@
+
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_wakoohome_20230625_023002_8x9ozr?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: root
+    mvc:
+      pathmatch:
+        matching-strategy: ant_path_matcher
+
+#mybatis
+mybatis:
+  type-aliases-package: wakoo.pojo
+  mapper-locations: classpath:/mappers/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+upload:
+  file:
+    location: file:\\er\\
+    path: /code/**
+
+
