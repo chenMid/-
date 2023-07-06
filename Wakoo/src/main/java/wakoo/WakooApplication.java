@@ -11,7 +11,7 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 @EnableOpenApi
 @EnableKnife4j
 @EnableWebMvc
-@MapperScan("wakoo.mapper")
+@MapperScan("wakoo.fun.mapper")
 public class WakooApplication {
 
     public static void main(String[] args) {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="wakoo.mapper.FaAdminMapper">
+<mapper namespace="wakoo.fun.mapper.FaAdminMapper">
     
-    <resultMap id="FaAdminMap" type="wakoo.pojo.FaAdmin">
+    <resultMap id="FaAdminMap" type="wakoo.fun.pojo.FaAdmin">
         <id column="id" property="id"/>
         <result column="username" property="userName"/>
         <result column="nickname" property="nickName"/>
@@ -20,21 +20,53 @@
         <result column="deletetime" property="deleteTime"/>
         <result column="token" property="token"/>
         <result column="status" property="status"/>
-
     </resultMap>
+<!--更新ToKen-->
     <update id="UpdToken">
-        update fa_admin
+        update sys_user
         set token = #{Token}
-        where id=#{id};
+        where userName=#{userName};
     </update>
-
+<!--更新头像-->
+    <update id="avatar">
+        update sys_user
+        set avatar = #{avatarPath}
+        where username=#{userName};
+    </update>
+<!--查询所有，查询指定用户-->
     <select id="faAdmin" resultMap="FaAdminMap">
         select id,username,nickname,password,avatar,email,campus_id,mobile,loginfailure,token,status
-        from fa_admin
+        from sys_user
         <where>
-            <if test="account != null">
-                AND username = #{account, jdbcType=VARCHAR}
+            <if test="userName != null">
+                AND username = #{userName, jdbcType=VARCHAR}
             </if>
         </where>
+    </select>
+    <select id="getFaAdmin" resultType="wakoo.fun.pojo.FaAdmin">
+        select username
+        from sys_user where id=#{id};
+    </select>
+    <select id="getUserNameFaAdmin" resultType="wakoo.fun.pojo.FaAdminLogin">
+        select id,username,nickname,password,avatar,email,mobile,token
+        from sys_user where username=#{userName};
+    </select>
+    <!--查询指定用户下的菜单-->
+    <select id="getMenu" resultType="wakoo.fun.pojo.SysMenu">
+        SELECT * FROM sys_menu WHERE id IN ( SELECT menu_id FROM sys_permission WHERE role_id IN (
+            SELECT role_id FROM sys_user_role WHERE user_id =#{id})) and sys_menu.enabled=1 order by sys_menu.sort
+    </select>
+    <select id="getRole" resultType="wakoo.fun.pojo.SysRole">
+        select id,role_code,role_name,description,enabled,create_time,update_time
+        from sys_role;
+    </select>
+<!--    登录返回个人信息-->
+    <select id="ListFadmin" resultType="wakoo.fun.pojo.FaAdminLogin">
+        SELECT sysu.id,sysu.username,sysu.nickname,sysu.password,sysu.email,sysu.avatar,sysu.updatetime,sysu.token,sr.role_code roles FROM sys_role sr INNER JOIN sys_user sysu ON sr.id=sysu.id
+        WHERE sr.id=(SELECT role_id FROM sys_user_role
+                     WHERE user_id=(SELECT id FROM sys_user WHERE username=#{username}))
+    </select>
+    <select id="ListTwoMune" resultType="wakoo.fun.pojo.SysMenu">
+        SELECT * FROM sys_menu WHERE p_id=#{id}
     </select>
 </mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wakoo.fun.mapper.AdministrationMapper">
+    <select id="getAllAdministraltion" resultType="wakoo.fun.dto.AdminAdministraltion">
+        SELECT u.username, u.nickname, r.role_name, o.name, u.email, u.mobile, u.status, u.updatetime
+        FROM sys_user u
+                 JOIN sys_user_role m ON u.id = m.user_id
+                 JOIN sys_role r ON m.role_id = r.id
+                 JOIN order_quantity o ON o.id = u.campus_id
+        WHERE
+            u.username LIKE CONCAT('%', #{keyword}, '%') OR
+            u.nickname LIKE CONCAT('%', #{keyword}, '%') OR
+            r.role_name LIKE CONCAT('%', #{keyword}, '%') OR
+            o.name LIKE CONCAT('%', #{keyword}, '%') OR
+            u.email LIKE CONCAT('%', #{keyword}, '%') OR
+            u.mobile LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY u.status='normal' DESC
+    </select>
+    <select id="getRole" resultType="wakoo.fun.dto.RoleDto">
+        SELECT id,role_name roleName FROM sys_role
+    </select>
+    <select id="getOrderQ" resultType="wakoo.fun.dto.OrderQuantity">
+        SELECT id,name FROM order_quantity
+    </select>
+
+    <insert id="isUser">
+        INSERT INTO sys_user(username,nickname,password,email,campus_id,mobile)
+        VALUES(#{AdminDto.username},#{AdminDto.nickname},#{AdminDto.password},#{AdminDto.email},#{AdminDto.campusId},#{AdminDto.mobile})
+    </insert>
+
+    <insert id="isUserRoleOrder">
+        INSERT INTO sys_user_role(user_id,role_id,order_id)
+        VALUES(#{uid},#{rid},#{oid})
+    </insert>
+
+    <update id="UpdStatus">
+        UPDATE sys_user
+            <set>
+                <if test="status==1">status=0</if>
+                <if test="status==0">status=1</if>
+            </set>
+        WHERE id=#{id}
+    </update>
+
+</mapper>
