@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdminAdministraltion {
-    private String username,nickname,roleName,name,email,mobile,status,updatetime;
+    private Integer id;
+    private String username, nickname, roleName, name, email, mobile, status, updatetime;
 }

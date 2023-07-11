@@ -24,7 +24,7 @@
 <!--更新ToKen-->
     <update id="UpdToken">
         update sys_user
-        set token = #{Token}
+        set token = #{Token},updatetime=now()
         where userName=#{userName};
     </update>
 <!--更新头像-->
@@ -53,8 +53,8 @@
     </select>
     <!--查询指定用户下的菜单-->
     <select id="getMenu" resultType="wakoo.fun.pojo.SysMenu">
-        SELECT * FROM sys_menu WHERE id IN ( SELECT menu_id FROM sys_permission WHERE role_id IN (
-            SELECT role_id FROM sys_user_role WHERE user_id =#{id})) and sys_menu.enabled=1 order by sys_menu.sort
+        SELECT id,path,component,name,meta,type,p_id,hidden,redirect,cache,icon,url,sort,level,enabled,create_time,update_time FROM sys_menu WHERE id IN (SELECT menu_id FROM sys_permission WHERE role_id IN (
+            SELECT role_id FROM sys_user_role WHERE user_id =#{id}) AND status=1) and sys_menu.enabled=1 AND sys_menu.type!=10 order by sys_menu.sort
     </select>
     <select id="getRole" resultType="wakoo.fun.pojo.SysRole">
         select id,role_code,role_name,description,enabled,create_time,update_time
@@ -67,6 +67,6 @@
                      WHERE user_id=(SELECT id FROM sys_user WHERE username=#{username}))
     </select>
     <select id="ListTwoMune" resultType="wakoo.fun.pojo.SysMenu">
-        SELECT * FROM sys_menu WHERE p_id=#{id}
+        SELECT id,path,component,name,meta,type,p_id,hidden,redirect,cache,icon,url,sort,level,enabled,create_time,update_time FROM sys_menu WHERE p_id=#{id}
     </select>
 </mapper>

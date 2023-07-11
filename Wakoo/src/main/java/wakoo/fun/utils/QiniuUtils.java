@@ -6,13 +6,14 @@ import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
 import org.springframework.web.multipart.MultipartFile;
-import wakoo.fun.dto.MsgVo;
+import wakoo.fun.Vo.MsgVo;
 
 import java.io.IOException;
 
 public class QiniuUtils {
 
     public static MsgVo uploadAvatar(MultipartFile file,String accessKey, String secretKey,String bucketName) throws IOException {
+        System.out.println(file+"utils");
         MsgVo msg=null;
         if (file.isEmpty()) {
             msg=new MsgVo(MsgUtils.VALIDATE_ERROR); // 如果文件为空，则返回提示信息

@@ -21,7 +21,6 @@ import java.awt.image.BufferedImage;
  * 验证码Controller
  * 主要生成验证码
  * 获取验证码 String code = (String)request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
- *
  */
 @CrossOrigin
 @RestController
@@ -32,7 +31,7 @@ public class getKaptchaImage {
     @Autowired
     private Producer captchaProducer;
 
-    String Kap="";
+    String Kap = "";
 
     @PassToken
     @GetMapping("getKaptchaImage")
@@ -60,7 +59,7 @@ public class getKaptchaImage {
 
         // store the text in the session
         session.setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
-        Kap=(String)request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+        Kap = (String) request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
         // create the image with the text
         BufferedImage bi = captchaProducer.createImage(capText);
         ServletOutputStream out = response.getOutputStream();

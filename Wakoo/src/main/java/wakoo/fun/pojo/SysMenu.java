@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import wakoo.fun.dto.ButtonJurisdiction;
 import wakoo.fun.service.TreeNode;
 
 import java.sql.Timestamp;
@@ -61,6 +62,8 @@ public class SysMenu implements TreeNode {
         public <T extends TreeNode> void setChildren(List<T> list) {
                 this.children = (List<SysMenu>) list;
         }
+
+
 
 }
 

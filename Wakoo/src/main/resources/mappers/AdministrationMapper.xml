@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="wakoo.fun.mapper.AdministrationMapper">
     <select id="getAllAdministraltion" resultType="wakoo.fun.dto.AdminAdministraltion">
-        SELECT u.username, u.nickname, r.role_name, o.name, u.email, u.mobile, u.status, u.updatetime
+        SELECT u.id,u.username, u.nickname, r.role_name roleName, o.name, u.email, u.mobile, u.status, u.updatetime
         FROM sys_user u
                  JOIN sys_user_role m ON u.id = m.user_id
                  JOIN sys_role r ON m.role_id = r.id
-                 JOIN order_quantity o ON o.id = u.campus_id
+                 JOIN agent_management o ON o.id = u.campus_id
         WHERE
             u.username LIKE CONCAT('%', #{keyword}, '%') OR
             u.nickname LIKE CONCAT('%', #{keyword}, '%') OR
@@ -20,12 +20,25 @@
         SELECT id,role_name roleName FROM sys_role
     </select>
     <select id="getOrderQ" resultType="wakoo.fun.dto.OrderQuantity">
-        SELECT id,name FROM order_quantity
+        SELECT id,name FROM agent_management
+    </select>
+    <select id="getAdminVo" resultType="wakoo.fun.Vo.AdminVo">
+        SELECT id userId,username,nickname,email,mobile FROM sys_user WHERE id=#{id}
+    </select>
+    <select id="getAdminVos" resultType="wakoo.fun.Vo.AdminVo">
+        SELECT id,role_name FROM sys_role
+        WHERE sys_role.id=(SELECT role_id FROM sys_user_role WHERE user_id=#{id})
+    </select>
+    <select id="getAdminVoss" resultType="wakoo.fun.Vo.AdminVo">
+        SELECT id agentId,name FROM agent_management WHERE id=(SELECT order_id FROM sys_user_role WHERE user_id=#{id})
+    </select>
+    <select id="isAdminEmailMobile" resultType="wakoo.fun.dto.AdminAdministraltion">
+        SELECT username,email,mobile from sys_user WHERE email=#{AdminDto.email} OR mobile=#{AdminDto.mobile} or username=#{AdminDto.username}
     </select>
 
     <insert id="isUser">
-        INSERT INTO sys_user(username,nickname,password,email,campus_id,mobile)
-        VALUES(#{AdminDto.username},#{AdminDto.nickname},#{AdminDto.password},#{AdminDto.email},#{AdminDto.campusId},#{AdminDto.mobile})
+        INSERT INTO sys_user(username,nickname,password,email,campus_id,mobile,createtime)
+        VALUES(#{AdminDto.username},#{AdminDto.nickname},#{AdminDto.password},#{AdminDto.email},#{AdminDto.name},#{AdminDto.mobile},now())
     </insert>
 
     <insert id="isUserRoleOrder">
@@ -40,6 +53,12 @@
                 <if test="status==0">status=1</if>
             </set>
         WHERE id=#{id}
+    </update>
+    <update id="updUserRole">
+        UPDATE sys_user_role SET role_id=#{uAdmin.roleId},order_id=#{uAdmin.orderId} WHERE user_id=#{uAdmin.userId}
+    </update>
+    <update id="updAdminUser">
+        UPDATE sys_user SET username=#{aUser.username},email=#{aUser.email},mobile=#{aUser.mobile},nickname=#{aUser.nickname},password=#{aUser.password} WHERE id=#{aUser.userId}
     </update>
 
 </mapper>

@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdmininistraltionDto {
-    private String username,nickname,password,campusId,mobile,email;
-    private Integer roleId;
+    private String username,nickname,password,name,mobile,email,createtime;
+    private Integer roleName;
 }

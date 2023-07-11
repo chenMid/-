@@ -1,4 +1,4 @@
-package wakoo.fun.dto;
+package wakoo.fun.Vo;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

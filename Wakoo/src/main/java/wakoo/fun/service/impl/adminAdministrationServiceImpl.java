@@ -1,10 +1,8 @@
 package wakoo.fun.service.impl;
 
 import org.springframework.stereotype.Service;
-import wakoo.fun.dto.AdminAdministraltion;
-import wakoo.fun.dto.AdmininistraltionDto;
-import wakoo.fun.dto.OrderQuantity;
-import wakoo.fun.dto.RoleDto;
+import wakoo.fun.Vo.AdminVo;
+import wakoo.fun.dto.*;
 import wakoo.fun.mapper.AdministrationMapper;
 import wakoo.fun.service.AdminAdministrationService;
 
@@ -51,6 +49,11 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
         return adminAdministration.isUser(adminAdministraltion);
     }
 
+    @Override
+    public List<AdminAdministraltion> isAdminEmailMobile(AdmininistraltionDto AdminDto) {
+        return adminAdministration.isAdminEmailMobile(AdminDto);
+    }
+
     /**
      * 添加关系
      * @param uid
@@ -66,5 +69,30 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
     @Override
     public Boolean UpdStatus(Integer id, String status) {
         return adminAdministration.UpdStatus(id, status);
+    }
+
+    @Override
+    public AdminVo getAdminVo(Integer id) {
+        return adminAdministration.getAdminVo(id);
+    }
+
+    @Override
+    public AdminVo getAdminVos(Integer id) {
+        return adminAdministration.getAdminVos(id);
+    }
+
+    @Override
+    public AdminVo getAdminVoss(Integer id) {
+        return adminAdministration.getAdminVoss(id);
+    }
+
+    @Override
+    public Boolean updUserRole(UpdAdminDto updAdminDto) {
+        return adminAdministration.updUserRole(updAdminDto);
+    }
+
+    @Override
+    public Boolean updAdminUser(UpdAdminDto updAdminDto) {
+        return adminAdministration.updAdminUser(updAdminDto);
     }
 }
