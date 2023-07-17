@@ -9,10 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AdminVo {
     private Integer userId;
-    private Integer id;
-    private String roleName;
-    private Integer agentId;
-    private String name;
+    private Integer roleName;
+    private Integer name;
     private String username;
     private String email;
     private String mobile;

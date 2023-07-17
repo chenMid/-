@@ -1,8 +1,9 @@
 package wakoo.fun.utils;
 
-
+import com.qiniu.http.Response;
 import com.qiniu.common.QiniuException;
 import com.qiniu.storage.Configuration;
+import com.qiniu.storage.Region;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
 import org.springframework.web.multipart.MultipartFile;

@@ -24,7 +24,7 @@
 <!--更新ToKen-->
     <update id="UpdToken">
         update sys_user
-        set token = #{Token},updatetime=now()
+        set token = #{Token},logintime=now()
         where userName=#{userName};
     </update>
 <!--更新头像-->

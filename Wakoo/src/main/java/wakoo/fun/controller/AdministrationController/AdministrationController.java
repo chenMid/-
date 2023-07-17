@@ -6,21 +6,28 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import wakoo.fun.Vo.AdminVo;
+import wakoo.fun.Vo.AllId;
 import wakoo.fun.Vo.MsgVo;
 import wakoo.fun.config.UserLoginToken;
 import wakoo.fun.dto.*;
 import wakoo.fun.pojo.FaAdmin;
 import wakoo.fun.service.AdminAdministrationService;
 import wakoo.fun.service.FaAdminService;
+import wakoo.fun.utils.HashUtils;
 import wakoo.fun.utils.MsgUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +36,7 @@ import java.util.Map;
 @CrossOrigin
 @RestController
 @RequestMapping("/api")
-@Api(tags = "Administration")
+@Api(tags = "管理员页面")
 public class AdministrationController {
 
     @Resource
@@ -42,10 +49,27 @@ public class AdministrationController {
     @UserLoginToken
     @GetMapping("Administration")
     public MsgVo Administration(String keyword, Integer pageSize, Integer pageNumber) {
-        PageHelper.startPage(pageNumber, pageSize);
-        List<AdminAdministraltion> allAdministraltion = adminAdministrationService.getAllAdministraltion(keyword);
-        PageInfo<AdminAdministraltion> pageInfo = new PageInfo<>(allAdministraltion);
-        return new MsgVo(200, "请求成功", pageInfo);
+        try {
+            if (pageSize == null || pageSize <= 0) {
+                pageSize = 10; // 默认每页显示10条数据
+            }
+            if (pageNumber == null || pageNumber <= 0) {
+                pageNumber = 1; // 默认显示第一页
+            }
+
+            PageHelper.startPage(pageNumber, pageSize);
+            List<AdminAdministraltion> allAdministraltion = adminAdministrationService.getAllAdministraltion(keyword);
+            for (AdminAdministraltion a : allAdministraltion) {
+                if (a.getName() == null) {
+                    a.setName(a.getRoleName());
+                }
+            }
+            PageInfo<AdminAdministraltion> pageInfo = new PageInfo<>(allAdministraltion);
+            return new MsgVo(200, "请求成功", pageInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new MsgVo(500, "请求处理失败", null);
+        }
     }
 
 
@@ -71,34 +95,39 @@ public class AdministrationController {
 
     @ApiOperation(value = "管理员管理添加")
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
-    @Transactional
+//    @Transactional
     @UserLoginToken
     @PostMapping("addAdminUser")
-    public MsgVo addAdminUser(@RequestBody AdmininistraltionDto admininistraltionDto) {
+    public MsgVo addAdminUser(@Validated @RequestBody AdmininistraltionDto admininistraltionDto, BindingResult result) {
+        if (result.hasErrors()) {
+            String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
+            return new MsgVo(403, errorMessage, false);
+        }
         List<AdminAdministraltion> adminEmailMobile = adminAdministrationService.isAdminEmailMobile(admininistraltionDto);
-        if (adminEmailMobile.size()!=0){
-            for (AdminAdministraltion a:adminEmailMobile) {
-                if (a.getUsername().equals(admininistraltionDto.getUsername())){
-                    return new MsgVo(403,"用户名已存在",false);
-                }else if (a.getMobile().equals(admininistraltionDto.getMobile())){
-                    return new MsgVo(403,"手机号重复请重新输入",false);
-                }else if (a.getEmail().equals(admininistraltionDto.getEmail())){
-                    return new MsgVo(403,"邮箱重复请重新输入",false);
-                }
-            }
+        if (adminEmailMobile.stream().anyMatch(a -> a.getUsername().equals(admininistraltionDto.getUsername()))) {
+            return new MsgVo(403, "用户名已存在", false);
+        } else if (adminEmailMobile.stream().anyMatch(a -> a.getMobile().equals(admininistraltionDto.getMobile()))) {
+            return new MsgVo(403, "手机号重复请重新输入", false);
+        } else if (adminEmailMobile.stream().anyMatch(a -> a.getEmail().equals(admininistraltionDto.getEmail()))) {
+            return new MsgVo(403, "邮箱重复请重新输入", false);
         }
         try {
             Boolean userAdmin = adminAdministrationService.isUserAdmin(admininistraltionDto);
-            if (userAdmin) {
-                List<FaAdmin> faAdmins = faAdminService.faAdmin(admininistraltionDto.getUsername());
-                if (faAdmins.size() != 0) {
-                    adminAdministrationService.isUserRoleOrder(faAdmins.get(0).getId(), admininistraltionDto.getRoleName(), admininistraltionDto.getName());
-                    return new MsgVo(200,"添加成功",userAdmin);
-                }
+            if (admininistraltionDto.getName() == null) {
+                adminAdministrationService.isUserRoleOrder(admininistraltionDto.getId(), admininistraltionDto.getRoleName(), admininistraltionDto.getName());
+                AllId id = adminAdministrationService.getAgentId(admininistraltionDto.getId());
+                admininistraltionDto.setName(id.getId());
+                adminAdministrationService.updAgentName(admininistraltionDto.getId(), admininistraltionDto.getName());
+                Boolean aBoolean = adminAdministrationService.updAOder(admininistraltionDto.getName(),admininistraltionDto.getId());
+                userAdmin=false;
             }
-            return new MsgVo(MsgUtils.FAILED);
+            if (userAdmin) {
+                adminAdministrationService.isUserRoleOrder(admininistraltionDto.getId(), admininistraltionDto.getRoleName(), admininistraltionDto.getName());
+                return new MsgVo(200, "添加成功", userAdmin);
+            }
+            return new MsgVo(200, "添加成功", true);
         } catch (Exception e) {
-            // 在发生异常时进行事务回滚
+             //在发生异常时进行事务回滚
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return new MsgVo(MsgUtils.FAILED);
         }
@@ -118,15 +147,16 @@ public class AdministrationController {
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @UserLoginToken
     @GetMapping("/getIsAdmin")
-    public MsgVo getIsAdmin(HttpServletRequest request) {
-        Object userId = request.getAttribute("userId");
-        AdminVo adminVoss = adminAdministrationService.getAdminVoss((Integer) userId);
-        AdminVo adminVos = adminAdministrationService.getAdminVos((Integer) userId);
-        AdminVo adminVo = adminAdministrationService.getAdminVo((Integer) userId);
-        adminVo.setId(adminVos.getId());
-        adminVo.setRoleName(adminVos.getRoleName());
-        adminVo.setAgentId(adminVoss.getAgentId());
-        adminVo.setName(adminVoss.getName());
+    public MsgVo getIsAdmin(Integer userId) {
+        AdminVo adminVoss = adminAdministrationService.getAdminVoss(userId);
+        AdminVo adminVos = adminAdministrationService.getAdminVos(userId);
+        AdminVo adminVo = adminAdministrationService.getAdminVo(userId);
+
+        Integer roleName = adminVos != null ? adminVos.getRoleName() : null;
+        Integer name = adminVoss != null ? adminVoss.getName() : null;
+
+        adminVo.setRoleName(roleName);
+        adminVo.setName(name);
 
         return new MsgVo(MsgUtils.SUCCESS, adminVo);
     }
@@ -136,12 +166,87 @@ public class AdministrationController {
     @Transactional
     @UserLoginToken
     @PutMapping("/updIpAdmin")
-    public MsgVo updIpAdmin(@RequestBody UpdAdminDto updAdminDto) {
-        Boolean aBoolean = adminAdministrationService.updUserRole(updAdminDto);
-        Boolean aBoolean1 = adminAdministrationService.updAdminUser(updAdminDto);
-        if (aBoolean && aBoolean1) {
-            return new MsgVo(MsgUtils.SUCCESS, true);
+    public ResponseEntity<MsgVo> updIpAdmin(@Validated @Valid @RequestBody UpdAdminDto updAdminDto,BindingResult result) {
+        try {
+
+            if (result.hasErrors()) {
+                String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
+                MsgVo response = new MsgVo(403, errorMessage, false);
+                return ResponseEntity.ok(response);
+            }
+            boolean success = false;
+
+            // 检查是否存在重复的用户名、邮箱或手机号
+            List<UpdAdminDto> updAdminDtoList = adminAdministrationService.isUpdAdminDto(updAdminDto);
+            FaAdmin faAdmin = adminAdministrationService.getFaAdmin(updAdminDto.getUserId());
+
+            String username = updAdminDto.getUsername();
+            if (username != null && !username.equals(faAdmin.getUserName())) {
+                // 检查是否修改了用户名，并检查是否重复
+                for (UpdAdminDto u : updAdminDtoList) {
+                    if (u.getUsername().equals(username)) {
+                        // 用户名重复
+                        MsgVo response = new MsgVo(403, "用户名重复", false);
+                        return ResponseEntity.ok(response);
+                    }
+                }
+            }
+
+            String email = updAdminDto.getEmail();
+            if (email != null && !email.equals(faAdmin.getEmail())) {
+                // 检查是否修改了邮箱，并检查是否重复
+                for (UpdAdminDto u : updAdminDtoList) {
+                    if (u.getEmail().equals(email)) {
+                        // 邮箱重复
+                        MsgVo response = new MsgVo(403, "邮箱重复", false);
+                        return ResponseEntity.ok(response);
+                    }
+                }
+            }
+
+            String mobile = updAdminDto.getMobile();
+            if (mobile != null && !mobile.equals(faAdmin.getMobile())) {
+                // 检查是否修改了手机号，并检查是否重复
+                for (UpdAdminDto u : updAdminDtoList) {
+                    if (u.getMobile().equals(mobile)) {
+                        // 手机号重复
+                        MsgVo response = new MsgVo(403, "手机号重复", false);
+                        return ResponseEntity.ok(response);
+                    }
+                }
+            }
+
+            String password = updAdminDto.getPassword();
+            if (password != null) {
+                // 检查是否修改了密码
+                // 更新密码为哈希值
+                updAdminDto.setPassword(HashUtils.hash(password));
+            } else {
+                // 如果密码未被修改，则保持原密码不变
+                updAdminDto.setPassword(faAdmin.getPassword());
+            }
+
+            // 更新用户角色
+            success = adminAdministrationService.updUserRole(updAdminDto);
+
+            // 更新用户信息
+            if (success) {
+                success = adminAdministrationService.updAdminUser(updAdminDto);
+            }
+
+            // 更新成功
+            if (success) {
+                MsgVo response = new MsgVo(200, "更新成功", true);
+                return ResponseEntity.ok(response);
+            } else {
+                // 更新失败
+                MsgVo response = new MsgVo(500, "更新失败", false);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+        } catch (Exception e) {
+            // 异常处理
+            MsgVo response = new MsgVo(500, "服务器内部错误", false);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-        return new MsgVo(MsgUtils.SUCCESS, false);
     }
 }

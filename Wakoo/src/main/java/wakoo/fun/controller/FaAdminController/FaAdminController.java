@@ -31,35 +31,39 @@ public class FaAdminController {
     @ApiOperation(value = "登录")
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @PostMapping("/login")
-    public MsgVo login(@RequestBody User user, HttpServletRequest request) throws Exception {
+    public MsgVo login(@RequestBody User user, HttpServletRequest request) {
         try {
             String captchaSession = asd.getCaptchaSession(request);
             System.out.println(captchaSession);
             if (!user.getCaptchaImage().equals(captchaSession)) {
-                return new MsgVo(403, "验证码错误,请重新输入", null);
+                return new MsgVo(403, "验证码错误，请重新输入", null);
+            }
+
+            List<FaAdmin> faAdmins = faAdminService.faAdmin(user.getUserName());
+            if (!faAdmins.isEmpty()) {
+                if (!faAdmins.get(0).getPassword().equals(user.getPassword())) {
+                    return new MsgVo(403, "密码错误", null);
+                } else {
+                    /* 登录成功 */
+                    String token = TokenUtils.token(faAdmins.get(0).getUserName(), faAdmins.get(0).getPassword(), faAdmins.get(0).getId());
+                    Boolean aBoolean = faAdminService.UpdToken(token, user.getUserName());
+                    if (aBoolean) {
+                        FaAdminLogin faAdmin = faAdminService.UserNameFaAdmin(user.getUserName());
+                        FaAdminLogin faAdminLogins = faAdminService.ListFadmin(user.getUserName());
+                        return new MsgVo(200, "登录成功", faAdminLogins);
+                    }
+                }
+            } else {
+                return new MsgVo(403, "用户名错误", null);
             }
         } catch (NullPointerException e) {
+            e.printStackTrace();
             return new MsgVo(500, "请携带参数", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new MsgVo(500, "请求处理失败", null);
         }
-        MsgVo msg = null;
-        List<FaAdmin> faAdmins = faAdminService.faAdmin(user.getUserName());
-        if (faAdmins.size() != 0) {
-            if (!faAdmins.get(0).getPassword().equals(user.getPassword())) {
-                msg = new MsgVo(403, "密码错误", null);
-            } else {
-                /*登录成功*/
-                String token = TokenUtils.token(faAdmins.get(0).getUserName(), faAdmins.get(0).getPassword(), faAdmins.get(0).getId());
-                Boolean aBoolean = faAdminService.UpdToken(token, user.getUserName());
-                if (aBoolean) {
-                    FaAdminLogin faAdmin = faAdminService.UserNameFaAdmin(user.getUserName());
-                    FaAdminLogin faAdminLogins = faAdminService.ListFadmin(user.getUserName());
-                    msg = new MsgVo(200, "登录成功", faAdminLogins);
-                }
-            }
-        } else {
-            msg = new MsgVo(403, "用户名错误", null);
-        }
-        return msg;
+        return null;
     }
 
 

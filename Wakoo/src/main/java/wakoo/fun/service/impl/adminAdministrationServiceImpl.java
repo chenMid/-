@@ -2,8 +2,10 @@ package wakoo.fun.service.impl;
 
 import org.springframework.stereotype.Service;
 import wakoo.fun.Vo.AdminVo;
+import wakoo.fun.Vo.AllId;
 import wakoo.fun.dto.*;
 import wakoo.fun.mapper.AdministrationMapper;
+import wakoo.fun.pojo.FaAdmin;
 import wakoo.fun.service.AdminAdministrationService;
 
 import javax.annotation.Resource;
@@ -54,6 +56,11 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
         return adminAdministration.isAdminEmailMobile(AdminDto);
     }
 
+    @Override
+    public List<UpdAdminDto> isUpdAdminDto(UpdAdminDto updAdminDto) {
+        return adminAdministration.isUpdAdminDto(updAdminDto);
+    }
+
     /**
      * 添加关系
      * @param uid
@@ -62,7 +69,7 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
      * @return
      */
     @Override
-    public Boolean isUserRoleOrder(Integer uid, Integer rid, String oid) {
+    public Boolean isUserRoleOrder(Integer uid, Integer rid, Integer oid) {
         return adminAdministration.isUserRoleOrder(uid, rid, oid);
     }
 
@@ -83,9 +90,13 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
 
     @Override
     public AdminVo getAdminVoss(Integer id) {
-        return adminAdministration.getAdminVoss(id);
+        AdminVo adminVoss = adminAdministration.getAdminVoss(id);
+        if (adminVoss == null || adminVoss.getName() == null) {
+            AdminVo adminVosss = adminAdministration.getAdminVosss(id);
+            return adminVosss;
+        }
+        return adminVoss;
     }
-
     @Override
     public Boolean updUserRole(UpdAdminDto updAdminDto) {
         return adminAdministration.updUserRole(updAdminDto);
@@ -94,5 +105,25 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
     @Override
     public Boolean updAdminUser(UpdAdminDto updAdminDto) {
         return adminAdministration.updAdminUser(updAdminDto);
+    }
+
+    @Override
+    public FaAdmin getFaAdmin(Integer id) {
+        return adminAdministration.getFaAdmin(id);
+    }
+
+    @Override
+    public AllId getAgentId(Integer id) {
+        return adminAdministration.getAgentId(id);
+    }
+
+    @Override
+    public Boolean updAgentName(Integer userId, Integer campusId) {
+        return adminAdministration.updAgentName(userId, campusId);
+    }
+
+    @Override
+    public Boolean updAOder(Integer id, Integer userId) {
+        return adminAdministration.updAOder(id, userId);
     }
 }

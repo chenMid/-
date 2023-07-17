@@ -3,7 +3,9 @@ package wakoo.fun.service;
 
 import org.apache.ibatis.annotations.Param;
 import wakoo.fun.Vo.AdminVo;
+import wakoo.fun.Vo.AllId;
 import wakoo.fun.dto.*;
+import wakoo.fun.pojo.FaAdmin;
 
 import java.util.List;
 
@@ -35,6 +37,13 @@ public interface AdminAdministrationService {
      * @return
      */
     List<AdminAdministraltion>isAdminEmailMobile(@Param("AdminDto") AdmininistraltionDto AdminDto);
+    /**
+     * 判断用户邮箱手机号是否重复
+     * @param updAdminDto
+     * @return
+     */
+    List<UpdAdminDto>isUpdAdminDto(@Param("UpdAdminDto") UpdAdminDto updAdminDto);
+
 
     /**
      * 添加关系表信息
@@ -43,7 +52,7 @@ public interface AdminAdministrationService {
      * @param oid
      * @return
      */
-    Boolean isUserRoleOrder(@Param("uid") Integer uid, @Param("rid") Integer rid, @Param("oid") String oid);
+    Boolean isUserRoleOrder(@Param("uid") Integer uid, @Param("rid") Integer rid, @Param("oid") Integer oid);
     /**
      * 修改用户状态
      * @param id
@@ -70,4 +79,25 @@ public interface AdminAdministrationService {
      * @return
      */
     Boolean updAdminUser(@Param("aUser") UpdAdminDto updAdminDto);
+    /**
+     * 获取指定用户
+     * @param id
+     * @return
+     */
+    FaAdmin getFaAdmin(Integer id);
+    /**
+     * 获取代理id
+     * @return
+     */
+    AllId getAgentId(Integer id);
+    /**
+     * 修改campus_id
+     * @param
+     * @return
+     */
+    Boolean updAgentName(@Param("userId") Integer userId, @Param("campusId") Integer campusId);
+    /**
+     * 修改order——id
+     */
+    Boolean updAOder(@Param("id") Integer id, @Param("userId") Integer userId);
 }

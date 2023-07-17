@@ -3,6 +3,7 @@ package wakoo.fun.service.impl;
 import org.springframework.stereotype.Service;
 import wakoo.fun.dto.RoleButtonDto;
 import wakoo.fun.Vo.RoleVo;
+import wakoo.fun.dto.RoleIdRoleName;
 import wakoo.fun.dto.UpdRoleDto;
 import wakoo.fun.mapper.RoleMapper;
 import wakoo.fun.pojo.ButtonPermissions;
@@ -27,6 +28,16 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public List<Integer> getButtonById() {
+        return roleMapper.getButtonById();
+    }
+
+    @Override
+    public List<Integer> getOneByid() {
+        return roleMapper.getOneByid();
+    }
+
+    @Override
     public Boolean addRole(RoleButtonDto roleButtonDto) {
         return roleMapper.addRole(roleButtonDto);
     }
@@ -37,8 +48,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<ButtonPermissions> updGetAllPermissions(Integer id) {
-        return roleMapper.updGetAllPermissions(id);
+    public List<ButtonPermissions> updGetAllPermissions() {
+        return roleMapper.updGetAllPermissions();
     }
 
     @Override
@@ -59,6 +70,16 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Boolean updStatusRole(Integer id, Integer status) {
         return roleMapper.updStatusRole(id, status);
+    }
+
+    @Override
+    public Integer getByIdRoleName(Integer roleId) {
+        return roleMapper.getByIdRoleName(roleId);
+    }
+
+    @Override
+    public RoleIdRoleName getTwoRoleName(Integer roleId) {
+        return roleMapper.getTwoRoleName(roleId);
     }
 
 }

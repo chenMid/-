@@ -2,6 +2,7 @@ package wakoo.fun.service;
 
 import org.apache.ibatis.annotations.Param;
 import wakoo.fun.Vo.AdvertDtoVo;
+import wakoo.fun.Vo.CarouselVo;
 import wakoo.fun.dto.AdvertDto;
 import wakoo.fun.pojo.Advert;
 import wakoo.fun.pojo.Carousel;
@@ -45,8 +46,47 @@ public interface AdvertService {
     Boolean addCarousel(@Param("carousel") Carousel carousel);
 
     /**
-     * 查询顺序不能有重复的
+     * 查询最大序列号
      * @return
      */
-    Integer getOrderNumber(Integer orderNumber);
+    Integer getOrderNumber();
+    /**
+     * 查询所有广告
+     * @return
+     */
+    List<CarouselVo> getAllConouselVo(@Param("keyword") String keyword);
+    /**
+     * 查询指定轮播图
+     * @return
+     */
+    CarouselVo isCaouselVo(@Param("id") Integer id);
+    /**
+     * 修改指定用户信息
+     * @param carousel
+     * @return
+     */
+    Boolean updCaouselVo(@Param("carousel") Carousel carousel);
+    /**
+     * 修改轮播图的状态
+     * @param id
+     * @param status
+     * @return
+     */
+    Boolean updCaouselStatus(@Param("id") Integer id, @Param("status") Integer status);
+    /**
+     * 通过id查询用户原有顺序
+     * @return
+     */
+    Carousel getCarById(Integer id);
+
+    /**
+     * 通过顺序查到用户及顺序
+     * @return
+     */
+    Carousel getNumberById(Integer orderNumber);
+    /**
+     * 修改另一个用户的顺序
+     * @return
+     */
+    Boolean updCarnumber(Integer id,Integer orderNumber);
 }

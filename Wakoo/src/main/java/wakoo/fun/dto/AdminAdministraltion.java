@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AdminAdministraltion {
     private Integer id;
-    private String username, nickname, roleName, name, email, mobile, status, updatetime;
+    private String username, nickname, roleName, name, email, mobile, status, logintime;
 }

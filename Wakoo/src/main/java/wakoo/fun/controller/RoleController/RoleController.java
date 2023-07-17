@@ -19,7 +19,8 @@ import wakoo.fun.utils.MenuTreeRole;
 import wakoo.fun.utils.MsgUtils;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @EnableTransactionManagement//数据库事务管理
 @CrossOrigin
@@ -46,10 +47,22 @@ public class RoleController {
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @UserLoginToken
     @GetMapping("/getButton")
-    public MsgVo getButton() {
+    public MsgVo getButton(Integer roleId) {
+        System.out.println(roleId);
+        Integer byIdRoleName = roleService.getByIdRoleName(roleId);
+        RoleIdRoleName twoRoleName = roleService.getTwoRoleName(roleId);
+        List<Integer> buttonById = roleService.getButtonById();
         List<ButtonPermissions> button = roleService.getButton();
+        List<Integer> oneByid = roleService.getOneByid();
         List<ButtonPermissions> menuList = new MenuTreeRole(button).buildTree();
-        return new MsgVo(200, "菜单列表", menuList);
+        Map<String, Object> roleButton=new HashMap<>();
+        roleButton.put("fRoleName", byIdRoleName);
+        roleButton.put("roleName", twoRoleName.getRoleName());
+        roleButton.put("status", twoRoleName.getStatus());
+        roleButton.put("roleButton", menuList);
+        roleButton.put("buttonById", buttonById);
+        roleButton.put("oneByid", oneByid);
+        return new MsgVo(200, "菜单列表", roleButton);
     }
 
     @ApiOperation(value = "角色添加")
@@ -58,23 +71,32 @@ public class RoleController {
     @UserLoginToken
     @PostMapping("/addRole")
     public MsgVo addRole(@RequestBody RoleButtonDto role) {
-        Boolean aBoolean = roleService.addRole(role);
-        Boolean aBoolean1 = roleService.addPermission(role.getList(), role.getId());
-        return new MsgVo(MsgUtils.SUCCESS, role);
+        try {
+            boolean isRoleAdded = roleService.addRole(role);
+            boolean isPermissionAdded = roleService.addPermission(role.getList(), role.getId());
+
+            if (isRoleAdded && isPermissionAdded) {
+                return new MsgVo(MsgUtils.SUCCESS);
+            } else {
+                return new MsgVo(403,"添加角色和权限失败", null);
+            }
+        } catch (Exception ex) {
+            return new MsgVo(MsgUtils.FAILED);
+        }
     }
 
     @ApiOperation(value = "查询指定角色信息")
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @UserLoginToken
     @GetMapping("/updgetRole")
-    public MsgVo updgetRole(Integer id) {
-        List<ButtonPermissions> buttonPermissions = roleService.updGetAllPermissions(id);
+    public MsgVo updgetRole() {
+        List<ButtonPermissions> buttonPermissions = roleService.updGetAllPermissions();
         List<ButtonPermissions> menuList = new MenuTreeRole(buttonPermissions).buildTree();
         return new MsgVo(200, "菜单列表", menuList);
     }
 
 
-    @ApiOperation(value = "查询指定角色信息")
+    @ApiOperation(value = "修改角色信息")
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @Transactional
     @UserLoginToken

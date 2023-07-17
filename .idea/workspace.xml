@@ -4,25 +4,44 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd376d8f-2ff4-4306-80ae-2df3d7c43904" name="Changes" comment="23-7-6">
+    <list default="true" id="dd376d8f-2ff4-4306-80ae-2df3d7c43904" name="Changes" comment="23-7-6角色组页面的状态更改，杂项管理的广告添加，更改状态修改广告分页查询完毕轮播图添加完毕">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__jakarta_validation_jakarta_validation_api_2_0_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hibernate_validator_hibernate_validator_6_2_5_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_jboss_logging_jboss_logging_3_4_3_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_validation_2_7_8.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_code_gson_gson_2_9_1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_code_gson_gson_2_8_9.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/Vo/AdminVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/Vo/AdminVo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/Vo/AdvertDtoVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/Vo/AdvertDtoVo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/AdministrationController/AdministrationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/AdministrationController/AdministrationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/CaptchaController/getKaptchaImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/CaptchaController/getKaptchaImage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/FaAdminController/FaAdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/FaAdminController/FaAdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/MenuController/MenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/MenuController/MenuController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/PersonalCenterController/PersonalCenterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/PersonalCenterController/PersonalCenterController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/RoleController/RoleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/RoleController/RoleController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/dto/AdminAdministraltion.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/dto/AdminAdministraltion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/dto/AdmininistraltionDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/dto/AdmininistraltionDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/dto/MsgVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/Vo/MsgVo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/dto/RoleButtonDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/dto/RoleButtonDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/dto/UpdAdminDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/dto/UpdAdminDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/mapper/AdministrationMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/mapper/AdministrationMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/pojo/SysMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/pojo/SysMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/mapper/AdvertMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/mapper/AdvertMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/mapper/RoleMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/mapper/RoleMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/pojo/Advert.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/pojo/Advert.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/pojo/ButtonPermissions.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/pojo/ButtonPermissions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/pojo/Carousel.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/pojo/Carousel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/pojo/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/pojo/Role.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/AdminAdministrationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/AdminAdministrationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/TreeNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/TreeNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/AdvertService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/AdvertService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/RoleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/RoleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/impl/AdvertServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/impl/AdvertServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/impl/RoleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/impl/RoleServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/impl/adminAdministrationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/impl/adminAdministrationServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/utils/QiniuUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/utils/QiniuUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/resources/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/resources/mappers/AdministrationMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/resources/mappers/AdministrationMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/resources/mappers/AdvertMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/resources/mappers/AdvertMapper.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/resources/mappers/FaAdminMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/resources/mappers/FaAdminMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/resources/mappers/RoleMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/resources/mappers/RoleMapper.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,8 +57,8 @@
         <option value="FxmlFile" />
         <option value="AnnotationType" />
         <option value="JavaFXApplication" />
-        <option value="Interface" />
         <option value="Mybatis Mapper" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -103,11 +122,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
+      <recent name="wakoo.fun.service.CategoryService.impl" />
+      <recent name="wakoo.fun.mapper" />
+      <recent name="wakoo.fun.service" />
+      <recent name="wakoo.fun.service.AgentService.impl" />
       <recent name="wakoo.fun.service.impl" />
-      <recent name="wakoo.fun.service.imp;" />
-      <recent name="wakoo.service.impl" />
-      <recent name="wakoo.dto" />
-      <recent name="wakoo.controller" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\WakooHome\Wakoo\src\main\resources\mappers" />
@@ -252,7 +271,12 @@
       <workItem from="1688691604009" duration="25132000" />
       <workItem from="1688777847158" duration="26766000" />
       <workItem from="1688951118744" duration="27776000" />
-      <workItem from="1689036724580" duration="9044000" />
+      <workItem from="1689036724580" duration="30320000" />
+      <workItem from="1689123482163" duration="26534000" />
+      <workItem from="1689210096002" duration="27654000" />
+      <workItem from="1689296512117" duration="26435000" />
+      <workItem from="1689382467356" duration="28100000" />
+      <workItem from="1689555630900" duration="3289000" />
     </task>
     <task id="LOCAL-00001" summary="23-7-6">
       <created>1688633536137</created>
@@ -261,7 +285,21 @@
       <option name="project" value="LOCAL" />
       <updated>1688633536137</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="23-7-6角色组页面的状态更改，杂项管理的广告添加，更改状态修改广告分页查询完毕轮播图添加完毕">
+      <created>1689046052511</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1689046052511</updated>
+    </task>
+    <task id="LOCAL-00003" summary="23-7-6角色组页面的状态更改，杂项管理的广告添加，更改状态修改广告分页查询完毕轮播图添加完毕">
+      <created>1689046136385</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1689046136385</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -281,7 +319,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commit" />
     <MESSAGE value="23-7-6" />
-    <option name="LAST_COMMIT_MESSAGE" value="23-7-6" />
+    <MESSAGE value="23-7-6角色组页面的状态更改，杂项管理的广告添加，更改状态修改广告分页查询完毕轮播图添加完毕" />
+    <option name="LAST_COMMIT_MESSAGE" value="23-7-6角色组页面的状态更改，杂项管理的广告添加，更改状态修改广告分页查询完毕轮播图添加完毕" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -293,6 +332,10 @@
         <breakpoint enabled="true" type="java-exception">
           <properties class="org.springframework.beans.factory.BeanCreationException" package="org.springframework.beans.factory" />
           <option name="timeStamp" value="2" />
+        </breakpoint>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.sql.SQLSyntaxErrorException" package="java.sql" />
+          <option name="timeStamp" value="3" />
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>

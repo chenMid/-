@@ -2,6 +2,7 @@ package wakoo.fun.service.impl;
 
 import org.springframework.stereotype.Service;
 import wakoo.fun.Vo.AdvertDtoVo;
+import wakoo.fun.Vo.CarouselVo;
 import wakoo.fun.dto.AdvertDto;
 import wakoo.fun.mapper.AdvertMapper;
 import wakoo.fun.pojo.Advert;
@@ -9,6 +10,7 @@ import wakoo.fun.pojo.Carousel;
 import wakoo.fun.service.AdvertService;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -47,7 +49,46 @@ public class AdvertServiceImpl implements AdvertService {
     }
 
     @Override
-    public Integer getOrderNumber(Integer orderNumber) {
-        return advertMapper.getOrderNumber(orderNumber);
+    public Integer getOrderNumber() {
+        return advertMapper.getOrderNumber();
+    }
+
+    @Override
+    public List<CarouselVo> getAllConouselVo(String keyword) {
+        return advertMapper.getAllConouselVo(keyword);
+    }
+
+    @Override
+    public CarouselVo isCaouselVo(Integer id) {
+
+        CarouselVo caouselVo = advertMapper.isCaouselVo(id);
+        CarouselVo carouselVo=caouselVo;
+        caouselVo.setOrderNumber((advertMapper.listIntegerGetCa()));
+        return caouselVo;
+    }
+
+    @Override
+    public Boolean updCaouselVo(Carousel carousel) {
+        return advertMapper.updCaouselVo(carousel);
+    }
+
+    @Override
+    public Boolean updCaouselStatus(Integer id, Integer status) {
+        return advertMapper.updCaouselStatus(id, status);
+    }
+
+    @Override
+    public Carousel getCarById(Integer id) {
+        return advertMapper.getCarById(id);
+    }
+
+    @Override
+    public Carousel getNumberById(Integer orderNumber) {
+        return advertMapper.getNumberById(orderNumber);
+    }
+
+    @Override
+    public Boolean updCarnumber(Integer id, Integer orderNumber) {
+        return advertMapper.updCarnumber(id, orderNumber);
     }
 }

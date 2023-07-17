@@ -15,6 +15,19 @@ spring:
     multipart:
       max-file-size: 1000MB
       max-request-size: 1000MB
+      enabled: true
+#  redis:
+#    port: 6379
+#    host: 192.168.21.132
+#    password:
+#    database: 15
+#    jedis:
+#      pool:
+#        max-active: 100
+#        max-idle: 8
+#        min-idle: 0
+#        max-wait: 60000
+#    timeout: 1000
 
 #mybatis
 mybatis:
@@ -47,3 +60,4 @@ pagehelper:
   params: count=countSql
   # 默认值为 false，当该参数设置为 true 时，如果 pageSize=0 或者 RowBounds.limit = 0 就会查询出全部的结果（相当于没有执行分页查询，但是返回结果仍然是 Page 类型）
   page-size-zero: true
+

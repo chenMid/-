@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ButtonPermissions<T> implements TreeNode{
     private String id;
-    private String name;
+    private String label;
     private String pid;
     private Integer enabled;
     private Integer type;

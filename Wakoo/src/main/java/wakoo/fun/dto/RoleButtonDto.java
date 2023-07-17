@@ -15,4 +15,5 @@ public class RoleButtonDto {
     private Integer fId;
     private String name;
     private List<RoleVo> list;
+    private Integer status;
 }

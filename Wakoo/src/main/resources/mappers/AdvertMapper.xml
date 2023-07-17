@@ -2,15 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="wakoo.fun.mapper.AdvertMapper">
     <insert id="addAdver">
-        INSERT INTO advert(advert_name,content,img,status,sort,createtime,updatetime)
-        VALUES(#{avatar.advertName},#{avatar.content},#{avatar.img},#{avatar.status},#{avatar.sort},now(),now())
+        INSERT INTO advert(advert_name, content, img, status, sort, createtime, updatetime)
+        VALUES (#{avatar.advertName}, #{avatar.content}, #{avatar.img}, #{avatar.status}, #{avatar.sort}, now(), now())
     </insert>
     <insert id="addCarousel">
         INSERT INTO carousel (image_url, title, description, link_url, order_number)
-        VALUES (#{carousel.imageUrl}, #{carousel.title},#{carousel.description},#{carousel.linkUrl},#{carousel.orderNumber});
+        VALUES (#{carousel.imageUrl}, #{carousel.title}, #{carousel.description}, #{carousel.linkUrl},
+                #{carousel.orderNumber});
     </insert>
     <update id="updAvate">
-        UPDATE advert SET advert_name = #{Advert.advertName},content = #{Advert.content},img = #{Advert.content},updatetime = NOW() WHERE id = #{Advert.id};
+        UPDATE advert
+        SET advert_name = #{Advert.advertName},
+            content     = #{Advert.content},
+            img         = #{Advert.content},
+            updatetime  = NOW()
+        WHERE id = #{Advert.id};
     </update>
     <update id="updAvateStatus">
         UPDATE advert
@@ -20,21 +26,92 @@
         </set>
         WHERE id=#{id}
     </update>
+    <update id="updCaouselVo">
+        UPDATE carousel
+        SET image_url=#{carousel.imageUrl},
+            title=#{carousel.title},
+            description=#{carousel.description},
+            link_url=#{carousel.linkUrl},
+            order_number=#{carousel.orderNumber},
+            is_active=#{carousel.isActive}
+        WHERE id = #{carousel.id};
+    </update>
+    <update id="updCaouselStatus">
+        UPDATE carousel
+        <set>
+            <if test="status==1">is_active=0</if>
+            <if test="status==0">is_active=1</if>
+        </set>
+        WHERE id=#{id}
+    </update>
+    <update id="updCarnumber">
+        UPDATE carousel SET order_number=#{orderNumber} WHERE id=#{id}
+    </update>
     <select id="getAvate" resultType="wakoo.fun.dto.AdvertDto">
-        SELECT id, advert_name, content, img, sort, status, createtime, updatetime
+        SELECT id,
+               advert_name,
+               content,
+               img,
+               sort,
+               status,
+               createtime,
+               updatetime
         FROM Advert
-        WHERE advert_name LIKE CONCAT('%', #{keyword}, '%') OR
-            content LIKE CONCAT('%', #{keyword}, '%') OR
-            img LIKE CONCAT('%', #{keyword}, '%') OR
-            sort LIKE CONCAT('%', #{keyword}, '%') OR
-            status LIKE CONCAT('%', #{keyword}, '%') OR
-            createtime LIKE CONCAT('%', #{keyword}, '%') OR
-            updatetime LIKE CONCAT('%', #{keyword}, '%')
+        WHERE advert_name LIKE CONCAT('%', #{keyword}, '%')
+           OR content LIKE CONCAT('%', #{keyword}, '%')
+           OR img LIKE CONCAT('%', #{keyword}, '%')
+           OR sort LIKE CONCAT('%', #{keyword}, '%')
+           OR status LIKE CONCAT('%', #{keyword}, '%')
+           OR createtime LIKE CONCAT('%', #{keyword}, '%')
+           OR updatetime LIKE CONCAT('%', #{keyword}, '%')
     </select>
     <select id="getIsAvate" resultType="wakoo.fun.Vo.AdvertDtoVo">
-        SELECT id,advert_name,content,img,sort FROM advert WHERE id=#{id}
+        SELECT id, advert_name, content, img, sort
+        FROM advert
+        WHERE id = #{id}
     </select>
     <select id="getOrderNumber" resultType="java.lang.Integer">
-        SELECT COUNT(order_number) FROM carousel WHERE order_number=#{orderNumber}
+        SELECT max(order_number)
+        FROM carousel
+    </select>
+    <select id="getAllConouselVo" resultType="wakoo.fun.Vo.CarouselVo">
+        SELECT id,
+               image_url,
+               title,
+               description,
+               link_url,
+               order_number,
+               is_active,
+               updated_at
+        FROM carousel
+        where image_url LIKE CONCAT('%', #{keyword}, '%')
+           OR title LIKE CONCAT('%', #{keyword}, '%')
+           OR description LIKE CONCAT('%', #{keyword}, '%')
+           OR link_url LIKE CONCAT('%', #{keyword}, '%')
+           OR order_number LIKE CONCAT('%', #{keyword}, '%')
+           OR is_active LIKE CONCAT('%', #{keyword}, '%')
+           OR updated_at LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY order_number ASC
+    </select>
+    <select id="isCaouselVo" resultType="wakoo.fun.Vo.CarouselVo">
+        SELECT id,
+               image_url,
+               title,
+               description,
+               link_url,
+               order_number,
+               is_active,
+               updated_at
+        FROM carousel
+        WHERE id = #{id}
+    </select>
+    <select id="listIntegerGetCa" resultType="java.lang.Integer">
+        SELECT order_number FROM carousel ORDER BY order_number
+    </select>
+    <select id="getCarById" resultType="wakoo.fun.pojo.Carousel">
+        SELECT order_number FROM carousel WHERE id=#{id}
+    </select>
+    <select id="getNumberById" resultType="wakoo.fun.pojo.Carousel">
+        SELECT id,order_number FROM carousel WHERE order_number=#{orderNumber}
     </select>
 </mapper>
