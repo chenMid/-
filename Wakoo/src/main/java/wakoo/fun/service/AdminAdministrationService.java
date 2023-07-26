@@ -2,8 +2,8 @@ package wakoo.fun.service;
 
 
 import org.apache.ibatis.annotations.Param;
-import wakoo.fun.Vo.AdminVo;
-import wakoo.fun.Vo.AllId;
+import wakoo.fun.vo.AdminVo;
+import wakoo.fun.vo.AllId;
 import wakoo.fun.dto.*;
 import wakoo.fun.pojo.FaAdmin;
 
@@ -100,4 +100,11 @@ public interface AdminAdministrationService {
      * 修改order——id
      */
     Boolean updAOder(@Param("id") Integer id, @Param("userId") Integer userId);
+
+    /**
+     * 获取门店
+     * @param id
+     * @return
+     */
+    Boolean getTheStoreUnderTheRole(Integer id);
 }

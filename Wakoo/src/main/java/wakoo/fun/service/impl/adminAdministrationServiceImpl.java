@@ -1,8 +1,8 @@
 package wakoo.fun.service.impl;
 
 import org.springframework.stereotype.Service;
-import wakoo.fun.Vo.AdminVo;
-import wakoo.fun.Vo.AllId;
+import wakoo.fun.vo.AdminVo;
+import wakoo.fun.vo.AllId;
 import wakoo.fun.dto.*;
 import wakoo.fun.mapper.AdministrationMapper;
 import wakoo.fun.pojo.FaAdmin;
@@ -125,5 +125,11 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
     @Override
     public Boolean updAOder(Integer id, Integer userId) {
         return adminAdministration.updAOder(id, userId);
+    }
+
+    @Override
+    public Boolean getTheStoreUnderTheRole(Integer id) {
+        Integer theStoreUnderTheRole = adminAdministration.getTheStoreUnderTheRole(id);
+        return theStoreUnderTheRole != null && theStoreUnderTheRole > 0;
     }
 }

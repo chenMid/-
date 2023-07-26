@@ -1,12 +1,9 @@
-package wakoo.fun.Vo;
+package wakoo.fun.vo;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import wakoo.fun.utils.MsgUtils;
 import wakoo.fun.service.FaAdminCode;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Data
 @NoArgsConstructor

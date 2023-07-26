@@ -5,7 +5,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.0.108/wakooHomeJava?useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true
+    url: jdbc:mysql://192.168.0.111/wakooHomeJava?useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true
     username: root
     password: root
   mvc:
@@ -46,7 +46,8 @@ qiniu:
   access-key: qEcvaGP-gpW6BypGf0w75uEgbZgwpQMcbJxyDU75
   secret-key: LKK0Sl38yKWV3hjc2vZ6nkoxGIqpiI-LL36uEMox
   bucket-name: wkimage123
-
+  bucket-names: 2023.6.21编程分类视频及图片/test/
+  domain: cdn.wakoohome.com
 pagehelper:
   # 设置方言，此处指定 MySQL 数据库
   helper-dialect: mysql

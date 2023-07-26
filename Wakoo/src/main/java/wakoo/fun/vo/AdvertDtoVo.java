@@ -1,4 +1,4 @@
-package wakoo.fun.Vo;
+package wakoo.fun.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -18,7 +17,7 @@ public class AdvertDtoVo {
     @NotBlank(message = "广告名称不能为空")
     private String advertName;
     @NotNull(message = "图片不能为空")
-    private MultipartFile file;
     private String content;
     private String img;
+    private Integer sort;
 }

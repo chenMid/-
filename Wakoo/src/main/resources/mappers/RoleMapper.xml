@@ -6,10 +6,10 @@
         WHERE id=#{role.id}
     </update>
     <update id="updMessRole">
-        <foreach collection="role" item="item" index="index" separator=";">
+        <foreach collection="role" item="menuId" index="index" separator=";">
             UPDATE sys_permission
-            SET status = #{item.status}
-            WHERE menu_id = #{item.menuId}
+            SET status = 1
+            WHERE menu_id = #{menuId}
         </foreach>
     </update>
     <update id="updStatusRole">
@@ -20,25 +20,60 @@
         </set>
         WHERE id=#{id}
     </update>
+    <update id="UpdRoleStatus">
+        UPDATE sys_permission
+        SET `status` = 0
+        WHERE
+            role_id =#{roleId}
+    </update>
+    <delete id="delRole">
+        DELETE FROM sys_permission WHERE role_id=#{idList}
+    </delete>
 
     <select id="getAllRole" resultType="wakoo.fun.pojo.Role">
-        SELECT id,rid,role_code,role_name,description,status,create_time,update_time
+        SELECT id,rid,role_code,role_name,menus,status,create_time,update_time
         FROM sys_role
         WHERE role_code LIKE CONCAT('%', #{keyword}, '%') OR
             role_name LIKE CONCAT('%', #{keyword}, '%') OR
-            description LIKE CONCAT('%', #{keyword}, '%') OR
+            menus LIKE CONCAT('%', #{keyword}, '%') OR
             create_time LIKE CONCAT('%', #{keyword}, '%') OR
             update_time LIKE CONCAT('%', #{keyword}, '%')
     </select>
     <select id="getButton" resultType="wakoo.fun.pojo.ButtonPermissions">
-        SELECT id,path,component,name label,meta,type,p_id,hidden,redirect,cache,icon,url,sort,level,enabled,create_time,update_time FROM sys_menu WHERE id IN (SELECT menu_id FROM sys_permission WHERE role_id IN (
-            SELECT role_id FROM sys_user_role))order by sys_menu.sort
+        SELECT
+            id,
+            path,
+            component,
+            NAME label,
+            meta,
+            type,
+            p_id,
+            hidden,
+            redirect,
+            CACHE,
+            icon,
+            url,
+            sort,
+            LEVEL,
+            enabled,
+            create_time,
+            update_time
+        FROM
+            sys_menu
+        WHERE FIND_IN_SET(id,(
+            SELECT menus FROM sys_role WHERE id=(SELECT rid
+                                                 FROM
+                                                     sys_role
+                                                 WHERE
+                                                     id=#{roleId})))
+        ORDER BY
+            sys_menu.sort
     </select>
     <select id="updGetAllPermissions" resultType="wakoo.fun.pojo.ButtonPermissions">
         SELECT id,path,component,
                name label,meta,type,p_id,hidden,redirect,
                cache,icon,url,sort,level,enabled,create_time,
-               update_time FROM sys_menu
+               update_time from sys_menu WHERE FIND_IN_SET (id,(SELECT menus FROM sys_role WHERE id=#{id}))>0
     </select>
     <select id="getRoleNum" resultType="java.lang.Integer">
         SELECT COUNT(id) FROM sys_user_role WHERE role_id=#{id}
@@ -49,24 +84,31 @@
     <select id="getTwoRoleName" resultType="wakoo.fun.dto.RoleIdRoleName">
         SELECT role_name,status FROM sys_role WHERE id=#{roleId}
     </select>
-    <select id="getButtonById" resultType="java.lang.Integer">
-        SELECT id FROM sys_menu WHERE id IN (SELECT menu_id FROM sys_permission WHERE role_id IN (
-            SELECT role_id FROM sys_user_role))order by sys_menu.sort
+    <select id="getButtonById" resultType="wakoo.fun.dto.RoleGetButonById">
+        SELECT id,type FROM sys_menu WHERE FIND_IN_SET(id,(SELECT menus FROM sys_role WHERE id=#{roleId}))
     </select>
     <select id="getOneByid" resultType="java.lang.Integer">
-        SELECT id FROM sys_menu WHERE id IN (SELECT menu_id FROM sys_permission WHERE role_id IN (
-            SELECT role_id FROM sys_user_role)) AND enabled=1 AND type=0 order by sys_menu.sort
+        SELECT id FROM sys_menu WHERE type=0 AND enabled=1 ORDER BY sort
+    </select>
+    <select id="getParentIdById" resultType="java.lang.String">
+        SELECT id FROM sys_menu WHERE id=(SELECT p_id FROM sys_menu WHERE id=#{id})
+    </select>
+    <select id="getButtonRolea" resultType="java.util.Map">
+        SELECT name,hidden FROM sys_menu WHERE FIND_IN_SET(id,(SELECT menus FROM sys_role WHERE id=(SELECT role_id FROM sys_user_role WHERE user_id=#{roleId}))) AND type=10 AND p_id=#{menuId}
+    </select>
+    <select id="getTowButton" resultType="java.util.Map">
+        SELECT `name`,hidden FROM sys_menu WHERE p_id=#{menuId}
     </select>
 
-    <insert id="addRole" parameterType="wakoo.fun.dto.RoleButtonDto" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO sys_role(rid,role_name,status,create_time)
-        VALUES(#{role.fId},#{role.name},#{role.status},NOW())
+    <insert id="addRole" parameterType="wakoo.fun.dto.RoleButtonDto">
+        INSERT INTO sys_role(rid,role_name,menus,status,create_time)
+        VALUES(#{role.fId},#{role.name},#{aaa},#{role.status},NOW())
     </insert>
 
     <insert id="addPermission">
         INSERT INTO sys_permission (role_id, menu_id,create_time) VALUES
         <foreach collection="roleVos" item="item" separator=",">
-            (#{id}, #{item.id},NOW())
+            (#{id}, #{item},NOW())
         </foreach>
     </insert>
 </mapper>

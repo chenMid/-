@@ -1,20 +1,17 @@
 package wakoo.fun.utils;
 
-import com.qiniu.http.Response;
 import com.qiniu.common.QiniuException;
 import com.qiniu.storage.Configuration;
-import com.qiniu.storage.Region;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
 import org.springframework.web.multipart.MultipartFile;
-import wakoo.fun.Vo.MsgVo;
+import wakoo.fun.vo.MsgVo;
 
 import java.io.IOException;
 
 public class QiniuUtils {
 
     public static MsgVo uploadAvatar(MultipartFile file,String accessKey, String secretKey,String bucketName) throws IOException {
-        System.out.println(file+"utils");
         MsgVo msg=null;
         if (file.isEmpty()) {
             msg=new MsgVo(MsgUtils.VALIDATE_ERROR); // 如果文件为空，则返回提示信息
@@ -25,7 +22,6 @@ public class QiniuUtils {
             UploadManager uploadManager = new UploadManager(cfg); // 创建七牛云上传管理器对象
 
             String key = file.getOriginalFilename(); // 获取上传文件的原始文件名作为七牛云的文件名
-            System.out.println(key);
             byte[] fileBytes = file.getBytes(); // 获取上传文件的字节数组
 
             String upToken = auth.uploadToken(bucketName); // 生成上传凭证

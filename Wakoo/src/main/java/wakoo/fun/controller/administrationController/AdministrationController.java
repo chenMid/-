@@ -1,4 +1,4 @@
-package wakoo.fun.controller.AdministrationController;
+package wakoo.fun.controller.administrationController;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -14,19 +14,17 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import wakoo.fun.Vo.AdminVo;
-import wakoo.fun.Vo.AllId;
-import wakoo.fun.Vo.MsgVo;
+import wakoo.fun.vo.AdminVo;
+import wakoo.fun.vo.AllId;
+import wakoo.fun.vo.MsgVo;
 import wakoo.fun.config.UserLoginToken;
 import wakoo.fun.dto.*;
 import wakoo.fun.pojo.FaAdmin;
 import wakoo.fun.service.AdminAdministrationService;
-import wakoo.fun.service.FaAdminService;
 import wakoo.fun.utils.HashUtils;
 import wakoo.fun.utils.MsgUtils;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -41,8 +39,6 @@ public class AdministrationController {
 
     @Resource
     private AdminAdministrationService adminAdministrationService;
-    @Resource
-    private FaAdminService faAdminService;
 
     @ApiOperation(value = "管理员管理查询")
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
@@ -248,5 +244,13 @@ public class AdministrationController {
             MsgVo response = new MsgVo(500, "服务器内部错误", false);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+    }
+
+    @ApiOperation(value = "管理员管理添加")
+    @UserLoginToken
+    @GetMapping("verifyTheGroupLinkageOfAllStores")
+    public ResponseEntity<MsgVo> verifyTheGroupLinkageOfAllStores(Integer id){
+        Boolean theStoreUnderTheRole = adminAdministrationService.getTheStoreUnderTheRole(id);
+        return ResponseEntity.ok(new MsgVo(200,"请求成功",theStoreUnderTheRole));
     }
 }

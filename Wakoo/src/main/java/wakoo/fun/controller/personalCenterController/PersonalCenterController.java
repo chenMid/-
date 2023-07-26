@@ -1,4 +1,4 @@
-package wakoo.fun.controller.PersonalCenterController;
+package wakoo.fun.controller.personalCenterController;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -16,14 +16,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import wakoo.fun.Vo.AdvertDtoVo;
-import wakoo.fun.Vo.CarouselVo;
+import wakoo.fun.vo.AdvertDtoVo;
+import wakoo.fun.vo.CarouselVo;
 import wakoo.fun.config.UserLoginToken;
-import wakoo.fun.Vo.MsgVo;
+import wakoo.fun.vo.MsgVo;
 import wakoo.fun.dto.AdvertDto;
 import wakoo.fun.pojo.Advert;
 import wakoo.fun.pojo.Carousel;
-import wakoo.fun.pojo.Role;
 import wakoo.fun.service.AdvertService;
 import wakoo.fun.utils.QiniuUtils;
 import wakoo.fun.service.PersonalCenterService;
@@ -53,7 +52,7 @@ public class PersonalCenterController {
 
     @ApiOperation(value = "个人简介")
     @UserLoginToken
-    @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "1000", description = "响应成功")})
+    @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @PostMapping("/uploadAvatar")
     public ResponseEntity<MsgVo> uploadAvatar(@RequestPart MultipartFile file, @RequestParam Integer id) throws IOException {
         try {
@@ -87,17 +86,10 @@ public class PersonalCenterController {
                 MsgVo response = new MsgVo(403, errorMessage, false);
                 return ResponseEntity.ok(response);
             }
-            // 上传头像到七牛云
-            MsgVo msgVo = QiniuUtils.uploadAvatar(avatar.getFile(), accessKey, secretKey, bucketName);
-            if (msgVo.getCode() == 200) {
-                String imageUrl = (String) msgVo.getData();
-                avatar.setImg(imageUrl);
-                // 添加广告
-                advertService.addAdver(avatar);
-                // 返回成功消息
+            Boolean aBoolean = advertService.addAdver(avatar);
+            if (aBoolean){
                 return ResponseEntity.ok(new MsgVo(200, "添加成功", true));
-            } else {
-                // 上传失败
+            }else {
                 return ResponseEntity.ok(new MsgVo(500, "添加失败", false));
             }
         } catch (Exception e) {
@@ -114,10 +106,12 @@ public class PersonalCenterController {
     public ResponseEntity<MsgVo> selectAvatar(String keyword, Integer pageSize, Integer pageNumber) {
         try {
             if (pageSize == null || pageSize <= 0) {
-                pageSize = 10; // 默认每页显示10条数据
+                pageSize = 10;
+                // 默认每页显示10条数据
             }
             if (pageNumber == null || pageNumber <= 0) {
-                pageNumber = 1; // 默认显示第一页
+                pageNumber = 1;
+                // 默认显示第一页
             }
 
             PageHelper.startPage(pageNumber, pageSize);
@@ -162,23 +156,20 @@ public class PersonalCenterController {
     @Transactional
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @PutMapping("/updAdvert")
-    public ResponseEntity<MsgVo> updAdvert(@Validated AdvertDtoVo advertDtoVo,BindingResult result) {
+    public ResponseEntity<MsgVo> updAdvert(@Validated @RequestBody AdvertDtoVo advertDtoVo,BindingResult result) {
         try {
             if (result.hasErrors()) {
                 String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
                 MsgVo response = new MsgVo(403, errorMessage, false);
                 return ResponseEntity.ok(response);
             }
-            // 调用 advertService.updAvate() 方法进行广告修改
-            MsgVo msgVo = QiniuUtils.uploadAvatar(advertDtoVo.getFile(), accessKey, secretKey, bucketName);
-                advertDtoVo.setImg((String) msgVo.getData());
-                Boolean aBoolean = advertService.updAvate(advertDtoVo);
+            Boolean aBoolean = advertService.updAvate(advertDtoVo);
                 if (aBoolean) {
                     // 修改成功，返回成功消息
-                    return ResponseEntity.ok(new MsgVo(200, "修改成功", aBoolean));
+                    return ResponseEntity.ok(new MsgVo(200, "修改成功", true));
                 } else {
                     // 修改失败，返回错误消息
-                    return ResponseEntity.badRequest().body(new MsgVo(400, "修改失败", aBoolean));
+                    return ResponseEntity.badRequest().body(new MsgVo(400, "修改失败", false));
                 }
         } catch (Exception e) {
             // 出现异常，返回错误消息
@@ -187,17 +178,17 @@ public class PersonalCenterController {
     }
 
 
-    @ApiOperation(value = "广告状态修改")
+    @ApiOperation(value = "广告删除")
     @UserLoginToken
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
-    @PutMapping("/updAdvertStatus")
-    public MsgVo updAdvertStatus(Integer id, Integer status) {
+    @DeleteMapping("/removeSpecifiedAds")
+    public MsgVo removeSpecifiedAds(Integer id) {
         try {
-            Boolean aBoolean = advertService.updAvateStatus(id, status);
+            Boolean aBoolean = advertService.removeSpecifiedAds(id);
             if (aBoolean) {
-                return new MsgVo(200, "广告状态修改成功", aBoolean);
+                return new MsgVo(200, "删除成功", true);
             } else {
-                return new MsgVo(500, "广告状态修改失败，请重试", aBoolean);
+                return new MsgVo(500, "删除失败", false);
             }
         } catch (Exception e) {
             return new MsgVo(500, "出现错误，请重试", null);
@@ -208,7 +199,7 @@ public class PersonalCenterController {
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @UserLoginToken
     @PostMapping("/addSlideshow")
-    public ResponseEntity<MsgVo> addSlideshow(@Validated Carousel carousel,BindingResult result) throws IOException {
+    public ResponseEntity<MsgVo> addSlideshow(@Validated @RequestBody Carousel carousel,BindingResult result) throws IOException {
         try {
             if (result.hasErrors()) {
                 String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
@@ -284,7 +275,7 @@ public class PersonalCenterController {
     @UserLoginToken
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @PutMapping("/updCarousel")
-    public ResponseEntity<MsgVo> updCarousel(Carousel carousel,BindingResult result) {
+    public ResponseEntity<MsgVo> updCarousel(@Validated @RequestBody Carousel carousel,BindingResult result) {
         try {
             if (result.hasErrors()) {
                 String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
@@ -293,7 +284,7 @@ public class PersonalCenterController {
             }
             Carousel carById = advertService.getCarById(carousel.getId());
             Carousel numberById = advertService.getNumberById(carousel.getOrderNumber());
-            if (carById.getOrderNumber()!=numberById.getOrderNumber()){
+            if (!carById.getOrderNumber().equals(numberById.getOrderNumber())){
                 Boolean aBoolean = advertService.updCarnumber(numberById.getId(), carById.getOrderNumber());
                 System.out.println(aBoolean);
             }
@@ -317,14 +308,14 @@ public class PersonalCenterController {
     @ApiOperation(value = "修改状态轮播图")
     @UserLoginToken
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
-    @PutMapping("/updstatusCarousel")
-    public ResponseEntity<MsgVo> updstatusCarousel(Integer status, Integer id) {
-        boolean isSuccess = advertService.updCaouselStatus(id, status);
+    @DeleteMapping("/deleteASpecifiedWheelMap")
+    public ResponseEntity<MsgVo> deleteASpecifiedWheelMap(Integer status, Integer id) {
+        boolean isSuccess = advertService.deleteASpecifiedWheelMap(id);
         if (isSuccess) {
-            MsgVo message = new MsgVo(200,"修改成功",isSuccess);
+            MsgVo message = new MsgVo(200,"删除成功",true);
             return ResponseEntity.ok(message);
         } else {
-            MsgVo message = new MsgVo(500,"修改失败",isSuccess);
+            MsgVo message = new MsgVo(500,"删除失败",false);
             return ResponseEntity.badRequest().body(message);
         }
     }

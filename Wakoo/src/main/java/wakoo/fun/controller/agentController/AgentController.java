@@ -1,4 +1,4 @@
-package wakoo.fun.controller.AgentController;
+package wakoo.fun.controller.agentController;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -13,22 +13,16 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import wakoo.fun.Vo.MsgVo;
+import wakoo.fun.vo.MsgVo;
 import wakoo.fun.config.PassToken;
 import wakoo.fun.config.UserLoginToken;
-import wakoo.fun.dto.AdvertDto;
-import wakoo.fun.mapper.AgentMapper;
-import wakoo.fun.pojo.Advert;
 import wakoo.fun.pojo.Agent;
 import wakoo.fun.service.AgentService.AgentService;
 import wakoo.fun.service.DistrictService;
 import wakoo.fun.utils.District;
 
 import javax.annotation.Resource;
-import java.text.Collator;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 
 @EnableTransactionManagement//数据库事务管理
@@ -67,7 +61,7 @@ public class AgentController {
     @UserLoginToken
     @PostMapping("/addAgent")
     @Transactional
-    public ResponseEntity<MsgVo> addAgent(@Validated Agent agent, BindingResult result) {
+    public ResponseEntity<MsgVo> addAgent(@Validated @RequestBody Agent agent, BindingResult result) {
         if (result.hasErrors()) {
             String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
             MsgVo response = new MsgVo(403, errorMessage, false);
@@ -148,7 +142,7 @@ public class AgentController {
     @UserLoginToken
     @Transactional
     @PutMapping("/updAgent")
-    public ResponseEntity<?> updAgent(@Validated Agent agent, BindingResult result) {
+    public ResponseEntity<?> updAgent(@Validated @RequestBody Agent agent, BindingResult result) {
         if (result.hasErrors()) {
             String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
             MsgVo response = new MsgVo(403, errorMessage, false);

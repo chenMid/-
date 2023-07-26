@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="wakoo.fun.mapper.AdvertMapper">
     <insert id="addAdver">
-        INSERT INTO advert(advert_name, content, img, status, sort, createtime, updatetime)
-        VALUES (#{avatar.advertName}, #{avatar.content}, #{avatar.img}, #{avatar.status}, #{avatar.sort}, now(), now())
+        INSERT INTO advert(advert_name, content, img, createtime)
+        VALUES (#{avatar.advertName}, #{avatar.content}, #{avatar.img}, now())
     </insert>
     <insert id="addCarousel">
         INSERT INTO carousel (image_url, title, description, link_url, order_number)
@@ -14,17 +14,10 @@
         UPDATE advert
         SET advert_name = #{Advert.advertName},
             content     = #{Advert.content},
-            img         = #{Advert.content},
+            img         = #{Advert.img},
+            sort        = #{Advert.sort},
             updatetime  = NOW()
         WHERE id = #{Advert.id};
-    </update>
-    <update id="updAvateStatus">
-        UPDATE advert
-        <set>
-            <if test="status==1">status=0</if>
-            <if test="status==0">status=1</if>
-        </set>
-        WHERE id=#{id}
     </update>
     <update id="updCaouselVo">
         UPDATE carousel
@@ -47,6 +40,12 @@
     <update id="updCarnumber">
         UPDATE carousel SET order_number=#{orderNumber} WHERE id=#{id}
     </update>
+    <delete id="removeSpecifiedAds">
+        DELETE FROM advert WHERE id=#{id}
+    </delete>
+    <delete id="deleteASpecifiedWheelMap">
+        DELETE FROM carousel WHERE id=#{id}
+    </delete>
     <select id="getAvate" resultType="wakoo.fun.dto.AdvertDto">
         SELECT id,
                advert_name,
@@ -65,7 +64,7 @@
            OR createtime LIKE CONCAT('%', #{keyword}, '%')
            OR updatetime LIKE CONCAT('%', #{keyword}, '%')
     </select>
-    <select id="getIsAvate" resultType="wakoo.fun.Vo.AdvertDtoVo">
+    <select id="getIsAvate" resultType="wakoo.fun.vo.AdvertDtoVo">
         SELECT id, advert_name, content, img, sort
         FROM advert
         WHERE id = #{id}
@@ -74,7 +73,7 @@
         SELECT max(order_number)
         FROM carousel
     </select>
-    <select id="getAllConouselVo" resultType="wakoo.fun.Vo.CarouselVo">
+    <select id="getAllConouselVo" resultType="wakoo.fun.vo.CarouselVo">
         SELECT id,
                image_url,
                title,
@@ -93,7 +92,7 @@
            OR updated_at LIKE CONCAT('%', #{keyword}, '%')
         ORDER BY order_number ASC
     </select>
-    <select id="isCaouselVo" resultType="wakoo.fun.Vo.CarouselVo">
+    <select id="isCaouselVo" resultType="wakoo.fun.vo.CarouselVo">
         SELECT id,
                image_url,
                title,

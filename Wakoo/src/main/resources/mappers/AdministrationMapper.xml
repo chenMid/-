@@ -52,17 +52,17 @@
         SELECT id, name
         FROM agent_management
     </select>
-    <select id="getAdminVo" resultType="wakoo.fun.Vo.AdminVo">
+    <select id="getAdminVo" resultType="wakoo.fun.vo.AdminVo">
         SELECT id userId, username, nickname, email, mobile
         FROM sys_user
         WHERE id = #{id}
     </select>
-    <select id="getAdminVos" resultType="wakoo.fun.Vo.AdminVo">
+    <select id="getAdminVos" resultType="wakoo.fun.vo.AdminVo">
         SELECT id roleName
         FROM sys_role
         WHERE sys_role.id = (SELECT role_id FROM sys_user_role WHERE user_id = #{id})
     </select>
-    <select id="getAdminVoss" resultType="wakoo.fun.Vo.AdminVo">
+    <select id="getAdminVoss" resultType="wakoo.fun.vo.AdminVo">
         SELECT id name
         FROM agent_management
         WHERE id = (SELECT order_id FROM sys_user_role WHERE user_id = #{id})
@@ -86,7 +86,7 @@
         from sys_user
         where id = #{id};
     </select>
-    <select id="getAgentId" resultType="wakoo.fun.Vo.AllId">
+    <select id="getAgentId" resultType="wakoo.fun.vo.AllId">
         SELECT id
         FROM agent_sysrole
         WHERE role_id = (SELECT role_id
@@ -95,7 +95,7 @@
                                   LEFT JOIN sys_role r ON m.role_id = r.id
                          WHERE u.id = #{id})
     </select>
-    <select id="getAdminVosss" resultType="wakoo.fun.Vo.AdminVo">
+    <select id="getAdminVosss" resultType="wakoo.fun.vo.AdminVo">
         SELECT
             id name
         FROM
@@ -109,6 +109,11 @@
                 WHERE
                     user_id = #{id}
             )
+    </select>
+    <select id="getTheStoreUnderTheRole" resultType="java.lang.Integer">
+        select id
+        from agent_sysrole
+        where id = (select order_id from sys_user_role where user_id=#{id})
     </select>
 
     <insert id="isUser" parameterType="wakoo.fun.dto.AdmininistraltionDto" useGeneratedKeys="true" keyProperty="id">

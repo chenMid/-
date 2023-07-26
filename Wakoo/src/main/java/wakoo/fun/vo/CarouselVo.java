@@ -1,13 +1,11 @@
-package wakoo.fun.Vo;
+package wakoo.fun.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
-import wakoo.fun.dto.CarouselVoDto;
 
 import java.util.List;
-import java.util.Map;
 
 @Data
 @AllArgsConstructor

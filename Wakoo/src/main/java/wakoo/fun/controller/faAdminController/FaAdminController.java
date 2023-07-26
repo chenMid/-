@@ -1,14 +1,14 @@
-package wakoo.fun.controller.FaAdminController;
+package wakoo.fun.controller.faAdminController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.bind.annotation.*;
-import wakoo.fun.controller.CaptchaController.getKaptchaImage;
+import wakoo.fun.controller.kaptchaController.getKaptchaImage;
 import wakoo.fun.dto.User;
 import wakoo.fun.pojo.FaAdminLogin;
-import wakoo.fun.Vo.MsgVo;
+import wakoo.fun.vo.MsgVo;
 import wakoo.fun.pojo.FaAdmin;
 import wakoo.fun.service.FaAdminService;
 import wakoo.fun.utils.TokenUtils;

@@ -2,7 +2,7 @@ package wakoo.fun.service.impl;
 
 import org.springframework.stereotype.Service;
 import wakoo.fun.dto.RoleButtonDto;
-import wakoo.fun.Vo.RoleVo;
+import wakoo.fun.dto.RoleGetButonById;
 import wakoo.fun.dto.RoleIdRoleName;
 import wakoo.fun.dto.UpdRoleDto;
 import wakoo.fun.mapper.RoleMapper;
@@ -12,6 +12,8 @@ import wakoo.fun.service.RoleService;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
+
 @Service
 public class RoleServiceImpl implements RoleService {
     @Resource
@@ -23,13 +25,13 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<ButtonPermissions> getButton() {
-        return roleMapper.getButton();
+    public List<ButtonPermissions> getButton(Integer roleId) {
+        return roleMapper.getButton(roleId);
     }
 
     @Override
-    public List<Integer> getButtonById() {
-        return roleMapper.getButtonById();
+    public List<RoleGetButonById> getButtonById(Integer roleId) {
+        return roleMapper.getButtonById(roleId);
     }
 
     @Override
@@ -38,18 +40,18 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Boolean addRole(RoleButtonDto roleButtonDto) {
-        return roleMapper.addRole(roleButtonDto);
+    public Boolean addRole(RoleButtonDto roleButtonDto,String list) {
+        return roleMapper.addRole(roleButtonDto,list);
     }
 
     @Override
-    public Boolean addPermission(List<RoleVo> roleVos, Integer id) {
+    public Boolean addPermission(Integer[] roleVos, Integer id) {
         return roleMapper.addPermission(roleVos, id);
     }
 
     @Override
-    public List<ButtonPermissions> updGetAllPermissions() {
-        return roleMapper.updGetAllPermissions();
+    public List<ButtonPermissions> updGetAllPermissions(Integer id) {
+        return roleMapper.updGetAllPermissions(id);
     }
 
     @Override
@@ -58,7 +60,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Boolean updMessRole(List<UpdRoleDto> updRoleDto) {
+    public Boolean updMessRole(Integer[] updRoleDto) {
         return roleMapper.updMessRole(updRoleDto);
     }
 
@@ -80,6 +82,31 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleIdRoleName getTwoRoleName(Integer roleId) {
         return roleMapper.getTwoRoleName(roleId);
+    }
+
+    @Override
+    public Boolean UpdRoleStatus(Integer roleId) {
+        return roleMapper.UpdRoleStatus(roleId);
+    }
+
+    @Override
+    public Boolean delRole(Integer rid) {
+        return roleMapper.delRole(rid);
+    }
+
+    @Override
+    public String getParentIdById(Integer id) {
+        return roleMapper.getParentIdById(id);
+    }
+
+    @Override
+    public List<Map<String,Boolean>> getButtonRolea(Integer roleId, Integer menuId) {
+        return roleMapper.getButtonRolea(roleId, menuId);
+    }
+
+    @Override
+    public List<Map<String, Boolean>> getTowButton(Integer menuId) {
+        return roleMapper.getTowButton(menuId);
     }
 
 }

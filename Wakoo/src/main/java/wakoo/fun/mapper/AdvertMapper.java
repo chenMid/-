@@ -1,8 +1,8 @@
 package wakoo.fun.mapper;
 
 import org.apache.ibatis.annotations.Param;
-import wakoo.fun.Vo.AdvertDtoVo;
-import wakoo.fun.Vo.CarouselVo;
+import wakoo.fun.vo.AdvertDtoVo;
+import wakoo.fun.vo.CarouselVo;
 import wakoo.fun.dto.AdvertDto;
 import wakoo.fun.pojo.Advert;
 import wakoo.fun.pojo.Carousel;
@@ -36,12 +36,11 @@ public interface AdvertMapper {
     Boolean updAvate(@Param("Advert") AdvertDtoVo advertDtoVo);
 
     /**
-     * 修改广告状态
-     * @param id
-     * @param status
-     * @return
+     * 删除广告
+     * @param id 要删除的id
+     * @return 删除成功返回true！false
      */
-    Boolean updAvateStatus(@Param("id") Integer id, @Param("status") Integer status);
+    Boolean removeSpecifiedAds(@Param("id") Integer id);
 
     /**
      * 添加轮播图
@@ -76,11 +75,10 @@ public interface AdvertMapper {
 
     /**
      * 修改轮播图的状态
-     * @param id
-     * @param status
-     * @return
+     * @param id 轮播图id
+     * @return 成功true！
      */
-    Boolean updCaouselStatus(@Param("id") Integer id, @Param("status") Integer status);
+    Boolean deleteASpecifiedWheelMap(@Param("id") Integer id);
 
     /**
      * 查询所有的顺序

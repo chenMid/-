@@ -1,8 +1,8 @@
 package wakoo.fun.service.impl;
 
 import org.springframework.stereotype.Service;
-import wakoo.fun.Vo.AdvertDtoVo;
-import wakoo.fun.Vo.CarouselVo;
+import wakoo.fun.vo.AdvertDtoVo;
+import wakoo.fun.vo.CarouselVo;
 import wakoo.fun.dto.AdvertDto;
 import wakoo.fun.mapper.AdvertMapper;
 import wakoo.fun.pojo.Advert;
@@ -10,7 +10,6 @@ import wakoo.fun.pojo.Carousel;
 import wakoo.fun.service.AdvertService;
 
 import javax.annotation.Resource;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -39,8 +38,8 @@ public class AdvertServiceImpl implements AdvertService {
     }
 
     @Override
-    public Boolean updAvateStatus(Integer id, Integer status) {
-        return advertMapper.updAvateStatus(id, status);
+    public Boolean removeSpecifiedAds(Integer id) {
+        return advertMapper.removeSpecifiedAds(id);
     }
 
     @Override
@@ -73,8 +72,8 @@ public class AdvertServiceImpl implements AdvertService {
     }
 
     @Override
-    public Boolean updCaouselStatus(Integer id, Integer status) {
-        return advertMapper.updCaouselStatus(id, status);
+    public Boolean deleteASpecifiedWheelMap(Integer id) {
+        return advertMapper.deleteASpecifiedWheelMap(id);
     }
 
     @Override
@@ -91,4 +90,5 @@ public class AdvertServiceImpl implements AdvertService {
     public Boolean updCarnumber(Integer id, Integer orderNumber) {
         return advertMapper.updCarnumber(id, orderNumber);
     }
+
 }

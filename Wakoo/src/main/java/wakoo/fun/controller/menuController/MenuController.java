@@ -1,4 +1,4 @@
-package wakoo.fun.controller.MenuController;
+package wakoo.fun.controller.menuController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wakoo.fun.config.UserLoginToken;
-import wakoo.fun.Vo.MsgVo;
+import wakoo.fun.vo.MsgVo;
 import wakoo.fun.pojo.SysMenu;
 import wakoo.fun.pojo.SysRole;
 import wakoo.fun.service.MenuService;
@@ -36,6 +36,7 @@ public class MenuController {
     @PostMapping("/menu")
     public MsgVo menu(HttpServletRequest request) {
         Object userId = request.getAttribute("userId");
+        System.out.println(userId);
         List<SysMenu> menu = menuService.getMenu((Integer) userId);
         List<SysMenu> menuList = new MenuTree(menu).buildTree();
         Map<String, Object> map = new HashMap<>();

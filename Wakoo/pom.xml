@@ -111,6 +111,12 @@
             <artifactId>qiniu-java-sdk</artifactId>
             <version>7.3.0</version>
         </dependency>
+        <dependency>
+            <groupId>ws.schild</groupId>
+            <artifactId>jave-all-deps</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+
 
         <!-- 通用编解码库 -->
         <dependency>

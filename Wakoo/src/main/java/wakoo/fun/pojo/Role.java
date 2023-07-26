@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Role {
     private Integer id,rid;
-    private String roleCode,roleName,description,status,createTime,updateTime;
+    private String roleCode,roleName,status,createTime,updateTime;
 }

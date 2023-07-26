@@ -1,14 +1,16 @@
 package wakoo.fun.service;
 
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 import wakoo.fun.dto.RoleButtonDto;
-import wakoo.fun.Vo.RoleVo;
+import wakoo.fun.dto.RoleGetButonById;
 import wakoo.fun.dto.RoleIdRoleName;
 import wakoo.fun.dto.UpdRoleDto;
 import wakoo.fun.pojo.ButtonPermissions;
 import wakoo.fun.pojo.Role;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RoleService {
     /**
@@ -20,26 +22,26 @@ public interface RoleService {
      * 查询按钮
      * @return
      */
-    List<ButtonPermissions> getButton();
-    List<Integer> getButtonById();
+    List<ButtonPermissions> getButton(Integer roleId);
+    List<RoleGetButonById> getButtonById(Integer roleId);
     List<Integer> getOneByid();
 
     /**
      * 添加角色
      * @return
      */
-    Boolean addRole(RoleButtonDto roleButtonDto);
+    Boolean addRole(RoleButtonDto roleButtonDto,String list);
     /**
      * 插入多条语句
      * @param roleVos
      * @return
      */
-    Boolean addPermission(@Param("roleVos") List<RoleVo> roleVos, @Param("id") Integer id);
+    Boolean addPermission(@Param("roleVos") Integer[] roleVos, @Param("id") Integer id);
     /**
      * 查询所有菜单并显示
      * @return
      */
-    List<ButtonPermissions> updGetAllPermissions();
+    List<ButtonPermissions> updGetAllPermissions(Integer id);
     /**
      * 修改角色信息
      * @return
@@ -50,7 +52,7 @@ public interface RoleService {
      * @param updRoleDto
      * @return
      */
-    Boolean updMessRole(@Param("role") List<UpdRoleDto> updRoleDto);
+    Boolean updMessRole(@Param("role") Integer[] updRoleDto);
     /**
      * 查询这个角色下有没有用户
      * @param id
@@ -74,5 +76,25 @@ public interface RoleService {
      * @return
      */
     RoleIdRoleName getTwoRoleName(@Param("roleId") Integer roleId);
-
+    /**
+     * 修改状态
+     * @return
+     */
+    Boolean UpdRoleStatus(Integer roleId);
+    /**删除
+     *
+     */
+    Boolean delRole(@Param("idList") Integer rid);
+    /**
+     * 通过子类id查询父类及子类
+     */
+    String getParentIdById(Integer id);
+    /**
+     * 查询按钮状态
+     * @return
+     */
+    @MapKey("buttonName")
+    List<Map<String,Boolean>> getButtonRolea(@Param("roleId") Integer roleId, @Param("menuId") Integer menuId);
+    @MapKey("twoName")
+    List<Map<String,Boolean>> getTowButton(@Param("menuId") Integer menuId);
 }

@@ -1,4 +1,4 @@
-package wakoo.fun.controller.CategoryController;
+package wakoo.fun.controller.categoryController;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -9,9 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.*;
-import wakoo.fun.Vo.MsgVo;
+import wakoo.fun.vo.MsgVo;
 import wakoo.fun.config.UserLoginToken;
-import wakoo.fun.dto.AdminAdministraltion;
 import wakoo.fun.pojo.Category;
 import wakoo.fun.service.CategoryService.CategoryService;
 import wakoo.fun.utils.QiniuUtils;
@@ -39,7 +38,7 @@ public class CategoryController {
     @ApiOperation(value = "添加父类")
     @UserLoginToken
     @PostMapping("/addCategory")
-    public ResponseEntity<MsgVo> addCategory(Category category) {
+    public ResponseEntity<MsgVo> addCategory(@RequestBody Category category) {
         try {
             // 上传到七牛云
             MsgVo msgVo = QiniuUtils.uploadAvatar(category.getFile(), accessKey, secretKey, bucketName);
@@ -89,7 +88,7 @@ public class CategoryController {
     @ApiOperation(value = "修改父类信息")
     @UserLoginToken
     @PutMapping("/updCategory")
-    public ResponseEntity<MsgVo> updCategory(Category category) throws IOException {
+    public ResponseEntity<MsgVo> updCategory(@RequestBody Category category) throws IOException {
         try {
             MsgVo msgVo = QiniuUtils.uploadAvatar(category.getFile(), accessKey, secretKey, bucketName);
             if (msgVo.getCode() == 200) {

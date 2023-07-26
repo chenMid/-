@@ -15,6 +15,7 @@ public class ButtonPermissions<T> implements TreeNode{
     private String id;
     private String label;
     private String pid;
+    private String ppid;
     private Integer enabled;
     private Integer type;
     private List<? extends Object> children;

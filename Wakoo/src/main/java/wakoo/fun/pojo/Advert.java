@@ -21,6 +21,4 @@ public class Advert {
     @NotBlank(message = "广告简介不能为空")
     private String content;
     private String img, createtime, updatetime;
-    @NotNull(message = "图片不能为空")
-    private MultipartFile file;
 }
