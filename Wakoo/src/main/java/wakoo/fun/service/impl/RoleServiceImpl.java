@@ -109,4 +109,9 @@ public class RoleServiceImpl implements RoleService {
         return roleMapper.getTowButton(menuId);
     }
 
+    @Override
+    public Boolean exampleQueryWhetherARoleIsDisplayed(Integer id) {
+        return roleMapper.exampleQueryWhetherARoleIsDisplayed(id) > 0;
+    }
+
 }

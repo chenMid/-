@@ -10,6 +10,9 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author 轮播图实体类
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,8 +20,6 @@ public class Carousel {
     private Integer id;
 
     private Integer orderNumber;
-
-    private Integer isActive;
     @NotNull(message = "标题不能为空")
     private String title;
 
@@ -27,7 +28,4 @@ public class Carousel {
     private String description;
 
     private String linkUrl;
-
-    @NotNull(message = "图片不能为空")
-    private MultipartFile file;
 }

@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/Wakoo/src/main/resources/mappers/AdministrationMapper.xml" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/Wakoo/src/main/resources/mappers/AdvertMapper.xml" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/Wakoo/src/main/resources/mappers/AgentMapper.xml" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/Wakoo/src/main/resources/mappers/CategoryMapper.xml" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/Wakoo/src/main/resources/mappers/DistrictMapper.xml" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/Wakoo/src/main/resources/mappers/FaAdminMapper.xml" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/Wakoo/src/main/resources/mappers/OrdersMapper.xml" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/Wakoo/src/main/resources/mappers/RoleMapper.xml" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/Wakoo/src/main/resources/mappers/SubclassMapper.xml" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/Wakoo/src/main/resources/mappers/VideosMapper.xml" dialect="GenericSQL" />
   </component>

@@ -79,7 +79,7 @@ public class PersonalCenterController {
     @Transactional
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @PostMapping("/addAvatar")
-    public ResponseEntity<MsgVo> addAvatar(@Validated @ModelAttribute Advert avatar, BindingResult result) throws IOException {
+    public ResponseEntity<MsgVo> addAvatar(@Validated @RequestBody Advert avatar, BindingResult result) throws IOException {
         try {
             if (result.hasErrors()) {
                 String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
@@ -208,11 +208,6 @@ public class PersonalCenterController {
             }
             Integer orderNumber = advertService.getOrderNumber();
             carousel.setOrderNumber(orderNumber+1);
-            // 上传轮播图图片到七牛云
-            MsgVo msgVo = QiniuUtils.uploadAvatar(carousel.getFile(), accessKey, secretKey, bucketName);
-            String imageUrl = (String) msgVo.getData();
-            carousel.setImageUrl(imageUrl);
-
             // 添加轮播图
             Boolean isSuccess = advertService.addCarousel(carousel);
 
@@ -235,12 +230,6 @@ public class PersonalCenterController {
     @GetMapping("/getAllCarousel")
     public ResponseEntity<MsgVo> getAllCarousel(String keyword, Integer pageSize, Integer pageNumber) {
         try {
-            if (pageSize == null || pageSize <= 0) {
-                pageSize = 10; // 默认每页显示10条数据
-            }
-            if (pageNumber == null || pageNumber <= 0) {
-                pageNumber = 1; // 默认显示第一页
-            }
 
             PageHelper.startPage(pageNumber, pageSize);
             List<CarouselVo> allConouselVo = advertService.getAllConouselVo(keyword);
@@ -254,8 +243,12 @@ public class PersonalCenterController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MsgVo(500, "服务器错误", null));
         }
     }
-
-
+    @ApiOperation(value = "获取顺序")
+    @UserLoginToken
+    @GetMapping("/fetchSequence")
+    public ResponseEntity<MsgVo> fetchSequence(){
+        return ResponseEntity.ok(new MsgVo(200,"请求成功",advertService.listIntegerGetCa()));
+    }
     @ApiOperation(value = "查询指定轮播图")
     @UserLoginToken
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
@@ -276,7 +269,7 @@ public class PersonalCenterController {
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @PutMapping("/updCarousel")
     public ResponseEntity<MsgVo> updCarousel(@Validated @RequestBody Carousel carousel,BindingResult result) {
-        try {
+//        try {
             if (result.hasErrors()) {
                 String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
                 MsgVo response = new MsgVo(403, errorMessage, false);
@@ -284,12 +277,9 @@ public class PersonalCenterController {
             }
             Carousel carById = advertService.getCarById(carousel.getId());
             Carousel numberById = advertService.getNumberById(carousel.getOrderNumber());
-            if (!carById.getOrderNumber().equals(numberById.getOrderNumber())){
+        if (numberById != null && !carById.getOrderNumber().equals(numberById.getOrderNumber())){
                 Boolean aBoolean = advertService.updCarnumber(numberById.getId(), carById.getOrderNumber());
-                System.out.println(aBoolean);
             }
-            MsgVo msgVo = QiniuUtils.uploadAvatar(carousel.getFile(), accessKey, secretKey, bucketName);
-            carousel.setImageUrl((String) msgVo.getData());
             Boolean aBoolean = advertService.updCaouselVo(carousel);
             // 根据返回结果判断是否更新成功
             if (aBoolean) {
@@ -299,13 +289,13 @@ public class PersonalCenterController {
                 // 更新失败
                 return ResponseEntity.ok(new MsgVo(500, "更新失败", false));
             }
-        } catch (Exception e) {
-            // 出现异常，返回错误消息
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MsgVo(500, "服务器错误", false));
-        }
+//        } catch (Exception e) {
+//            // 出现异常，返回错误消息
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MsgVo(500, "服务器错误", false));
+//        }
     }
 
-    @ApiOperation(value = "修改状态轮播图")
+    @ApiOperation(value = "删除轮播图")
     @UserLoginToken
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @DeleteMapping("/deleteASpecifiedWheelMap")

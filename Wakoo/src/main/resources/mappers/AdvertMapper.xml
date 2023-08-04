@@ -6,9 +6,9 @@
         VALUES (#{avatar.advertName}, #{avatar.content}, #{avatar.img}, now())
     </insert>
     <insert id="addCarousel">
-        INSERT INTO carousel (image_url, title, description, link_url, order_number)
-        VALUES (#{carousel.imageUrl}, #{carousel.title}, #{carousel.description}, #{carousel.linkUrl},
-                #{carousel.orderNumber});
+        INSERT INTO carousel (image_url, title, description, order_number, created_at)
+        VALUES (#{carousel.imageUrl}, #{carousel.title}, #{carousel.description},
+                #{carousel.orderNumber}, NOW());
     </insert>
     <update id="updAvate">
         UPDATE advert
@@ -24,9 +24,7 @@
         SET image_url=#{carousel.imageUrl},
             title=#{carousel.title},
             description=#{carousel.description},
-            link_url=#{carousel.linkUrl},
-            order_number=#{carousel.orderNumber},
-            is_active=#{carousel.isActive}
+            order_number=#{carousel.orderNumber}
         WHERE id = #{carousel.id};
     </update>
     <update id="updCaouselStatus">
@@ -38,13 +36,19 @@
         WHERE id=#{id}
     </update>
     <update id="updCarnumber">
-        UPDATE carousel SET order_number=#{orderNumber} WHERE id=#{id}
+        UPDATE carousel
+        SET order_number=#{orderNumber}
+        WHERE id = #{id}
     </update>
     <delete id="removeSpecifiedAds">
-        DELETE FROM advert WHERE id=#{id}
+        DELETE
+        FROM advert
+        WHERE id = #{id}
     </delete>
     <delete id="deleteASpecifiedWheelMap">
-        DELETE FROM carousel WHERE id=#{id}
+        DELETE
+        FROM carousel
+        WHERE id = #{id}
     </delete>
     <select id="getAvate" resultType="wakoo.fun.dto.AdvertDto">
         SELECT id,
@@ -81,7 +85,8 @@
                link_url,
                order_number,
                is_active,
-               updated_at
+               updated_at,
+               created_at
         FROM carousel
         where image_url LIKE CONCAT('%', #{keyword}, '%')
            OR title LIKE CONCAT('%', #{keyword}, '%')
@@ -90,6 +95,7 @@
            OR order_number LIKE CONCAT('%', #{keyword}, '%')
            OR is_active LIKE CONCAT('%', #{keyword}, '%')
            OR updated_at LIKE CONCAT('%', #{keyword}, '%')
+           OR created_at LIKE CONCAT('%', #{keyword}, '%')
         ORDER BY order_number ASC
     </select>
     <select id="isCaouselVo" resultType="wakoo.fun.vo.CarouselVo">
@@ -105,12 +111,18 @@
         WHERE id = #{id}
     </select>
     <select id="listIntegerGetCa" resultType="java.lang.Integer">
-        SELECT order_number FROM carousel ORDER BY order_number
+        SELECT order_number
+        FROM carousel
+        ORDER BY order_number
     </select>
     <select id="getCarById" resultType="wakoo.fun.pojo.Carousel">
-        SELECT order_number FROM carousel WHERE id=#{id}
+        SELECT order_number
+        FROM carousel
+        WHERE id = #{id}
     </select>
     <select id="getNumberById" resultType="wakoo.fun.pojo.Carousel">
-        SELECT id,order_number FROM carousel WHERE order_number=#{orderNumber}
+        SELECT id, order_number
+        FROM carousel
+        WHERE order_number = #{orderNumber}
     </select>
 </mapper>

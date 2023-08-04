@@ -1,34 +1,37 @@
 package wakoo.fun.mapper;
 
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
+import sun.management.resources.agent;
 import wakoo.fun.vo.AdminVo;
 import wakoo.fun.vo.AllId;
 import wakoo.fun.dto.*;
 import wakoo.fun.pojo.FaAdmin;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AdministrationMapper {
     /**
      * 查询管理员管理页面
      * @return
      */
-    List<AdminAdministraltion> getAllAdministraltion(@Param("keyword") String keyword);
+    List<AdminAdministraltion> getAllAdministraltion(@Param("keyword") String keyword, @Param("userId") Integer userId, @Param("isnull") Integer isnull);
     /**
      *  查询管理员管理页面的角色
      * @return
      */
-    List<RoleDto> getRole();
+    List<RoleDto> getRole(Integer userId);
     /**
      * 获取代理下拉框
      * @return
      */
-    List<OrderQuantity> getOrderQ();
+    List<OrderQuantity> getOrderQ(@Param("id") Integer id, @Param("role") Integer role);
     /**
      * 添加用户
      * @return
      */
-    Boolean isUser(@Param("AdminDto") AdmininistraltionDto AdminDto);
+    Boolean isUser(@Param("AdminDto") AdmininistraltionDto admininistraltionDto);
 
     /**
      * 判断用户邮箱手机号是否重复
@@ -47,10 +50,9 @@ public interface AdministrationMapper {
      * 添加关系表信息
      * @param uid
      * @param rid
-     * @param oid
      * @return
      */
-    Boolean isUserRoleOrder(@Param("uid") Integer uid, @Param("rid") Integer rid, @Param("oid") Integer oid);
+    Boolean isUserRoleOrder(@Param("uid") Integer uid, @Param("rid") Integer rid);
 
     /**
      * 修改用户状态
@@ -108,8 +110,84 @@ public interface AdministrationMapper {
 
     /**
      * 获取门店
+     * @return
+     */
+    List<Integer> getTheStoreUnderTheRole();
+
+    /**
+     * 获取角色的id
+     * @param userId 指定user的id
+     * @return 返回role-id
+     */
+    Integer getsTheIdOfTheRole(Integer userId);
+
+    /**
+     *  获取您的帐户ID
+     * @param userId id
+     * @return 返回字符串
+     */
+    String getYourAccountID(Integer userId);
+
+    /**
+     * 修改权限显示
+     * @param userId id
+     * @return 返回true
+     */
+    Boolean modifyDisplayUser(@Param("userId") Integer userId, @Param("affiliatedId") String affiliatedId);
+
+    /**
+     * 查询角色id权限
+     * @param userId
+     * @return
+     */
+    Integer exampleQueryTheIdPermissionOfARole(@Param("userId") Integer userId);
+
+    /**
+     * 过去角色id
+     * @param userId
+     * @return
+     */
+    Integer getTheRoleId(Integer userId);
+
+    /**
+     * 验证角色id
+     * @param userId
+     * @return
+     */
+    Integer GetTheRoleId(Integer userId);
+
+    /**
+     * 查询指定用户的人
      * @param id
      * @return
      */
-    Integer getTheStoreUnderTheRole(Integer id);
+    @MapKey("key")
+    Map<String,Map<Integer, String>> getAllAgent(Integer id);
+
+    /**
+     * 查询所有指定权限用户
+     * @return
+     */
+    @MapKey("Order")
+    List<Map<String,String>> getsAllUsersWithSpecifiedPermissions(@Param("role") Integer role, @Param("ids") Integer ids);
+
+    /**
+     * 如果是开发者或总部调用该方法
+     * @return 返回查询到的普通人
+     */
+    @MapKey("order")
+    List<Map<String,String>> getEveryoneWhoDoesnTHaveAnAccount();
+
+    /**
+     * 查询跟登录账号有关的未被分配的人
+     * @param userId
+     * @return
+     */
+    @MapKey("order")
+    List<Map<String,String>> SearchrdinaryeoplAgent(Integer userId);
+    /**
+     * 查询没有账号的人包括自己
+     */
+    @MapKey("order")
+    List<Map<String,String>>getNoUserperson(Integer id);
 }

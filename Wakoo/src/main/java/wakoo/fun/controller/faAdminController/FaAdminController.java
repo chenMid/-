@@ -35,7 +35,7 @@ public class FaAdminController {
         try {
             String captchaSession = asd.getCaptchaSession(request);
             System.out.println(captchaSession);
-            if (!user.getCaptchaImage().equals(captchaSession)) {
+            if (!captchaSession.equalsIgnoreCase(user.getCaptchaImage())) {
                 return new MsgVo(403, "验证码错误，请重新输入", null);
             }
 

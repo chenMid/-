@@ -97,4 +97,11 @@ public interface RoleService {
     List<Map<String,Boolean>> getButtonRolea(@Param("roleId") Integer roleId, @Param("menuId") Integer menuId);
     @MapKey("twoName")
     List<Map<String,Boolean>> getTowButton(@Param("menuId") Integer menuId);
+
+    /**
+     * 查询是否含有角色
+     * @param id
+     * @return
+     */
+    Boolean exampleQueryWhetherARoleIsDisplayed(Integer id);
 }

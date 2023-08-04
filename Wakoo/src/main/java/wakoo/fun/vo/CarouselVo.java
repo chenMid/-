@@ -7,12 +7,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+/**
+ * @author HASEE
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CarouselVo {
-    private Integer id,isActive;
-    private List<Integer> orderNumber;
-    private String imageUrl,title,description,linkUrl;
-    private MultipartFile file;
+    private Integer id;
+    private Integer orderNumber;
+    private String imageUrl,title,description;
+    private String createdAt;
+    private String updatedAt;
 }

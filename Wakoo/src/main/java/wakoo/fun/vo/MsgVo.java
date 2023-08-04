@@ -1,5 +1,6 @@
 package wakoo.fun.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import wakoo.fun.utils.MsgUtils;

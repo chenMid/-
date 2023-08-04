@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import wakoo.fun.config.PassToken;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +27,7 @@ import java.awt.image.BufferedImage;
 @Api(tags = "Admin")
 public class getKaptchaImage {
 
-    @Autowired
+    @Resource
     private Producer captchaProducer;
 
     String Kap = "";
@@ -43,7 +44,6 @@ public class getKaptchaImage {
 
         // Set IE extended HTTP/1.1 no-cache headers (use addHeader).
         response.addHeader("Cache-Control", "post-check=0, pre-check=0");
-
         // Set standard HTTP/1.0 no-cache header.
         response.setHeader("Pragma", "no-cache");
 

@@ -88,4 +88,10 @@ public interface AdvertService {
      * @return
      */
     Boolean updCarnumber(Integer id,Integer orderNumber);
+    /**
+     * 查询所有的顺序
+     * @return
+     */
+    List<Integer> listIntegerGetCa();
+
 }

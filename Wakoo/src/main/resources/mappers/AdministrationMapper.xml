@@ -2,55 +2,58 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="wakoo.fun.mapper.AdministrationMapper">
     <select id="getAllAdministraltion" resultType="wakoo.fun.dto.AdminAdministraltion">
-        SELECT u.id,
-               u.username,
-               u.nickname,
-               COALESCE(o.name, o2.name) AS name,
-               u.email,
-               u.mobile,
-               u.status,
-               u.logintime,
-               r.role_name AS roleName
-        FROM sys_user_role m
-                 LEFT JOIN sys_user u ON u.id = m.user_id
-                 LEFT JOIN sys_role r ON m.role_id = r.id
-                 LEFT JOIN agent_management o ON o.id = m.order_id
-                 LEFT JOIN agent_sysrole o2 ON o2.id = m.role_id
-        WHERE u.username IS NOT NULL
-          AND u.username != '' AND
-    (
-      u.username LIKE CONCAT('%', #{keyword}
-            , '%')
-           OR
-            u.nickname LIKE CONCAT('%'
-            , #{keyword}
-            , '%')
-           OR
-            r.role_name LIKE CONCAT('%'
-            , #{keyword}
-            , '%')
-           OR
-            o.name LIKE CONCAT('%'
-            , #{keyword}
-            , '%')
-           OR
-            u.email LIKE CONCAT('%'
-            , #{keyword}
-            , '%')
-           OR
-            u.mobile LIKE CONCAT('%'
-            , #{keyword}
-            , '%')
-            )
-        ORDER BY u.status, u.id
+        SELECT sr.id,
+               sr.username,
+               sr.nickname,
+               sr.email,
+               se.role_name,
+               se.id AS agent_id,
+               CASE
+                   WHEN sr.campus_id = '*' THEN '开发者'
+                   WHEN sr.campus_id = '**' THEN '总部'
+                   ELSE am.name
+                   END AS name,
+               sr.mobile,
+               sr.status,
+               sr.logintime
+        FROM sys_user sr
+                 LEFT JOIN agent_management AS am ON FIND_IN_SET(am.id, sr.campus_id) > 0
+                 INNER JOIN sys_user_role sur ON sur.user_id = sr.id
+                 INNER JOIN sys_role se ON sur.role_id = se.id
+        WHERE (sr.agent_id = (SELECT agent_id FROM sys_user WHERE id = #{userId})
+            OR (SELECT agent_id FROM sys_user WHERE id = #{userId}) = '*'
+            OR (SELECT agent_id FROM sys_user WHERE id = #{userId}) = '**')
+          AND sr.status = 1
+          AND (sr.id = #{isnull} OR #{isnull} IS NULL)
+            AND (sr.username LIKE CONCAT('%', #{keyword}, '%')
+                OR sr.nickname LIKE CONCAT('%', #{keyword}, '%')
+                OR sr.email LIKE CONCAT('%', #{keyword}, '%')
+                OR sr.mobile LIKE CONCAT('%', #{keyword}, '%')
+                OR sr.logintime LIKE CONCAT('%', #{keyword}, '%'))
+        GROUP BY sr.id
     </select>
     <select id="getRole" resultType="wakoo.fun.dto.RoleDto">
-        SELECT id, role_name roleName
+        SELECT id, role_name
         FROM sys_role
+        WHERE rid >= (SELECT rid FROM sys_role WHERE id = (SELECT role_id FROM sys_user_role WHERE user_id = #{userId})
+        )
     </select>
     <select id="getOrderQ" resultType="wakoo.fun.dto.OrderQuantity">
-        SELECT id, name
+        SELECT id, `name`
         FROM agent_management
+        WHERE id IN (
+            SELECT campus_id
+            FROM sys_user
+            WHERE id in (SELECT user_id
+                         FROM sys_user_role
+                         WHERE user_id IN (SELECT id
+                                           FROM sys_user
+                                           WHERE agent_id IN (SELECT agent_id FROM sys_user WHERE id = #{id}))
+                           AND role_id = #{role}
+            )
+        )
+           OR (SELECT agent_id FROM sys_user WHERE id = #{id}) = '*'
+           OR (SELECT agent_id FROM sys_user WHERE id = #{id}) = '**'
     </select>
     <select id="getAdminVo" resultType="wakoo.fun.vo.AdminVo">
         SELECT id userId, username, nickname, email, mobile
@@ -96,35 +99,98 @@
                          WHERE u.id = #{id})
     </select>
     <select id="getAdminVosss" resultType="wakoo.fun.vo.AdminVo">
-        SELECT
-            id name
-        FROM
-            agent_sysrole
-        WHERE
-                role_id = (
-                SELECT
-                    role_id
-                FROM
-                    sys_user_role
-                WHERE
-                    user_id = #{id}
-            )
+        SELECT id name
+        FROM agent_sysrole
+        WHERE role_id = (
+            SELECT role_id
+            FROM sys_user_role
+            WHERE user_id = #{id}
+        )
     </select>
     <select id="getTheStoreUnderTheRole" resultType="java.lang.Integer">
-        select id
-        from agent_sysrole
-        where id = (select order_id from sys_user_role where user_id=#{id})
+        SELECT id
+        FROM sys_role
+        WHERE id = #{roleId}
+    </select>
+    <select id="getsTheIdOfTheRole" resultType="java.lang.Integer">
+        SELECT role_id
+        FROM sys_user_role
+        WHERE user_id = #{userId}
+    </select>
+    <select id="getYourAccountID" resultType="java.lang.String">
+        SELECT affiliated_id
+        FROM sys_user_role
+        WHERE user_id = #{userId}
+    </select>
+    <select id="exampleQueryTheIdPermissionOfARole" resultType="java.lang.Integer">
+        SELECT role_id
+        FROM sys_user_role
+        WHERE user_id = #{userId}
+    </select>
+    <select id="getTheRoleId" resultType="java.lang.Integer">
+        SELECT campus_id
+        FROM sys_user
+        WHERE id = #{userId}
+    </select>
+    <select id="GetTheRoleId" resultType="java.lang.Integer">
+        SELECT rid
+        FROM sys_role
+        WHERE id = #{userId}
+    </select>
+    <select id="getAllAgent" resultType="java.util.Map">
+        SELECT id, `name`
+        FROM agent_management
+        WHERE id in
+              (SELECT campus_id FROM sys_user WHERE id IN (SELECT user_id FROM sys_user_role WHERE role_id = #{id}))
+    </select>
+    <select id="getsAllUsersWithSpecifiedPermissions" resultType="java.util.Map">
+        SELECT DISTINCT am.id, am.name, sr.id AS roleId
+        FROM agent_management am
+                 INNER JOIN sys_user su ON am.id = su.campus_id
+                 INNER JOIN sys_user_role sur ON su.id = sur.user_id
+                 INNER JOIN sys_role sr ON sr.id = sur.role_id
+        WHERE am.id IN (
+            SELECT campus_id
+            FROM sys_user
+            WHERE id IN (
+                SELECT user_id
+                FROM sys_user_role
+                WHERE role_id = #{role} OR role_id = #{ids}
+            )
+        )
+    </select>
+    <select id="getEveryoneWhoDoesnTHaveAnAccount" resultType="java.util.Map">
+        SELECT id,`name` FROM agent_management WHERE id not in(SELECT campus_id FROM sys_user)
+    </select>
+    <select id="SearchrdinaryeoplAgent" resultType="java.util.Map">
+        SELECT id,`name`
+        FROM agent_management
+        WHERE user_id IN (
+            SELECT id
+            FROM sys_user
+            WHERE agent_id = (SELECT agent_id FROM sys_user WHERE id = #{userId})
+        ) AND id NOT IN (SELECT campus_id FROM sys_user WHERE agent_id=(SELECT agent_id FROM sys_user WHERE id=#{userId}))
+    </select>
+    <select id="getNoUserperson" resultType="java.util.Map">
+        SELECT id,`name`
+        FROM agent_management
+        WHERE user_id IN (
+            SELECT id
+            FROM sys_user
+            WHERE agent_id = (SELECT agent_id FROM sys_user WHERE id = #{id})
+        )
     </select>
 
     <insert id="isUser" parameterType="wakoo.fun.dto.AdmininistraltionDto" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO sys_user(username, nickname, password, email, campus_id, mobile, createtime)
+        INSERT INTO sys_user(username, nickname, password, email, campus_id, agent_id, mobile, createtime)
         VALUES (#{AdminDto.username}, #{AdminDto.nickname}, #{AdminDto.password}, #{AdminDto.email}, #{AdminDto.name},
+                #{AdminDto.agentId},
                 #{AdminDto.mobile}, now())
     </insert>
 
     <insert id="isUserRoleOrder">
-        INSERT INTO sys_user_role(user_id, role_id, order_id)
-        VALUES (#{uid}, #{rid}, #{oid})
+        INSERT INTO sys_user_role(user_id, role_id)
+        VALUES (#{uid}, #{rid})
     </insert>
 
     <update id="UpdStatus">
@@ -137,8 +203,7 @@
     </update>
     <update id="updUserRole">
         UPDATE sys_user_role
-        SET role_id=#{uAdmin.roleName},
-            order_id=#{uAdmin.name}
+        SET role_id=#{uAdmin.roleName}
         WHERE user_id = #{uAdmin.userId}
     </update>
     <update id="updAdminUser">
@@ -156,7 +221,14 @@
         WHERE id = #{userId}
     </update>
     <update id="updAOder">
-        UPDATE sys_user_role SET order_id=#{id} WHERE user_id=#{userId}
+        UPDATE sys_user_role
+        SET order_id=#{id}
+        WHERE user_id = #{userId}
+    </update>
+    <update id="modifyDisplayUser">
+        update sys_user_role
+        set affiliated_id=#{affiliatedId}
+        where user_id = #{userId};
     </update>
 
 </mapper>

@@ -13,6 +13,7 @@ public class AdmininistraltionDto {
     @NotBlank(message = "用户名不能为空")
     private String nickname;
     private String password,createtime;
+    private String agentId;
     @NotNull(message = "手机号不能为空")
     @NotBlank(message = "手机号不能为空")
     @Pattern(regexp = "^(?:(?:\\+|00)86)?1[3-9]\\d{9}$", message = "手机号格式有误")
@@ -23,6 +24,6 @@ public class AdmininistraltionDto {
     @NotBlank(message = "邮箱不能为空")
     @Pattern(regexp = "^(?:\\w+@(?:qq|163)\\.com)$", message = "邮箱格式错误")
     private String email;
-    private Integer roleName;
-    private Integer name,id;
+    private Integer roleName,id;
+    private Object name;
 }

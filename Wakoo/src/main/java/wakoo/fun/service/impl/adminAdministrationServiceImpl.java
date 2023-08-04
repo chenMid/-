@@ -1,5 +1,6 @@
 package wakoo.fun.service.impl;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import wakoo.fun.vo.AdminVo;
 import wakoo.fun.vo.AllId;
@@ -10,6 +11,8 @@ import wakoo.fun.service.AdminAdministrationService;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
+
 @Service
 public class adminAdministrationServiceImpl implements AdminAdministrationService {
     @Resource
@@ -20,8 +23,8 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
      * @return
      */
     @Override
-    public List<AdminAdministraltion> getAllAdministraltion(String keyword) {
-        return adminAdministration.getAllAdministraltion(keyword);
+    public List<AdminAdministraltion> getAllAdministraltion(String keyword,Integer userId,Integer isnull) {
+        return adminAdministration.getAllAdministraltion(keyword,userId,isnull);
     }
 
     /**
@@ -29,8 +32,8 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
      * @return
      */
     @Override
-    public List<RoleDto> getRole() {
-        return adminAdministration.getRole();
+    public List<RoleDto> getRole(Integer userId) {
+        return adminAdministration.getRole(userId);
     }
 
     /**
@@ -38,8 +41,8 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
      * @return
      */
     @Override
-    public List<OrderQuantity> getOrderQ() {
-        return adminAdministration.getOrderQ();
+    public List<OrderQuantity> getOrderQ(Integer id,Integer role) {
+        return adminAdministration.getOrderQ(id,role);
     }
 
     /**
@@ -65,12 +68,11 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
      * 添加关系
      * @param uid
      * @param rid
-     * @param oid
      * @return
      */
     @Override
-    public Boolean isUserRoleOrder(Integer uid, Integer rid, Integer oid) {
-        return adminAdministration.isUserRoleOrder(uid, rid, oid);
+    public Boolean isUserRoleOrder(Integer uid, Integer rid) {
+        return adminAdministration.isUserRoleOrder(uid, rid);
     }
 
     @Override
@@ -128,8 +130,62 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
     }
 
     @Override
-    public Boolean getTheStoreUnderTheRole(Integer id) {
-        Integer theStoreUnderTheRole = adminAdministration.getTheStoreUnderTheRole(id);
-        return theStoreUnderTheRole != null && theStoreUnderTheRole > 0;
+    public List<Integer> getTheStoreUnderTheRole() {
+        return adminAdministration.getTheStoreUnderTheRole();
+    }
+
+    @Override
+    public Integer getsTheIdOfTheRole(Integer userId) {
+        return adminAdministration.getsTheIdOfTheRole(userId);
+    }
+
+    @Override
+    public String getYourAccountID(Integer userId) {
+        return adminAdministration.getYourAccountID(userId);
+    }
+
+    @Override
+    public Boolean modifyDisplayUser(Integer userId, String affiliatedId) {
+        return adminAdministration.modifyDisplayUser(userId, affiliatedId);
+    }
+
+    @Override
+    public Integer exampleQueryTheIdPermissionOfARole(Integer userId) {
+        return adminAdministration.exampleQueryTheIdPermissionOfARole(userId);
+    }
+
+    @Override
+    public Integer getTheRoleId(Integer userId) {
+        return adminAdministration.getTheRoleId(userId);
+    }
+
+    @Override
+    public Integer GetTheRoleId(Integer userId) {
+        return adminAdministration.GetTheRoleId(userId);
+    }
+
+    @Override
+    public  Map<String,Map<Integer, String>> getAllAgent(Integer id) {
+        return adminAdministration.getAllAgent(id);
+    }
+
+    @Override
+    public  List<Map<String,String>>getsAllUsersWithSpecifiedPermissions(Integer role,Integer ids) {
+        return adminAdministration.getsAllUsersWithSpecifiedPermissions(role,ids);
+    }
+
+    @Override
+    public List<Map<String, String>> getEveryoneWhoDoesnTHaveAnAccount() {
+        return adminAdministration.getEveryoneWhoDoesnTHaveAnAccount();
+    }
+
+    @Override
+    public List<Map<String, String>> SearchrdinaryeoplAgent(Integer userId) {
+        return adminAdministration.SearchrdinaryeoplAgent(userId);
+    }
+
+    @Override
+    public List<Map<String, String>> getNoUserperson(Integer id) {
+        return adminAdministration.getNoUserperson(id);
     }
 }

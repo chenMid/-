@@ -99,6 +99,9 @@
     <select id="getTowButton" resultType="java.util.Map">
         SELECT `name`,hidden FROM sys_menu WHERE p_id=#{menuId}
     </select>
+    <select id="exampleQueryWhetherARoleIsDisplayed" resultType="java.lang.Integer">
+        SELECT COUNT(rid) FROM sys_role WHERE rid=#{id}
+    </select>
 
     <insert id="addRole" parameterType="wakoo.fun.dto.RoleButtonDto">
         INSERT INTO sys_role(rid,role_name,menus,status,create_time)

@@ -101,6 +101,10 @@ public class RoleController {
 //            String dataStr = Arrays.stream(list)
 //                    .map(String::valueOf)
 //                    .collect(Collectors.joining(","));
+            Boolean aBoolean1 = roleService.exampleQueryWhetherARoleIsDisplayed(role.getFId());
+            if (aBoolean1){
+                return new MsgVo(200,"角色权限重复,请重新添加",aBoolean1);
+            }
             Boolean aBoolean = roleService.addRole(role, ids);
             return new MsgVo(200,"添加成功",aBoolean);
         } catch (Exception ex) {

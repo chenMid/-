@@ -41,12 +41,6 @@ public class AgentController {
     @GetMapping("/getAllAgent")
     public ResponseEntity<MsgVo> getAllAgent(String keyword, Integer pageSize, Integer pageNumber) {
         try {
-            if (pageSize == null || pageSize <= 0) {
-                pageSize = 10; // 默认每页显示10条数据
-            }
-            if (pageNumber == null || pageNumber <= 0) {
-                pageNumber = 1; // 默认显示第一页
-            }
             PageHelper.startPage(pageNumber, pageSize);
             List<Agent> adverts = agentService.listAdcert(keyword);
             PageInfo<Agent> pageInfo = new PageInfo<>(adverts);
@@ -175,7 +169,6 @@ public class AgentController {
             int lastSeparatorIndex = agent.getAddress().lastIndexOf("/");
             if (lastSeparatorIndex != -1) {
                 String modifiedAddress = agent.getAddress().substring(0, lastSeparatorIndex);
-                System.out.println(modifiedAddress); // 输出：河北省/廊坊市/三河市
             }
         } else {
             String s = agent.getAddress() + "/" + agent.getDetailedAddress();

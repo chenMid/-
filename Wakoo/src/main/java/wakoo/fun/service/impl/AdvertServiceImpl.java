@@ -59,11 +59,7 @@ public class AdvertServiceImpl implements AdvertService {
 
     @Override
     public CarouselVo isCaouselVo(Integer id) {
-
-        CarouselVo caouselVo = advertMapper.isCaouselVo(id);
-        CarouselVo carouselVo=caouselVo;
-        caouselVo.setOrderNumber((advertMapper.listIntegerGetCa()));
-        return caouselVo;
+        return advertMapper.isCaouselVo(id);
     }
 
     @Override
@@ -89,6 +85,11 @@ public class AdvertServiceImpl implements AdvertService {
     @Override
     public Boolean updCarnumber(Integer id, Integer orderNumber) {
         return advertMapper.updCarnumber(id, orderNumber);
+    }
+
+    @Override
+    public List<Integer> listIntegerGetCa() {
+        return advertMapper.listIntegerGetCa();
     }
 
 }
