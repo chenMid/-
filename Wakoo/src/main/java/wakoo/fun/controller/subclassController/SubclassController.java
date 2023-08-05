@@ -43,11 +43,6 @@ public class SubclassController {
     private String secretKey;
     @Value("${qiniu.bucket-name}")
     private String bucketName;
-    // 存储空间的默认域名
-    @Value("${qiniu.domain}")
-    private String domain;
-    @Value("${qiniu.bucket-names}")
-    private String folderPath;
 
     @Resource
     private SubclassService subclassService;
@@ -56,8 +51,10 @@ public class SubclassController {
     @UserLoginToken
     @GetMapping("/getAllsubclass")
     public ResponseEntity<MsgVo> getAllsubclass(String keyword, Integer pageSize, Integer pageNumber) {
-        pageSize = (pageSize == null || pageSize <= 0) ? 10 : pageSize; // 默认每页显示10条数据
-        pageNumber = (pageNumber == null || pageNumber <= 0) ? 1 : pageNumber; // 默认显示第一页
+        pageSize = (pageSize == null || pageSize <= 0) ? 10 : pageSize;
+        // 默认每页显示10条数据
+        pageNumber = (pageNumber == null || pageNumber <= 0) ? 1 : pageNumber;
+        // 默认显示第一页
 
         PageHelper.startPage(pageNumber, pageSize);
         List<Subclass> allSubclass = subclassService.getAllSubclass(keyword);
@@ -72,7 +69,7 @@ public class SubclassController {
     public ResponseEntity<MsgVo> addImg(@RequestPart MultipartFile file) throws IOException {
         try {
             // 上传头像到七牛云
-            MsgVo msgVo = QiniuUtils.uploadAvatar(file, accessKey, secretKey, bucketName);
+            MsgVo msgVo = QiniuUtils.uploadAvatar(file, accessKey, secretKey, bucketName,null);
             if (msgVo.getCode() == 200) {
                 // 返回成功消息
                 return ResponseEntity.ok(new MsgVo(200, "上传成功", msgVo.getData()));
@@ -105,8 +102,6 @@ public class SubclassController {
         String[] fruits = subclass.getInageImage().split(",");
         String[] fruits1 = subclass.getAgeImage().split(",");
         int startAge = subclass.getTypeAge();
-        System.out.println(startAge);
-        System.out.println(fruits);
         for (int i = 0; i < fruits.length; i++) {
             Subclass subclass1 = new Subclass(subclass.getId(), subclass.getName(), startAge + i, fruits[i], fruits1[i], subclass.getMaterial(), subclass.getSort());
             subclassService.addSubclasss(subclass1);
@@ -165,63 +160,5 @@ public class SubclassController {
     }
 
 
-    @ApiOperation(value = "七牛")
-    @UserLoginToken
-    @GetMapping("/qiniu")
-    public ResponseEntity<MsgVo> qiniu() {
-        Auth auth = Auth.create(accessKey, secretKey);
-        Configuration configuration = new Configuration();
-        BucketManager bucketManager = new BucketManager(auth, configuration);
-        List<FileInformationDto> fileInformationList = new ArrayList<>();
-
-        BucketManager.FileListIterator fileListIterator = bucketManager.createFileListIterator(bucketName, folderPath, 1000, null);
-        while (fileListIterator.hasNext()) {
-            FileInfo[] items = fileListIterator.next();
-            for (FileInfo fileInfo : items) {
-                if (!isImageFile(fileInfo.key)) {
-                    continue; // 跳过非图片文件
-                }
-
-                String fileUrl = domain + "/" + fileInfo.key;
-                FileInformationDto fileInformation = new FileInformationDto();
-                fileInformation.setFileName(fileInfo.key);
-                fileInformation.setFileUrl(fileUrl);
-
-                double fileSize = fileInfo.fsize;
-                String fileSizeString = (fileSize < 1024 * 1024) ? String.format("%.2fKB", fileSize / 1024) : String.format("%.2fMB", fileSize / (1024 * 1024));
-                fileInformation.setFileSize(fileSizeString);
-
-                String uploadTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(fileInfo.putTime / 10000));
-                fileInformation.setUploadTime(uploadTime);
-
-                try {
-                    String mimeType = bucketManager.stat(bucketName, fileInfo.key).mimeType;
-                    fileInformation.setMimeType(mimeType);
-                } catch (QiniuException e) {
-                    e.printStackTrace();
-                    // 如果无法获取MimeType，则设置为未知
-                    fileInformation.setMimeType("Unknown");
-                }
-
-                fileInformationList.add(fileInformation);
-            }
-        }
-        return ResponseEntity.ok(new MsgVo(MsgUtils.SUCCESS, fileInformationList));
-    }
-
-    /**
-     * 判断文件是否为图片文件
-     */
-    private static boolean isImageFile(String fileName) {
-        // 支持的图片文件扩展名
-        String[] imageExtensions = {"jpg", "jpeg", "png", "gif"};
-        for (String extension : imageExtensions) {
-            // 忽略文件名的大小写进行判断
-            if (fileName.toLowerCase().endsWith(extension)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
 

@@ -188,4 +188,9 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
     public List<Map<String, String>> getNoUserperson(Integer id) {
         return adminAdministration.getNoUserperson(id);
     }
+
+    @Override
+    public AdminAdministraltion getAll(Integer userId) {
+        return adminAdministration.getAll(userId);
+    }
 }

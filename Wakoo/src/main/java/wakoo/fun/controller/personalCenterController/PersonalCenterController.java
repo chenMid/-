@@ -57,7 +57,7 @@ public class PersonalCenterController {
     public ResponseEntity<MsgVo> uploadAvatar(@RequestPart MultipartFile file, @RequestParam Integer id) throws IOException {
         try {
             // 上传头像到七牛云
-            MsgVo msgVo = QiniuUtils.uploadAvatar(file, accessKey, secretKey, bucketName);
+            MsgVo msgVo = QiniuUtils.uploadAvatar(file, accessKey, secretKey, bucketName,null);
             if (msgVo.getCode() == 200) {
                 // 保存用户头像信息
                 personalCenterService.avatar(id, (String) msgVo.getData());

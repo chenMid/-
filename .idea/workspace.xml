@@ -7,31 +7,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd376d8f-2ff4-4306-80ae-2df3d7c43904" name="Changes" comment="23-7-26广告的删除轮播图的删除，七牛的图片视频回显接口，角色部分代码修改不影响，子类管理增删改，课程管理增删改，父类代码更新不影响，权限管理代码修改优化回显已搞定">
-      <change afterPath="$PROJECT_DIR$/.idea/GrepConsole.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+    <list default="true" id="dd376d8f-2ff4-4306-80ae-2df3d7c43904" name="Changes" comment="23/8/4重构管理员接口逻辑。视频接口，以及验证码的大小写问题代理管理，以及广告">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_qiniu_qiniu_java_sdk_7_3_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_qiniu_qiniu_java_sdk_7_12_1.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/administrationController/AdministrationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/administrationController/AdministrationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/agentController/AgentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/agentController/AgentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/faAdminController/FaAdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/faAdminController/FaAdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/kaptchaController/getKaptchaImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/kaptchaController/getKaptchaImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/categoryController/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/categoryController/CategoryController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/personalCenterController/PersonalCenterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/personalCenterController/PersonalCenterController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/roleController/RoleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/roleController/RoleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/subclassController/SubclassController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/controller/subclassController/SubclassController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/dto/AdminAdministraltion.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/dto/AdminAdministraltion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/dto/AdmininistraltionDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/dto/AdmininistraltionDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/dto/FileInformationDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/dto/FileInformationDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/dto/UpdRoleDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/dto/UpdRoleDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/mapper/AdministrationMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/mapper/AdministrationMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/mapper/RoleMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/mapper/RoleMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/pojo/Carousel.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/pojo/Carousel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/AdminAdministrationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/AdminAdministrationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/AdvertService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/AdvertService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/RoleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/RoleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/impl/AdvertServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/impl/AdvertServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/impl/RoleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/impl/RoleServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/impl/adminAdministrationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/service/impl/adminAdministrationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/vo/CarouselVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/vo/CarouselVo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/vo/MsgVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/vo/MsgVo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/utils/QiniuUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/java/wakoo/fun/utils/QiniuUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/resources/mappers/AdministrationMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/resources/mappers/AdministrationMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wakoo/src/main/resources/mappers/AdvertMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/resources/mappers/AdvertMapper.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wakoo/src/main/resources/mappers/RoleMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Wakoo/src/main/resources/mappers/RoleMapper.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -333,7 +328,8 @@
       <workItem from="1690765110631" duration="22905000" />
       <workItem from="1690851809384" duration="32236000" />
       <workItem from="1691024449521" duration="21713000" />
-      <workItem from="1691110965036" duration="16886000" />
+      <workItem from="1691110965036" duration="24689000" />
+      <workItem from="1691196264494" duration="28556000" />
     </task>
     <task id="LOCAL-00001" summary="23-7-6">
       <created>1688633536137</created>
@@ -377,7 +373,21 @@
       <option name="project" value="LOCAL" />
       <updated>1690348541602</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="23/8/4重构管理员接口逻辑。视频接口，以及验证码的大小写问题代理管理，以及广告">
+      <created>1691135811968</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1691135811968</updated>
+    </task>
+    <task id="LOCAL-00008" summary="23/8/4重构管理员接口逻辑。视频接口，以及验证码的大小写问题代理管理，以及广告">
+      <created>1691135839787</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1691135839787</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -400,7 +410,8 @@
     <MESSAGE value="23-7-6角色组页面的状态更改，杂项管理的广告添加，更改状态修改广告分页查询完毕轮播图添加完毕" />
     <MESSAGE value="23-7-17广告增删改轮播图增删改代理的增删改父类的增删改" />
     <MESSAGE value="23-7-26广告的删除轮播图的删除，七牛的图片视频回显接口，角色部分代码修改不影响，子类管理增删改，课程管理增删改，父类代码更新不影响，权限管理代码修改优化回显已搞定" />
-    <option name="LAST_COMMIT_MESSAGE" value="23-7-26广告的删除轮播图的删除，七牛的图片视频回显接口，角色部分代码修改不影响，子类管理增删改，课程管理增删改，父类代码更新不影响，权限管理代码修改优化回显已搞定" />
+    <MESSAGE value="23/8/4重构管理员接口逻辑。视频接口，以及验证码的大小写问题代理管理，以及广告" />
+    <option name="LAST_COMMIT_MESSAGE" value="23/8/4重构管理员接口逻辑。视频接口，以及验证码的大小写问题代理管理，以及广告" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

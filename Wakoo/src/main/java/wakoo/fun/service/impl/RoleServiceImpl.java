@@ -45,8 +45,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Boolean addPermission(Integer[] roleVos, Integer id) {
-        return roleMapper.addPermission(roleVos, id);
+    public Integer[] addPermission(String menus) {
+        return roleMapper.getPermission(menus);
     }
 
     @Override
@@ -112,6 +112,11 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Boolean exampleQueryWhetherARoleIsDisplayed(Integer id) {
         return roleMapper.exampleQueryWhetherARoleIsDisplayed(id) > 0;
+    }
+
+    @Override
+    public String getParentIdByRealId(Integer rid) {
+        return roleMapper.getParentIdByRealId(rid);
     }
 
 }

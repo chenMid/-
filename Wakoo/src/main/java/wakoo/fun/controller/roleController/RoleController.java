@@ -112,12 +112,11 @@ public class RoleController {
         }
     }
 
-    @ApiOperation(value = "查询指定角色信息")
+    @ApiOperation(value = "查询添加权限")
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @UserLoginToken
     @GetMapping("/updgetRole")
     public MsgVo updgetRole(Integer id) {
-        System.out.println(id);
         List<ButtonPermissions> buttonPermissions = roleService.updGetAllPermissions(id);
         for (ButtonPermissions me:buttonPermissions) {
             if (me.getType()==10){
@@ -140,11 +139,34 @@ public class RoleController {
     @PutMapping("/udpRoleMess")
     public MsgVo udpRoleMess(@RequestBody UpdRoleDto updRoleDto) {
             // 修改角色信息
+
+        StringBuilder numbe = new StringBuilder();
             if (updRoleDto != null) {
+                for (Integer a : updRoleDto.getList()) {
+                    if (numbe.length() == 0) {
+                        numbe.append(a);
+                    } else {
+                        numbe.append(",").append(a);
+                    }
+                }
+
+                updRoleDto.setMenus(String.valueOf(numbe));
+                Integer[] integers1 = roleService.addPermission(updRoleDto.getMenus());
+                for (Integer a : integers1) {
+                    numbe.append(",").append(a);
+                }
+                updRoleDto.setMenus(String.valueOf(numbe));
+                String parentIdByRealId = roleService.getParentIdByRealId(updRoleDto.getRid());
+                String realId = roleService.getParentIdByRealId(updRoleDto.getRid()+1);
+                String[] realIdArray = realId.split(",");
+                for (String id : realIdArray) {
+                    if (!parentIdByRealId.contains(id)) {
+                        System.out.println(id);
+                    }
+                }
+
                 Boolean aBoolean = roleService.updMess(updRoleDto);
-                Boolean aBoolean2 = roleService.UpdRoleStatus(updRoleDto.getId());
-                Boolean aBoolean1 = roleService.updMessRole(updRoleDto.getList());
-                if (aBoolean && aBoolean1 && aBoolean2) {
+                if (aBoolean) {
                     return new MsgVo(200, "修改成功", true);
                 }
             }

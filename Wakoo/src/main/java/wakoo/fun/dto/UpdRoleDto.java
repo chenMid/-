@@ -14,5 +14,6 @@ public class UpdRoleDto {
     private String roleName;
     private Integer status;
     private Integer menuId;
+    private String menus;
     private Integer[] list;
 }

@@ -32,11 +32,10 @@ public interface RoleMapper {
      */
     Boolean addRole(@Param("role") RoleButtonDto roleButtonDto, @Param("aaa") String list);
     /**
-     * 插入多条语句
-     * @param roleVos
+     * 查询祖宗 菜单。
      * @return
      */
-    Boolean addPermission(@Param("roleVos")Integer[] roleVos, @Param("id") Integer id);
+    Integer[] getPermission(String menus);
     /**
      * 查询所有菜单并显示
      * @return
@@ -107,4 +106,9 @@ public interface RoleMapper {
      * @return
      */
     Integer exampleQueryWhetherARoleIsDisplayed(Integer id);
+
+    /**获取角色下的菜单和高一级或底一级的菜单做比较
+     * @return
+     */
+    String getParentIdByRealId(Integer rid);
 }

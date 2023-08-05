@@ -190,4 +190,10 @@ public interface AdministrationMapper {
      */
     @MapKey("order")
     List<Map<String,String>>getNoUserperson(Integer id);
+    /**
+     * 修改回显
+     * @param userId
+     * @return
+     */
+    AdminAdministraltion getAll(Integer userId);
 }

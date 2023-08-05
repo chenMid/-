@@ -24,7 +24,6 @@
             OR (SELECT agent_id FROM sys_user WHERE id = #{userId}) = '*'
             OR (SELECT agent_id FROM sys_user WHERE id = #{userId}) = '**')
           AND sr.status = 1
-          AND (sr.id = #{isnull} OR #{isnull} IS NULL)
             AND (sr.username LIKE CONCAT('%', #{keyword}, '%')
                 OR sr.nickname LIKE CONCAT('%', #{keyword}, '%')
                 OR sr.email LIKE CONCAT('%', #{keyword}, '%')
@@ -180,11 +179,29 @@
             WHERE agent_id = (SELECT agent_id FROM sys_user WHERE id = #{id})
         )
     </select>
+    <select id="getAll" resultType="wakoo.fun.dto.AdminAdministraltion">
+        SELECT sr.id,
+               sr.username,
+               sr.nickname,
+               sr.email,
+               se.id roleName,
+               se.id AS agent_id,
+               am.id `name`,
+               sr.mobile,
+               sr.status,
+               sr.logintime
+        FROM sys_user sr
+                 LEFT JOIN agent_management AS am ON FIND_IN_SET(am.id, sr.campus_id) > 0
+                 INNER JOIN sys_user_role sur ON sur.user_id = sr.id
+                 INNER JOIN sys_role se ON sur.role_id = se.id
+        WHERE sr.id=#{userId}
+
+    </select>
 
     <insert id="isUser" parameterType="wakoo.fun.dto.AdmininistraltionDto" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO sys_user(username, nickname, password, email, campus_id, agent_id, mobile, createtime)
-        VALUES (#{AdminDto.username}, #{AdminDto.nickname}, #{AdminDto.password}, #{AdminDto.email}, #{AdminDto.name},
-                #{AdminDto.agentId},
+        VALUES (#{AdminDto.username}, #{AdminDto.nickname}, #{AdminDto.password}, #{AdminDto.email}, #{AdminDto.agentId},
+                #{AdminDto.name},
                 #{AdminDto.mobile}, now())
     </insert>
 

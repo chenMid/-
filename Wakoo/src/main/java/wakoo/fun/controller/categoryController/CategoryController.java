@@ -41,7 +41,7 @@ public class CategoryController {
     public ResponseEntity<MsgVo> addCategory(@RequestBody Category category) {
         try {
             // 上传到七牛云
-            MsgVo msgVo = QiniuUtils.uploadAvatar(category.getFile(), accessKey, secretKey, bucketName);
+            MsgVo msgVo = QiniuUtils.uploadAvatar(category.getFile(), accessKey, secretKey, bucketName,null);
             if (msgVo.getCode() == 200) {
                 category.setParentImage((String) msgVo.getData());
                 boolean isAdded = categoryService.addCategory(category);
@@ -90,7 +90,7 @@ public class CategoryController {
     @PutMapping("/updCategory")
     public ResponseEntity<MsgVo> updCategory(@RequestBody Category category) throws IOException {
         try {
-            MsgVo msgVo = QiniuUtils.uploadAvatar(category.getFile(), accessKey, secretKey, bucketName);
+            MsgVo msgVo = QiniuUtils.uploadAvatar(category.getFile(), accessKey, secretKey, bucketName,null);
             if (msgVo.getCode() == 200) {
                 category.setParentImage((String) msgVo.getData());
                 Boolean aBoolean = categoryService.updCategory(category);

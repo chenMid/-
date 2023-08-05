@@ -188,13 +188,14 @@ public class AdministrationController {
                     userAdmin = adminAdministrationService.isUserAdmin(admininistraltionDto);
                 } else {
                     if (admininistraltionDto.getAgentId()==null || "".equals(admininistraltionDto.getAgentId())){
-                        admininistraltionDto.setAgentId(String.valueOf(admininistraltionDto.getName()));
-                        userAdmin = adminAdministrationService.isUserAdmin(admininistraltionDto);
+                        admininistraltionDto.setAgentId(String.valueOf(admininistraltionDto.getName()));                        userAdmin = adminAdministrationService.isUserAdmin(admininistraltionDto);
                     }else {
                         userAdmin = adminAdministrationService.isUserAdmin(admininistraltionDto);
                     }
-
                 }
+            }else {
+                admininistraltionDto.setAgentId(String.valueOf(admininistraltionDto.getName()));
+                userAdmin = adminAdministrationService.isUserAdmin(admininistraltionDto);
             }
         }
 
@@ -226,11 +227,9 @@ public class AdministrationController {
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @UserLoginToken
     @GetMapping("/getIsAdmin")
-    public MsgVo getIsAdmin(HttpServletRequest request,Integer userId) {
-        String keyword="";
-        Object userId1 = request.getAttribute("userId");
-        List<AdminAdministraltion> allAdministraltion = adminAdministrationService.getAllAdministraltion(keyword, (Integer) userId1, userId);
-        return new MsgVo(MsgUtils.SUCCESS, allAdministraltion);
+    public MsgVo getIsAdmin(Integer userId) {
+        AdminAdministraltion all = adminAdministrationService.getAll(userId);
+        return new MsgVo(MsgUtils.SUCCESS, all);
     }
 
     @ApiOperation(value = "管理员管理修改")
@@ -239,7 +238,7 @@ public class AdministrationController {
     @UserLoginToken
     @PutMapping("/updIpAdmin")
     public ResponseEntity<MsgVo> updIpAdmin(@Validated @Valid @RequestBody UpdAdminDto updAdminDto, BindingResult result,HttpServletRequest request) {
-        try {
+//        try {
 
             if (result.hasErrors()) {
                 String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
@@ -319,11 +318,11 @@ public class AdministrationController {
                 MsgVo response = new MsgVo(500, "更新失败", false);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
-        } catch (Exception e) {
-            // 异常处理
-            MsgVo response = new MsgVo(500, "服务器内部错误", false);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
+//        } catch (Exception e) {
+//            // 异常处理
+//            MsgVo response = new MsgVo(500, "服务器内部错误", false);
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+//        }
     }
 
     @ApiOperation(value = "下拉框权限")
