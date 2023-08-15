@@ -150,10 +150,10 @@ public interface AdminAdministrationService {
      */
     Map<String,Map<Integer, String>> getAllAgent(Integer id);
     /**
-     * 查询所有指定权限用户
+     * 查询人员
      * @return
      */
-    List<Map<String,String>> getsAllUsersWithSpecifiedPermissions(Integer role,Integer ids);
+    List<AdminAdministraltion> getsAllUsersWithSpecifiedPermissions(Integer role,Integer userId);
     /**
      * 如果是开发者或总部调用该方法
      * @return 返回查询到的普通人
@@ -177,4 +177,9 @@ public interface AdminAdministrationService {
      * @return
      */
     AdminAdministraltion getAll(Integer userId);
+    /**
+     * 获取 总部使用的EG
+     * @return
+     */
+    String getCampusId(Integer userId);
 }

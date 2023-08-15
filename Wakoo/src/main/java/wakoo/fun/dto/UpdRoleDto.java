@@ -16,4 +16,10 @@ public class UpdRoleDto {
     private Integer menuId;
     private String menus;
     private Integer[] list;
+
+    public UpdRoleDto(Integer rid,Integer status, String menus) {
+        this.rid = rid;
+        this.status = status;
+        this.menus = menus;
+    }
 }

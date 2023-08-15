@@ -70,4 +70,5 @@ public class DistrictServiceImpl implements DistrictService {
     public List<District> allDistrictByNames(List<String> districtNames) {
         return districtMapper.allDistrictByNames(districtNames);
     }
+
 }

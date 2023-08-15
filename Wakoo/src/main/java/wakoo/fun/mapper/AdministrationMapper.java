@@ -2,7 +2,6 @@ package wakoo.fun.mapper;
 
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
-import sun.management.resources.agent;
 import wakoo.fun.vo.AdminVo;
 import wakoo.fun.vo.AllId;
 import wakoo.fun.dto.*;
@@ -168,8 +167,7 @@ public interface AdministrationMapper {
      * 查询所有指定权限用户
      * @return
      */
-    @MapKey("Order")
-    List<Map<String,String>> getsAllUsersWithSpecifiedPermissions(@Param("role") Integer role, @Param("ids") Integer ids);
+    List<AdminAdministraltion> getsAllUsersWithSpecifiedPermissions(@Param("role") Integer role, @Param("userId") Integer userId);
 
     /**
      * 如果是开发者或总部调用该方法
@@ -196,4 +194,10 @@ public interface AdministrationMapper {
      * @return
      */
     AdminAdministraltion getAll(Integer userId);
+
+    /**
+     * 获取 总部使用的EG
+     * @return
+     */
+    String getCampusId(Integer userId);
 }

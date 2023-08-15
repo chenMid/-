@@ -7,7 +7,7 @@
                sr.nickname,
                sr.email,
                se.role_name,
-               se.id AS agent_id,
+               sr.campus_id AS agent_id,
                CASE
                    WHEN sr.campus_id = '*' THEN '开发者'
                    WHEN sr.campus_id = '**' THEN '总部'
@@ -112,9 +112,9 @@
         WHERE id = #{roleId}
     </select>
     <select id="getsTheIdOfTheRole" resultType="java.lang.Integer">
-        SELECT role_id
-        FROM sys_user_role
-        WHERE user_id = #{userId}
+        SELECT rid FROM sys_role WHERE id=(  SELECT role_id
+                                             FROM sys_user_role
+                                             WHERE user_id =  #{userId})
     </select>
     <select id="getYourAccountID" resultType="java.lang.String">
         SELECT affiliated_id
@@ -142,21 +142,15 @@
         WHERE id in
               (SELECT campus_id FROM sys_user WHERE id IN (SELECT user_id FROM sys_user_role WHERE role_id = #{id}))
     </select>
-    <select id="getsAllUsersWithSpecifiedPermissions" resultType="java.util.Map">
-        SELECT DISTINCT am.id, am.name, sr.id AS roleId
-        FROM agent_management am
-                 INNER JOIN sys_user su ON am.id = su.campus_id
-                 INNER JOIN sys_user_role sur ON su.id = sur.user_id
-                 INNER JOIN sys_role sr ON sr.id = sur.role_id
-        WHERE am.id IN (
-            SELECT campus_id
-            FROM sys_user
-            WHERE id IN (
-                SELECT user_id
-                FROM sys_user_role
-                WHERE role_id = #{role} OR role_id = #{ids}
-            )
-        )
+    <select id="getsAllUsersWithSpecifiedPermissions" resultType="wakoo.fun.dto.AdminAdministraltion">
+        SELECT am.id, am.name FROM user_agent_role uar
+                                       INNER JOIN agent_management am ON uar.agent_id=am.id
+        WHERE user_id IN
+              (SELECT id FROM sys_user WHERE agent_id=
+                                             (SELECT agent_id FROM sys_user WHERE id=#{userId})
+                                          or (SELECT agent_id FROM sys_user WHERE id=#{userId})='*'
+                                          or (SELECT agent_id FROM sys_user WHERE id=#{userId})='**'
+              ) AND role_id=#{role} and am.status=1
     </select>
     <select id="getEveryoneWhoDoesnTHaveAnAccount" resultType="java.util.Map">
         SELECT id,`name` FROM agent_management WHERE id not in(SELECT campus_id FROM sys_user)
@@ -195,9 +189,10 @@
                  INNER JOIN sys_user_role sur ON sur.user_id = sr.id
                  INNER JOIN sys_role se ON sur.role_id = se.id
         WHERE sr.id=#{userId}
-
     </select>
-
+    <select id="getCampusId" resultType="java.lang.String">
+        SELECT campus_id FROM sys_user WHERE id=#{userId}
+    </select>
     <insert id="isUser" parameterType="wakoo.fun.dto.AdmininistraltionDto" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO sys_user(username, nickname, password, email, campus_id, agent_id, mobile, createtime)
         VALUES (#{AdminDto.username}, #{AdminDto.nickname}, #{AdminDto.password}, #{AdminDto.email}, #{AdminDto.agentId},

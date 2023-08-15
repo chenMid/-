@@ -26,6 +26,7 @@ public class Orders {
     private Integer totalQuantity;
     private Integer numberOfUse;
     private Integer remainingOrder;
+    private String status;
     private Date createTime;
     private Date updateTime;
 }

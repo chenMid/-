@@ -1,46 +1,114 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="wakoo.fun.mapper.AgentMapper">
-    <insert id="addAgent">
-        INSERT INTO agent_management (name, contact_phone, email, address,create_time,longitude, latitude,status)
-        VALUES (#{name}, #{contactPhone}, #{email}, #{address},NOW(),#{longitude}, #{latitude},#{status})
+    <insert id="addAgent" parameterType="wakoo.fun.pojo.Agent" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO agent_management (`name`, contact_phone, address, create_time)
+        VALUES (#{agent.name}, #{agent.contactPhone}, #{agent.detailedAddress}, NOW())
+    </insert>
+    <insert id="addARoleUser">
+        INSERT INTO user_agent_role(user_id, agent_id, role_id)
+        VALUES (#{userId}, #{agentId}, #{roleId})
     </insert>
     <update id="updRegent">
-        UPDATE agent_management SET `name`=#{agent.name},contact_phone=#{agent.contactPhone},
-        email=#{agent.email},address=#{agent.address},status=#{agent.status},longitude=#{agent.longitude},latitude=#{agent.latitude} WHERE id=#{agent.id}
+        UPDATE agent_management
+        SET `name`=#{agent.name},
+            contact_phone=#{agent.contactPhone},
+            address=#{agent.address}
+        WHERE id = #{agent.id}
     </update>
-    <select id="listAdcert" resultType="wakoo.fun.pojo.Agent">
-        SELECT id, name, contact_phone, email, address, `status`, creation_time, longitude, latitude
-        FROM agent_management
-        WHERE
-            id LIKE CONCAT('%', #{keyword}, '%') OR
-            name LIKE CONCAT('%', #{keyword}, '%') OR
-            contact_phone LIKE CONCAT('%', #{keyword}, '%') OR
-            email LIKE CONCAT('%', #{keyword}, '%') OR
-            address LIKE CONCAT('%', #{keyword}, '%') OR
-            creation_time LIKE CONCAT('%', #{keyword}, '%')
+    <update id="modifyRoleAgent">
+        UPDATE user_agent_role SET role_id=#{roleId} WHERE agent_id=#{agentId}
+    </update>
+    <update id="alterTheState">
+        UPDATE agent_management
+        SET status = CASE
+                         WHEN status = 1 THEN 0
+                         WHEN status = 0 THEN 1
+            END
+        WHERE id = #{id};
+
+        UPDATE agent_management
+        SET delete_time = CASE
+                              WHEN status = 0 THEN now()
+                              WHEN status = 1 THEN NULL
+            END
+        WHERE id = #{id};
+    </update>
+    <delete id="destructionAgent">
+        DELETE FROM agent_management WHERE id=#{id}
+    </delete>
+    <select id="listAdcert" resultType="wakoo.fun.dto.AgentDto">
+        SELECT am.id,
+               am.`name`,
+               sr.role_name roleId,
+               am.contact_phone,
+               am.email,
+               am.address,
+               am.`status`,
+               am.create_time,
+               am.longitude,
+               am.latitude,
+               am.update_time,
+               am.delete_time
+        FROM user_agent_role uar
+                 INNER JOIN agent_management am ON am.id = uar.agent_id
+                 INNER JOIN sys_role sr ON uar.role_id = sr.id
+        WHERE uar.user_id in
+              (SELECT id
+               FROM sys_user
+               WHERE agent_id =
+                     (SELECT agent_id FROM sys_user WHERE id = #{id})
+                  OR (SELECT agent_id FROM sys_user WHERE id = #{id}) = '*'
+                  OR (SELECT agent_id FROM sys_user WHERE id = #{id}) = '**')
+          AND am.`status` = #{status}
+          AND (am.name LIKE CONCAT('%', #{keyword}, '%')
+            OR sr.role_name LIKE CONCAT('%', #{keyword}, '%')
+            OR am.contact_phone LIKE CONCAT('%', #{keyword}, '%')
+            OR am.address LIKE CONCAT('%', #{keyword}, '%')
+            OR am.create_time LIKE CONCAT('%', #{keyword}, '%')
+            OR am.update_time LIKE CONCAT('%', #{keyword}, '%')
+            )
+        ORDER BY CASE
+                     WHEN am.delete_time IS NULL AND #{status} = 1 THEN am.id
+                     ELSE NULL
+                     END DESC,
+                 CASE
+                     WHEN am.delete_time IS NULL AND #{status} = 1 THEN NULL
+                     ELSE am.update_time
+                     END DESC
     </select>
     <select id="isEmailDuplicated" resultType="java.lang.Integer">
         SELECT count(email)
         FROM agent_management
-        WHERE email=#{email}
+        WHERE email = #{email}
     </select>
     <select id="isUsernameDuplicated" resultType="java.lang.Integer">
         SELECT count(name)
         FROM agent_management
-        WHERE `name`=#{name}
+        WHERE `name` = #{name}
     </select>
     <select id="isContactPhone" resultType="java.lang.Integer">
         SELECT count(contact_phone)
         FROM agent_management
-        WHERE `contact_phone`=#{phone}
+        WHERE `contact_phone` = #{phone}
     </select>
-    <select id="retrieveProxyInfo" resultType="wakoo.fun.pojo.Agent">
-        SELECT
-            id,`name`,contact_phone,email,address,status,longitude,latitude
-        FROM
-            agent_management
-        WHERE
-            id = #{getProxyId}
+    <select id="retrieveProxyInfo" resultType="wakoo.fun.dto.AgentDto">
+        SELECT am.id,
+               am.`name`,
+               sr.id roleId,
+               am.contact_phone,
+               am.email,
+               am.address,
+               am.`status`,
+               am.create_time,
+               am.longitude,
+               am.latitude,
+               am.update_time
+        FROM user_agent_role uar
+                 INNER JOIN agent_management am ON am.id = uar.agent_id
+                 INNER JOIN sys_role sr ON uar.role_id = sr.id
+        WHERE am.id=#{getProxyId}
     </select>
+
+
 </mapper>

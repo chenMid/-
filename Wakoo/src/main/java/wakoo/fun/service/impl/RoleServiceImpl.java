@@ -20,8 +20,8 @@ public class RoleServiceImpl implements RoleService {
     private RoleMapper roleMapper;
 
     @Override
-    public List<Role> getAllRole(String keyword) {
-        return roleMapper.getAllRole(keyword);
+    public List<Role> getAllRole(String keyword,Integer userId) {
+        return roleMapper.getAllRole(keyword, userId);
     }
 
     @Override
@@ -115,8 +115,28 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public Integer[] getsTheParentMenu(String menus) {
+        return roleMapper.getsTheParentMenu(menus);
+    }
+
+    @Override
     public String getParentIdByRealId(Integer rid) {
         return roleMapper.getParentIdByRealId(rid);
+    }
+
+    @Override
+    public Boolean modifyTheLowerLevelPermissionsConsistently(UpdRoleDto updRoleDto) {
+        return roleMapper.modifyTheLowerLevelPermissionsConsistently(updRoleDto);
+    }
+
+    @Override
+    public Integer exampleQueryWhetherTheParentExists(Integer rid) {
+        return roleMapper.exampleQueryWhetherTheParentExists(rid);
+    }
+
+    @Override
+    public Integer exampleQueryTheParentIdUnderId(Integer id) {
+        return roleMapper.exampleQueryTheParentIdUnderId(id);
     }
 
 }

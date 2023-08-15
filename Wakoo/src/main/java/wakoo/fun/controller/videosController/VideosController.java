@@ -14,6 +14,7 @@ import wakoo.fun.vo.MsgVo;
 import wakoo.fun.config.UserLoginToken;
 import wakoo.fun.pojo.Videos;
 import wakoo.fun.service.VideosService.VideosService;
+import wakoo.fun.vo.SubclassVo;
 import wakoo.fun.vo.VideosVo;
 import ws.schild.jave.MultimediaObject;
 
@@ -73,9 +74,14 @@ public class VideosController {
     @UserLoginToken
     @GetMapping("/getSontype")
     public ResponseEntity<MsgVo> getSontype(Integer fId) {
-        Map<Object, Object> map = new HashMap<>(50);
-        map.put("subClass", videosService.getAllSubclass(fId));
-        return ResponseEntity.ok(new MsgVo(200, "请求成功", map));
+        Map<String, Object> map = new HashMap<>(50);
+        List<SubclassVo> subclassVos = videosService.getAllSubclass(fId);
+        if (subclassVos.size()!=0){
+            map.put("result",subclassVos);
+        }else {
+            map.put("result","无查询结果");
+        }
+        return ResponseEntity.ok(new MsgVo(200, "请求成功",map));
     }
 
     @ApiOperation(value = "添加课程")

@@ -17,7 +17,7 @@ public interface RoleService {
      * 查询角色信息
      * @return
      */
-    List<Role> getAllRole(String keyword);
+    List<Role> getAllRole(String keyword,Integer userId);
     /**
      * 查询按钮
      * @return
@@ -103,9 +103,32 @@ public interface RoleService {
      * @return
      */
     Boolean exampleQueryWhetherARoleIsDisplayed(Integer id);
+    /**查询父级 菜单id
+     *
+     */
+    Integer[] getsTheParentMenu(String menus);
 
     /**获取角色下的菜单和高一级或底一级的菜单做比较
      * @return
      */
     String getParentIdByRealId(Integer rid);
+    /**修改下级权限一致
+     * @param updRoleDto 角色数据传输对象
+     * @return 是否修改成功
+     */
+    Boolean modifyTheLowerLevelPermissionsConsistently(UpdRoleDto updRoleDto);
+    /**
+     * 查询父级id
+     *
+     * @param rid 角色id
+     * @return 返回父级id
+     */
+    Integer exampleQueryWhetherTheParentExists(Integer rid);
+    /**
+     * 查询父级id
+     *
+     * @param id 角色id
+     * @return 返回父级id
+     */
+    Integer exampleQueryTheParentIdUnderId(Integer id);
 }

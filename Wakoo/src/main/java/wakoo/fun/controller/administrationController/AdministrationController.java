@@ -6,7 +6,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -15,8 +14,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import wakoo.fun.vo.AdminVo;
-import wakoo.fun.vo.AllId;
+import wakoo.fun.pojo.Option;
 import wakoo.fun.vo.MsgVo;
 import wakoo.fun.config.UserLoginToken;
 import wakoo.fun.dto.*;
@@ -27,7 +25,6 @@ import wakoo.fun.utils.MsgUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.sql.rowset.CachedRowSet;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -52,17 +49,23 @@ public class AdministrationController {
         try {
             Object userId = request.getAttribute("userId");
             PageHelper.startPage(pageNumber, pageSize);
+
             List<AdminAdministraltion> adminAdministrations = new ArrayList<>();
-            List<AdminAdministraltion> allAdministration = adminAdministrationService.getAllAdministraltion(keyword, (Integer) userId,null);
+            List<AdminAdministraltion> allAdministration = adminAdministrationService.getAllAdministraltion(keyword, (Integer) userId, null);
             Integer userId1 = (Integer) request.getAttribute("userId");
-            System.out.println(userId1);
             Integer role = adminAdministrationService.getsTheIdOfTheRole(userId1);
+            String campusId = adminAdministrationService.getCampusId(userId1);
             for (AdminAdministraltion a : allAdministration) {
-                if (role==2||role==4){
-                    if ("1".equals(a.getAgentId())){
+                if (role == 1 || role == 3) {
+                    if ("*".equals(a.getAgentId())) {
                         continue;
-                    }else if ("3".equals(a.getAgentId())){
+                    } else if ("3".equals(a.getAgentId())) {
                         continue;
+                    }
+                }
+                if (role == 3) {
+                    if (!String.valueOf(campusId).equals(a.getAgentId())) {
+                        continue; // 跳过当前循环
                     }
                 }
                 if (!a.getId().equals(userId1)) {
@@ -71,6 +74,8 @@ public class AdministrationController {
                 if (a.getName() == null) {
                     a.setName(a.getRoleName());
                 }
+
+
             }
             PageInfo<AdminAdministraltion> pageInfo = new PageInfo<>(adminAdministrations);
             pageInfo.setPageSize(pageSize);
@@ -80,16 +85,18 @@ public class AdministrationController {
             return new MsgVo(500, "请求处理失败", null);
         }
     }
+
     @ApiOperation(value = "检查是否为管理员和总部")
     @UserLoginToken
     @GetMapping("headquarters")
-    public MsgVo headquarters(HttpServletRequest request){
+    public MsgVo headquarters(HttpServletRequest request) {
         Object userId = request.getAttribute("userId");
         Integer role = adminAdministrationService.getsTheIdOfTheRole((Integer) userId);
-        boolean isShow = role == 1 || role == 2;
+        boolean isShow = role == 0 || role == 1;
         Map<String, Boolean> map = Collections.singletonMap("isShow", isShow);
         return new MsgVo(200, "请求成功", map);
     }
+
     @ApiOperation(value = "管理员角色权限查询")
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @UserLoginToken
@@ -105,42 +112,21 @@ public class AdministrationController {
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @UserLoginToken
     @GetMapping("/getAgentManagement")
-    public MsgVo getAgentManagement(HttpServletRequest request,Integer id) {
-        int ids=0;
-        Map<String, Object> map = new HashMap<>(50);
+    public MsgVo getAgentManagement(HttpServletRequest request, Integer id) {
+        List<AdminAdministraltion> adminAdministraltions =new ArrayList<>();
+        Map<String, List<AdminAdministraltion>> map=new HashMap<>(50);
         Object userId = request.getAttribute("userId");
         Integer role = adminAdministrationService.getsTheIdOfTheRole((Integer) userId);
-        if (role.equals(1)||role.equals(2)){
-            if (id==4){
-                ids=3;
-            }else {
-                ids=id;
-            }
-            List<Map<String,String>> stringMapMap = adminAdministrationService.getsAllUsersWithSpecifiedPermissions(id,ids);
-            map.put("Order", stringMapMap);
-            return new MsgVo(MsgUtils.SUCCESS, map);
-        }
-        map.put("Order", adminAdministrationService.getOrderQ((Integer) userId,id));
-        return new MsgVo(MsgUtils.SUCCESS, map);
-    }
-    @ApiOperation(value = "获取没有账号人")
-    @UserLoginToken
-    @GetMapping("/getPeopleWithoutAccounts")
-    public MsgVo getPeopleWithoutAccounts(HttpServletRequest request,Integer roleId){
-        Object userId = request.getAttribute("userId");
-        Integer role = adminAdministrationService.getsTheIdOfTheRole((Integer) userId);
-
-        if (role.equals(1)||role.equals(2)){
-            if (roleId!=null){
-                Integer role1 = adminAdministrationService.getsTheIdOfTheRole(roleId);
-                if (role1==3||role1==4){
-                    return new MsgVo(200, "请求成功", adminAdministrationService.getNoUserperson(roleId));
-                }
-            }
-            return new MsgVo(200,"请求成功",adminAdministrationService.getEveryoneWhoDoesnTHaveAnAccount());
+        if (id==4){
+            List<AdminAdministraltion> adminAdministraltions1 = adminAdministrationService.getsAllUsersWithSpecifiedPermissions(id, (Integer) userId);
+            map.put("Order", adminAdministraltions1);
+            adminAdministraltions=adminAdministrationService.getsAllUsersWithSpecifiedPermissions(role, (Integer) userId);
         }else {
-            return new MsgVo(200,"请求成功", adminAdministrationService.SearchrdinaryeoplAgent((Integer) userId));
+            map.put("Order", new ArrayList<>());
+            adminAdministraltions=adminAdministrationService.getsAllUsersWithSpecifiedPermissions(id, (Integer) userId);
         }
+        map.put("order", adminAdministraltions);
+        return new MsgVo(MsgUtils.SUCCESS, map);
     }
 
     @ApiOperation(value = "管理员管理添加")
@@ -149,7 +135,7 @@ public class AdministrationController {
     @UserLoginToken
     @PostMapping("addAdminUser")
     public MsgVo addAdminUser(@Validated @RequestBody AdmininistraltionDto admininistraltionDto, BindingResult result, HttpServletRequest request) {
-        Boolean userAdmin=true;
+        Boolean userAdmin = true;
         Object userId = request.getAttribute("userId");
 
         if (result.hasErrors()) {
@@ -174,36 +160,47 @@ public class AdministrationController {
             admininistraltionDto.setAgentId("*");
         }
         try {
-        Integer integer = adminAdministrationService.exampleQueryTheIdPermissionOfARole((Integer) userId);
-        if (integer == 3) {
-            Integer theRoleId = adminAdministrationService.getTheRoleId((Integer) userId);
-            System.out.println(theRoleId);
-            admininistraltionDto.setAgentId(String.valueOf(theRoleId));
-            userAdmin = adminAdministrationService.isUserAdmin(admininistraltionDto);
-        } else {
+            Integer integer = adminAdministrationService.getsTheIdOfTheRole((Integer) userId);
             Integer role = adminAdministrationService.getsTheIdOfTheRole((Integer) userId);
-            if (role == 2 || role == 1) {
-                if (admininistraltionDto.getName() == null || "".equals(admininistraltionDto.getName())) {
-                    admininistraltionDto.setName(admininistraltionDto.getAgentId());
+            Integer theRoleId = adminAdministrationService.getTheRoleId((Integer) userId);
+            if (integer == 2) {
+                if (admininistraltionDto.getAgentId() == null || Objects.equals(admininistraltionDto.getAgentId(), "")) {
+                    admininistraltionDto.setAgentId(String.valueOf(admininistraltionDto.getName()));
+                    admininistraltionDto.setName(theRoleId);
                     userAdmin = adminAdministrationService.isUserAdmin(admininistraltionDto);
                 } else {
-                    if (admininistraltionDto.getAgentId()==null || "".equals(admininistraltionDto.getAgentId())){
-                        admininistraltionDto.setAgentId(String.valueOf(admininistraltionDto.getName()));                        userAdmin = adminAdministrationService.isUserAdmin(admininistraltionDto);
-                    }else {
-                        userAdmin = adminAdministrationService.isUserAdmin(admininistraltionDto);
-                    }
+                    admininistraltionDto.setName(String.valueOf(theRoleId));
+                    userAdmin = adminAdministrationService.isUserAdmin(admininistraltionDto);
                 }
-            }else {
-                admininistraltionDto.setAgentId(String.valueOf(admininistraltionDto.getName()));
-                userAdmin = adminAdministrationService.isUserAdmin(admininistraltionDto);
-            }
-        }
+            } else {
 
-        if (userAdmin) {
-            adminAdministrationService.isUserRoleOrder(admininistraltionDto.getId(), admininistraltionDto.getRoleName());
-            return new MsgVo(200, "添加成功", true);
-        }
-        // 添加返回值，确保在未满足条件时有返回结果
+                if (role == 1 || role == 0) {
+                    if (admininistraltionDto.getName() == null || "".equals(admininistraltionDto.getName())) {
+                        admininistraltionDto.setName(admininistraltionDto.getAgentId());
+                        userAdmin = adminAdministrationService.isUserAdmin(admininistraltionDto);
+                    } else {
+                        if (admininistraltionDto.getAgentId() == null || "".equals(admininistraltionDto.getAgentId())) {
+                            admininistraltionDto.setAgentId(String.valueOf(admininistraltionDto.getName()));
+                            userAdmin = adminAdministrationService.isUserAdmin(admininistraltionDto);
+                        } else {
+                            userAdmin = adminAdministrationService.isUserAdmin(admininistraltionDto);
+                        }
+                    }
+                } else {
+                    if (role == 3) {
+                        admininistraltionDto.setAgentId(String.valueOf(theRoleId));
+                    } else {
+                        admininistraltionDto.setAgentId(String.valueOf(admininistraltionDto.getName()));
+                    }
+                    userAdmin = adminAdministrationService.isUserAdmin(admininistraltionDto);
+                }
+            }
+
+            if (userAdmin) {
+                adminAdministrationService.isUserRoleOrder(admininistraltionDto.getId(), admininistraltionDto.getRoleName());
+                return new MsgVo(200, "添加成功", true);
+            }
+            // 添加返回值，确保在未满足条件时有返回结果
 
         } catch (Exception e) {
             //在发生异常时进行事务回滚
@@ -237,87 +234,87 @@ public class AdministrationController {
     @Transactional
     @UserLoginToken
     @PutMapping("/updIpAdmin")
-    public ResponseEntity<MsgVo> updIpAdmin(@Validated @Valid @RequestBody UpdAdminDto updAdminDto, BindingResult result,HttpServletRequest request) {
+    public ResponseEntity<MsgVo> updIpAdmin(@Validated @Valid @RequestBody UpdAdminDto updAdminDto, BindingResult result, HttpServletRequest request) {
 //        try {
 
-            if (result.hasErrors()) {
-                String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
-                MsgVo response = new MsgVo(403, errorMessage, false);
-                return ResponseEntity.ok(response);
-            }
-            boolean success = false;
+        if (result.hasErrors()) {
+            String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
+            MsgVo response = new MsgVo(403, errorMessage, false);
+            return ResponseEntity.ok(response);
+        }
+        boolean success = false;
 
-            // 检查是否存在重复的用户名、邮箱或手机号
-            List<UpdAdminDto> updAdminDtoList = adminAdministrationService.isUpdAdminDto(updAdminDto);
-            FaAdmin faAdmin = adminAdministrationService.getFaAdmin(updAdminDto.getUserId());
+        // 检查是否存在重复的用户名、邮箱或手机号
+        List<UpdAdminDto> updAdminDtoList = adminAdministrationService.isUpdAdminDto(updAdminDto);
+        FaAdmin faAdmin = adminAdministrationService.getFaAdmin(updAdminDto.getUserId());
 
-            String username = updAdminDto.getUsername();
-            if (username != null && !username.equals(faAdmin.getUserName())) {
-                // 检查是否修改了用户名，并检查是否重复
-                for (UpdAdminDto u : updAdminDtoList) {
-                    if (u.getUsername().equals(username)) {
-                        // 用户名重复
-                        MsgVo response = new MsgVo(403, "用户名重复", false);
-                        return ResponseEntity.ok(response);
-                    }
+        String username = updAdminDto.getUsername();
+        if (username != null && !username.equals(faAdmin.getUserName())) {
+            // 检查是否修改了用户名，并检查是否重复
+            for (UpdAdminDto u : updAdminDtoList) {
+                if (u.getUsername().equals(username)) {
+                    // 用户名重复
+                    MsgVo response = new MsgVo(403, "用户名重复", false);
+                    return ResponseEntity.ok(response);
                 }
             }
+        }
 
-            String email = updAdminDto.getEmail();
-            if (email != null && !email.equals(faAdmin.getEmail())) {
-                // 检查是否修改了邮箱，并检查是否重复
-                for (UpdAdminDto u : updAdminDtoList) {
-                    if (u.getEmail().equals(email)) {
-                        // 邮箱重复
-                        MsgVo response = new MsgVo(403, "邮箱重复", false);
-                        return ResponseEntity.ok(response);
-                    }
+        String email = updAdminDto.getEmail();
+        if (email != null && !email.equals(faAdmin.getEmail())) {
+            // 检查是否修改了邮箱，并检查是否重复
+            for (UpdAdminDto u : updAdminDtoList) {
+                if (u.getEmail().equals(email)) {
+                    // 邮箱重复
+                    MsgVo response = new MsgVo(403, "邮箱重复", false);
+                    return ResponseEntity.ok(response);
                 }
             }
+        }
 
-            String mobile = updAdminDto.getMobile();
-            if (mobile != null && !mobile.equals(faAdmin.getMobile())) {
-                // 检查是否修改了手机号，并检查是否重复
-                for (UpdAdminDto u : updAdminDtoList) {
-                    if (u.getMobile().equals(mobile)) {
-                        // 手机号重复
-                        MsgVo response = new MsgVo(403, "手机号重复", false);
-                        return ResponseEntity.ok(response);
-                    }
+        String mobile = updAdminDto.getMobile();
+        if (mobile != null && !mobile.equals(faAdmin.getMobile())) {
+            // 检查是否修改了手机号，并检查是否重复
+            for (UpdAdminDto u : updAdminDtoList) {
+                if (u.getMobile().equals(mobile)) {
+                    // 手机号重复
+                    MsgVo response = new MsgVo(403, "手机号重复", false);
+                    return ResponseEntity.ok(response);
                 }
             }
+        }
 
-            String password = updAdminDto.getPassword();
-            if (password != null) {
-                // 检查是否修改了密码
-                // 更新密码为哈希值
-                updAdminDto.setPassword(HashUtils.hash(password));
-            } else {
-                // 如果密码未被修改，则保持原密码不变
-                updAdminDto.setPassword(faAdmin.getPassword());
-            }
+        String password = updAdminDto.getPassword();
+        if (password != null) {
+            // 检查是否修改了密码
+            // 更新密码为哈希值
+            updAdminDto.setPassword(HashUtils.hash(password));
+        } else {
+            // 如果密码未被修改，则保持原密码不变
+            updAdminDto.setPassword(faAdmin.getPassword());
+        }
 
-            // 更新用户角色
-            success = adminAdministrationService.updUserRole(updAdminDto);
+        // 更新用户角色
+        success = adminAdministrationService.updUserRole(updAdminDto);
 //            Object userId = request.getAttribute("userId");
 //            Integer role = adminAdministrationService.getsTheIdOfTheRole((Integer) userId);
 //            if (role==1||role==2){
 //
 //            }
-            // 更新用户信息
-            if (success) {
-                success = adminAdministrationService.updAdminUser(updAdminDto);
-            }
+        // 更新用户信息
+        if (success) {
+            success = adminAdministrationService.updAdminUser(updAdminDto);
+        }
 
-            // 更新成功
-            if (success) {
-                MsgVo response = new MsgVo(200, "更新成功", true);
-                return ResponseEntity.ok(response);
-            } else {
-                // 更新失败
-                MsgVo response = new MsgVo(500, "更新失败", false);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-            }
+        // 更新成功
+        if (success) {
+            MsgVo response = new MsgVo(200, "更新成功", true);
+            return ResponseEntity.ok(response);
+        } else {
+            // 更新失败
+            MsgVo response = new MsgVo(500, "更新失败", false);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
 //        } catch (Exception e) {
 //            // 异常处理
 //            MsgVo response = new MsgVo(500, "服务器内部错误", false);
@@ -331,14 +328,14 @@ public class AdministrationController {
     public ResponseEntity<MsgVo> verifyTheGroupLinkageOfAllStores(HttpServletRequest request) {
         String roleId = request.getParameter("id");
         int role = Integer.parseInt(roleId);
-        Map<String,Boolean> map=new HashMap<>(50);
-        if (role==1||role==2){
-                map.put("key", true);
-            }else {
+        Map<String, Boolean> map = new HashMap<>(50);
+        if (role == 0 || role == 1) {
+            map.put("key", true);
+        } else {
             map.put("key", false);
         }
 
-        return ResponseEntity.ok(new MsgVo(200, "请求成功",map));
+        return ResponseEntity.ok(new MsgVo(200, "请求成功", map));
     }
 }
 

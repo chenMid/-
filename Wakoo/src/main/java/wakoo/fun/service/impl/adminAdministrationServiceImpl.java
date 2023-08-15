@@ -170,8 +170,8 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
     }
 
     @Override
-    public  List<Map<String,String>>getsAllUsersWithSpecifiedPermissions(Integer role,Integer ids) {
-        return adminAdministration.getsAllUsersWithSpecifiedPermissions(role,ids);
+    public  List<AdminAdministraltion>getsAllUsersWithSpecifiedPermissions(Integer role,Integer userId) {
+        return adminAdministration.getsAllUsersWithSpecifiedPermissions(role,userId);
     }
 
     @Override
@@ -192,5 +192,10 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
     @Override
     public AdminAdministraltion getAll(Integer userId) {
         return adminAdministration.getAll(userId);
+    }
+
+    @Override
+    public String getCampusId(Integer userId) {
+        return adminAdministration.getCampusId(userId);
     }
 }

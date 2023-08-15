@@ -1,6 +1,7 @@
 package wakoo.fun.service.AgentService.impl;
 
 import org.springframework.stereotype.Service;
+import wakoo.fun.dto.AgentDto;
 import wakoo.fun.mapper.AgentMapper;
 import wakoo.fun.pojo.Advert;
 import wakoo.fun.pojo.Agent;
@@ -15,8 +16,8 @@ public class AgentServiceImpl implements AgentService {
     private AgentMapper agentMapper;
 
     @Override
-    public List<Agent> listAdcert(String keyword) {
-        return agentMapper.listAdcert(keyword);
+    public List<AgentDto> listAdcert(String keyword,Integer id,Integer status) {
+        return agentMapper.listAdcert(keyword,id,status);
     }
 
     @Override
@@ -40,12 +41,32 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public Agent retrieveProxyInfo(Integer getProxyId) {
+    public AgentDto retrieveProxyInfo(Integer getProxyId) {
         return agentMapper.retrieveProxyInfo(getProxyId);
     }
 
     @Override
-    public Boolean updRegent(Agent agent) {
+    public Boolean updRegent(AgentDto agent) {
         return agentMapper.updRegent(agent);
+    }
+
+    @Override
+    public Boolean addARoleUser(Integer userId, Integer agentId, Integer roleId) {
+        return agentMapper.addARoleUser(userId, agentId, roleId );
+    }
+
+    @Override
+    public Boolean modifyRoleAgent(Integer agentId, Integer roleId) {
+        return agentMapper.modifyRoleAgent(agentId, roleId);
+    }
+
+    @Override
+    public Boolean alterTheState(Integer id, Integer status) {
+        return agentMapper.alterTheState(id, status);
+    }
+
+    @Override
+    public Boolean destructionAgent(Integer id) {
+        return agentMapper.destructionAgent(id);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import wakoo.fun.service.AdminAdministrationService;
 import wakoo.fun.vo.MsgVo;
 import wakoo.fun.config.UserLoginToken;
 import wakoo.fun.dto.*;
@@ -23,6 +24,7 @@ import wakoo.fun.utils.MsgUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @EnableTransactionManagement//数据库事务管理
 @CrossOrigin
@@ -38,9 +40,11 @@ public class RoleController {
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @UserLoginToken
     @GetMapping("/SelectRole")
-    public MsgVo SelectRole(String keyword, Integer pageSize, Integer pageNumber) {
+    public MsgVo selectRole(String keyword, Integer pageSize, Integer pageNumber, HttpServletRequest request) {
+        Object userId = request.getAttribute("userId");
+        System.out.println(userId);
         PageHelper.startPage(pageNumber, pageSize);
-        List<Role> allRole = roleService.getAllRole(keyword);
+        List<Role> allRole = roleService.getAllRole(keyword, (Integer) userId);
         PageInfo<Role> pageInfo = new PageInfo<>(allRole);
         return new MsgVo(MsgUtils.SUCCESS, pageInfo);
     }
@@ -55,17 +59,17 @@ public class RoleController {
         List<RoleGetButonById> buttonById = roleService.getButtonById(roleId);
         List<ButtonPermissions> button = roleService.getButton(roleId);
         List<Integer> oneByid = roleService.getOneByid();
-        for (ButtonPermissions me:button) {
-            if (me.getType()==10){
-                for (ButtonPermissions m:button) {
-                    if (me.getPid().equals(m.getId())){
+        for (ButtonPermissions me : button) {
+            if (me.getType() == 10) {
+                for (ButtonPermissions m : button) {
+                    if (me.getPid().equals(m.getId())) {
                         me.setPpid(m.getPid());
                     }
                 }
             }
         }
         List<ButtonPermissions> menuList = new MenuTreeRole(button).buildTree();
-        Map<String, Object> roleButton=new HashMap<>();
+        Map<String, Object> roleButton = new HashMap<>();
         roleButton.put("fRoleName", byIdRoleName);
         roleButton.put("roleName", twoRoleName.getRoleName());
         roleButton.put("status", twoRoleName.getStatus());
@@ -82,9 +86,6 @@ public class RoleController {
     @PostMapping("/addRole")
     public MsgVo addRole(@RequestBody RoleButtonDto role) {
         try {
-            if (role.getList().equals(null)){
-                return new MsgVo(403,"请勾选权限",false);
-            }
             // 创建一个Set集合，用于存储唯一的ID
             Set<Integer> uniqueIds = new HashSet<>();
 
@@ -97,18 +98,14 @@ public class RoleController {
             }
             // 将Set集合转换为逗号分隔的字符串
             String ids = StringUtils.join(uniqueIds, ",");
-//            Integer[] list = role.getList(); // 替换为实际的 Integer 数组
-//            String dataStr = Arrays.stream(list)
-//                    .map(String::valueOf)
-//                    .collect(Collectors.joining(","));
-            Boolean aBoolean1 = roleService.exampleQueryWhetherARoleIsDisplayed(role.getFId());
-            if (aBoolean1){
-                return new MsgVo(200,"角色权限重复,请重新添加",aBoolean1);
-            }
+//            Boolean aBoolean1 = roleService.exampleQueryWhetherARoleIsDisplayed(role.getFId());
+//            if (aBoolean1) {
+//                return new MsgVo(200, "角色权限重复,请重新添加", aBoolean1);
+//            }
             Boolean aBoolean = roleService.addRole(role, ids);
-            return new MsgVo(200,"添加成功",aBoolean);
+            return new MsgVo(200, "添加成功", aBoolean);
         } catch (Exception ex) {
-            return new MsgVo(MsgUtils.FAILED);
+            return new MsgVo(500, "请勾选至少一个权限", null);
         }
     }
 
@@ -118,10 +115,10 @@ public class RoleController {
     @GetMapping("/updgetRole")
     public MsgVo updgetRole(Integer id) {
         List<ButtonPermissions> buttonPermissions = roleService.updGetAllPermissions(id);
-        for (ButtonPermissions me:buttonPermissions) {
-            if (me.getType()==10){
-                for (ButtonPermissions m:buttonPermissions) {
-                    if (me.getPid().equals(m.getId())){
+        for (ButtonPermissions me : buttonPermissions) {
+            if (me.getType() == 10) {
+                for (ButtonPermissions m : buttonPermissions) {
+                    if (me.getPid().equals(m.getId())) {
                         me.setPpid(m.getPid());
                     }
                 }
@@ -138,38 +135,60 @@ public class RoleController {
     @UserLoginToken
     @PutMapping("/udpRoleMess")
     public MsgVo udpRoleMess(@RequestBody UpdRoleDto updRoleDto) {
-            // 修改角色信息
-
-        StringBuilder numbe = new StringBuilder();
-            if (updRoleDto != null) {
-                for (Integer a : updRoleDto.getList()) {
-                    if (numbe.length() == 0) {
-                        numbe.append(a);
-                    } else {
-                        numbe.append(",").append(a);
-                    }
-                }
-
-                updRoleDto.setMenus(String.valueOf(numbe));
-                Integer[] integers1 = roleService.addPermission(updRoleDto.getMenus());
-                for (Integer a : integers1) {
-                    numbe.append(",").append(a);
-                }
-                updRoleDto.setMenus(String.valueOf(numbe));
-                String parentIdByRealId = roleService.getParentIdByRealId(updRoleDto.getRid());
-                String realId = roleService.getParentIdByRealId(updRoleDto.getRid()+1);
-                String[] realIdArray = realId.split(",");
-                for (String id : realIdArray) {
-                    if (!parentIdByRealId.contains(id)) {
-                        System.out.println(id);
-                    }
-                }
-
-                Boolean aBoolean = roleService.updMess(updRoleDto);
-                if (aBoolean) {
-                    return new MsgVo(200, "修改成功", true);
+//        Integer integer1 = roleService.exampleQueryTheParentIdUnderId(updRoleDto.getId());
+//        Integer integer = roleService.exampleQueryWhetherTheParentExists(updRoleDto.getRid()+1);
+//        if (!integer1.equals(updRoleDto.getRid())) {
+//            if (integer != null) {
+//                return new MsgVo(403, "已有父级不可复用", false);
+//            }
+//        }
+        StringBuilder number = new StringBuilder();
+        for (Integer a : updRoleDto.getList()) {
+            number.append(number.length() == 0 ? a : ("," + a));
+        }
+        Integer[] integers1 = roleService.addPermission(String.valueOf(number));
+        Integer[] integers = roleService.getsTheParentMenu(String.valueOf(number));
+        number.append(",");
+        for (int i = 0; i < integers.length; i++) {
+            if (i > 0) {
+                number.append(",");
+            }
+            number.append(integers[i]);
+        }
+        number.append(",");
+        for (int i = 0; i < integers1.length; i++) {
+            if (i > 0) {
+                number.append(",");
+            }
+            number.append(integers1[i]);
+        }
+        String[] strings = number.toString().split(",");
+        Set<String> uniqueStrings = new HashSet<>(Arrays.asList(strings));
+        updRoleDto.setMenus(String.join(",", uniqueStrings));
+        Boolean aBoolean = roleService.updMess(updRoleDto);
+        if (updRoleDto.getRid() <= 2) {
+            String parentId1 = roleService.getParentIdByRealId(updRoleDto.getRid());
+            String parentId2 = roleService.getParentIdByRealId(updRoleDto.getRid() + 1);
+            Set<String> parentIdSet1 = new HashSet<>(Arrays.asList(parentId1.split(",")));
+            String[] parentIdArray2 = parentId2.split(",");
+            List<String> filteredParentIds = new ArrayList<>();
+            for (String parentId : parentIdArray2) {
+                if (parentIdSet1.contains(parentId.trim())) {
+                    filteredParentIds.add(parentId.trim());
                 }
             }
+            String filteredParentId2 = String.join(",", filteredParentIds);
+            UpdRoleDto updRoleDto1 = new UpdRoleDto(updRoleDto.getRid(), updRoleDto.getStatus(), filteredParentId2);
+            Boolean aBoolean1 = roleService.modifyTheLowerLevelPermissionsConsistently(updRoleDto1);
+            if (aBoolean1) {
+                return new MsgVo(200, "修改成功", true);
+            }
+        }
+
+        if (aBoolean) {
+            return new MsgVo(200, "修改成功", true);
+        }
+
         return new MsgVo(200, "修改成功", true);
     }
 
@@ -223,6 +242,7 @@ public class RoleController {
                     }
                 }
             }
+
             return ResponseEntity.ok(new MsgVo(200, "请求成功", towButton));
         } catch (Exception e) {
             e.printStackTrace();

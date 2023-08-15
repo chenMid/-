@@ -17,7 +17,7 @@ public interface RoleMapper {
      * 查询角色信息
      * @return
      */
-    List<Role> getAllRole(String keyword);
+    List<Role> getAllRole(String keyword,Integer userId);
     /**
      * 查询按钮
      * @return
@@ -111,4 +111,30 @@ public interface RoleMapper {
      * @return
      */
     String getParentIdByRealId(Integer rid);
+    /**查询父级 菜单id
+     *
+     */
+    Integer[] getsTheParentMenu(String menus);
+
+    /**修改下级权限一致
+     *
+     * @param id
+     * @return
+     */
+    Boolean modifyTheLowerLevelPermissionsConsistently(@Param("updRoleDto") UpdRoleDto updRoleDto);
+
+    /**
+     * 查询父级id
+     *
+     * @param rid 角色id
+     * @return 返回父级id
+     */
+    Integer exampleQueryWhetherTheParentExists(Integer rid);
+    /**
+     * 查询父级id
+     *
+     * @param id 角色id
+     * @return 返回父级id
+     */
+    Integer exampleQueryTheParentIdUnderId(Integer id);
 }
