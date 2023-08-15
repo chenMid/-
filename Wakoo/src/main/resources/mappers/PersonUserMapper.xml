@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wakoo.fun.mapper.PersonUserMapper">
+    <insert id="addCommonUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO common_user (classname, `password`, sex, age, iphone, create_time)
+        VALUES (#{person.classname}, #{person.password}, #{person.sex}, #{person.age}, #{person.iphone}, now());
+    </insert>
+    <insert id="addAgentsAndHumanRelationships">
+        INSERT INTO person_common (common_id, person_id)
+        VALUES (#{commonId}, #{personId});
+    </insert>
+    <update id="modifyingCommonUser">
+        UPDATE common_user
+        SET classname=#{person.classname},
+            `password`=#{person.password},
+            sex=#{person.sex},
+            age=#{person.age}
+        WHERE id = #{person.id}
+    </update>
+    <select id="getRegularUsers" resultType="wakoo.fun.pojo.PersonUser">
+        SELECT cu.id,
+               cu.classname,
+               cu.`password`,
+               cu.sex,
+               cu.age,
+               cu.iphone,
+               cu.image,
+               cu.create_time,
+               cu.update_time,
+               GROUP_CONCAT(DISTINCT am.`name` SEPARATOR ',') AS agentName
+        FROM person_common pc
+                 INNER JOIN common_user cu ON pc.person_id = cu.id
+                 LEFT JOIN agent_management am ON am.id = pc.common_id
+        WHERE pc.person_id IN (
+            SELECT person_id
+            FROM person_common
+            WHERE common_id = (
+                SELECT CASE
+                           WHEN (SELECT campus_id FROM sys_user WHERE id = #{userId}) = '*'
+                               THEN common_id
+                           WHEN (SELECT campus_id FROM sys_user WHERE id = #{userId}) = '**'
+                               THEN common_id
+                           ELSE (SELECT campus_id FROM sys_user WHERE id = #{userId})
+                           END
+            )
+        )
+        GROUP BY cu.id, cu.classname, cu.`password`, cu.sex, cu.age, cu.iphone, cu.image, cu.create_time, cu.update_time
+
+    </select>
+    <select id="getPersonUserByUserIdAnd" resultType="wakoo.fun.pojo.Agent">
+        SELECT id, `name`
+        FROM agent_management
+        WHERE id = (SELECT campus_id FROM sys_user WHERE id = #{id})
+    </select>
+    <select id="getThePhoneNumber" resultType="java.lang.String">
+        SELECT iphone
+        FROM common_user
+        WHERE iphone = #{iphone}
+    </select>
+    <select id="theCommandOutputIsModified" resultType="wakoo.fun.pojo.PersonUser">
+        SELECT id, classname, `password`, sex, age, iphone
+        FROM common_user
+        WHERE id = #{id}
+    </select>
+    <select id="queryByMobilePhoneNumber" resultType="wakoo.fun.pojo.PersonUser">
+        SELECT cu.id,
+               cu.classname,
+               cu.sex,
+               cu.age,
+               cu.iphone,
+               am.`name` agentName
+        FROM person_common pc
+                 INNER JOIN common_user cu ON pc.person_id = cu.id
+                 LEFT JOIN agent_management am ON am.id = pc.common_id
+        WHERE iphone = #{iphone}
+    </select>
+    <select id="acquireOtherThanPersonnel" resultType="wakoo.fun.pojo.Agent">
+        SELECT id, `name`
+        FROM agent_management am
+        WHERE am.id IN (SELECT agent_id
+                        FROM user_agent_role
+                        WHERE user_id IN (
+                            SELECT id
+                            FROM sys_user
+                            WHERE agent_id = (
+                                SELECT agent_id
+                                FROM sys_user
+                                WHERE id = #{userId}
+                            )
+                               OR (
+                                      SELECT agent_id
+                                      FROM sys_user
+                                      WHERE id = #{userId}
+                                  ) = '*'
+                               OR (
+                                      SELECT agent_id
+                                      FROM sys_user
+                                      WHERE id = #{userId}
+                                  ) = '**'
+                        )
+                          AND agent_id NOT IN (
+                            SELECT common_id
+                            FROM person_common
+                            WHERE person_id = (
+                                SELECT id
+                                FROM common_user
+                                WHERE iphone = #{iphone}
+                            )
+                        ))
+    </select>
+</mapper>
