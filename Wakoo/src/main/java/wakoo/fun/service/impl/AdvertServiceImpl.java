@@ -8,6 +8,7 @@ import wakoo.fun.mapper.AdvertMapper;
 import wakoo.fun.pojo.Advert;
 import wakoo.fun.pojo.Carousel;
 import wakoo.fun.service.AdvertService;
+import wakoo.fun.vo.DeleteVo;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -38,8 +39,8 @@ public class AdvertServiceImpl implements AdvertService {
     }
 
     @Override
-    public Boolean removeSpecifiedAds(Integer id) {
-        return advertMapper.removeSpecifiedAds(id);
+    public Boolean removeSpecifiedAds(Integer[] ids) {
+        return advertMapper.removeSpecifiedAds(ids);
     }
 
     @Override
@@ -68,8 +69,8 @@ public class AdvertServiceImpl implements AdvertService {
     }
 
     @Override
-    public Boolean deleteASpecifiedWheelMap(Integer id) {
-        return advertMapper.deleteASpecifiedWheelMap(id);
+    public Boolean deleteASpecifiedWheelMap(Integer[] ids) {
+        return advertMapper.deleteASpecifiedWheelMap(ids);
     }
 
     @Override

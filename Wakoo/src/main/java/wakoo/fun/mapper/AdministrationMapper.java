@@ -2,8 +2,7 @@ package wakoo.fun.mapper;
 
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
-import wakoo.fun.vo.AdminVo;
-import wakoo.fun.vo.AllId;
+import wakoo.fun.vo.*;
 import wakoo.fun.dto.*;
 import wakoo.fun.pojo.FaAdmin;
 
@@ -59,7 +58,7 @@ public interface AdministrationMapper {
      * @param status
      * @return
      */
-    Boolean UpdStatus(@Param("id") Integer id, @Param("status") String status);
+    Boolean UpdStatus(@Param("id") Integer[] id, @Param("status") Integer status);
 
     /**
      * 查询指定用户信息
@@ -146,7 +145,7 @@ public interface AdministrationMapper {
      * @param userId
      * @return
      */
-    Integer getTheRoleId(Integer userId);
+    String getTheRoleId(Integer userId);
 
     /**
      * 验证角色id
@@ -187,7 +186,7 @@ public interface AdministrationMapper {
      * 查询没有账号的人包括自己
      */
     @MapKey("order")
-    List<Map<String,String>>getNoUserperson(Integer id);
+    List<Map<String,String>>getNoUserperson(Integer id,Integer role);
     /**
      * 修改回显
      * @param userId
@@ -200,4 +199,59 @@ public interface AdministrationMapper {
      * @return
      */
     String getCampusId(Integer userId);
+    /**
+     *  查询所有的角色id
+     * @return 返回角色id的list
+     */
+    List<AgentIdrId> getRoles();
+
+    /**
+     * 查询rid
+     * @param rid rid
+     * @return rid
+     */
+    Integer getRoleId(Integer rid);
+
+    /**
+     * 获取agent_id
+     * @param userId id
+     * @return 返回字符串
+     */
+    String getTheAgentId(Integer userId);
+
+    /**
+     * 查询agent_id
+     * @param id id
+     * @return 返回字符串
+     */
+    @MapKey("order")
+    List<Map<String,String>>getAProxyRole(Integer id);
+
+    /**
+     * 查询agent_id
+     * @param id id
+     * @return 返回字符串
+     */
+    @MapKey("order")
+    List<Map<String,String>>agency(Integer id);
+
+    /**
+     * 查询id
+     * @return 返
+     */
+    List<Integer> getPro_In_Id(Integer id);
+
+    /**
+     * 查询agent_id
+     * @return 返回字符串
+     */
+    @MapKey("order")
+    List<Map<String,String>>all();
+
+    /**
+     *  销毁账号
+     *  @param ids ids
+     * @return 返回一个list
+     */
+    Boolean destroyAccount(@Param("ids") Integer[] ids);
 }

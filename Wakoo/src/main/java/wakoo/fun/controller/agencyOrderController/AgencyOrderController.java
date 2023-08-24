@@ -10,12 +10,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.*;
 import wakoo.fun.config.UserLoginToken;
+import wakoo.fun.controller.administrationController.AdministrationController;
 import wakoo.fun.dto.AdminAdministraltion;
 import wakoo.fun.dto.OrdersDto;
 import wakoo.fun.pojo.Agent;
 import wakoo.fun.pojo.Orders;
+import wakoo.fun.service.AdminAdministrationService;
 import wakoo.fun.service.OrdersService.OrdersService;
 import wakoo.fun.service.VideosService.VideosService;
+import wakoo.fun.utils.RoleUtils;
+import wakoo.fun.vo.AgentIdrId;
 import wakoo.fun.vo.MsgVo;
 import wakoo.fun.vo.SubclassVo;
 
@@ -40,6 +44,8 @@ import java.util.*;
 public class AgencyOrderController {
     @Resource
     private OrdersService ordersService;
+    @Resource
+    private AdminAdministrationService adminAdministrationService;
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -77,14 +83,19 @@ public class AgencyOrderController {
         // 判断当前用户的类型是代理还是的人员
         Integer rId = ordersService.returnsTheParentId((Integer) userId);
         //  返回代理
+        System.out.println(rId);
+        int parentId=0;
+        RoleUtils roleUtils=new RoleUtils();
+        List<AgentIdrId> roles = adminAdministrationService.getRoles();
+        parentId = roleUtils.getParentId(parentId, rId,roles);
         List<Agent> agents;
-        if (rId == 3) {
+        if (parentId == 2) {
             // 获取当前用户的代理信息
             agents = ordersService.acquisitionPersonnel((Integer) userId);
         } else {
             // 获取当前用户的代理信息
-            Integer thePreviousLevelRid = ordersService.getThePreviousLevelRid(rId);
-            if (thePreviousLevelRid == null || thePreviousLevelRid == 3) {
+            Integer thePreviousLevelRid = ordersService.getThePreviousLevelRid(parentId);
+            if (thePreviousLevelRid == null || thePreviousLevelRid == 2) {
                 // 当前用户的为代理
                 agents = ordersService.acquisitionPersonnel((Integer) userId);
             } else {
@@ -163,6 +174,4 @@ public class AgencyOrderController {
         }
         return ResponseEntity.ok(new MsgVo(200, "修改失败", false));
     }
-
-
 }

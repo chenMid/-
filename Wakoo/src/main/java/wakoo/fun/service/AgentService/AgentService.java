@@ -75,4 +75,10 @@ public interface AgentService {
      * @return 是否删除成功
      */
     Boolean destructionAgent(@Param("id") Integer id);
+    /**
+     * 销毁中间表
+     * @param userId 用户id
+     * @return 是否刷新成功
+     */
+    Boolean destroyIntermediateTable(Integer userId);
 }

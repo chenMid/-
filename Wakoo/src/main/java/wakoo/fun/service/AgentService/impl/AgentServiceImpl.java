@@ -69,4 +69,9 @@ public class AgentServiceImpl implements AgentService {
     public Boolean destructionAgent(Integer id) {
         return agentMapper.destructionAgent(id);
     }
+
+    @Override
+    public Boolean destroyIntermediateTable(Integer userId) {
+        return agentMapper.destroyIntermediateTable(userId);
+    }
 }

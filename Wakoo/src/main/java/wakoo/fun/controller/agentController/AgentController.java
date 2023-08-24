@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -256,16 +257,26 @@ public class AgentController {
 
     @ApiOperation(value = "销毁代理")
     @UserLoginToken
+    @Transactional
     @DeleteMapping ("destructionAgent")
     public ResponseEntity<MsgVo> destructionAgent(Integer id){
         Boolean aBoolean=false;
+        try {
         if (id!=null){
             aBoolean = agentService.destructionAgent(id);
         }
         if (aBoolean) {
-            return ResponseEntity.ok(new MsgVo(200, "销毁成功", true));
+            Boolean aBoolean1 = agentService.destroyIntermediateTable(id);
+            if (aBoolean1){
+                return ResponseEntity.ok(new MsgVo(200, "销毁成功", true));
+            }
         } else {
             return ResponseEntity.ok(new MsgVo(200, "销毁失败", false));
         }
+        }catch (Exception e){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return ResponseEntity.ok(new MsgVo(500, "内部服务器错误", false));
+        }
+        return null;
     }
 }

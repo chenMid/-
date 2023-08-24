@@ -19,6 +19,7 @@ public class PersonUser {
     private Integer id;
     private String classname;
     private String password;
+    private String name;
     private Integer sex;
     private Integer age;
 

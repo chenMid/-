@@ -30,4 +30,11 @@ public interface CategoryMapper {
      * @return
      */
     Boolean updCategory(@Param("category") Category category);
+
+    /**
+     *  批量删除
+     * @param ids 要删除的id
+     * @return true删除成功，false删除失败
+     */
+    Boolean deleteSuperclassesInBatches(Integer[] ids);
 }

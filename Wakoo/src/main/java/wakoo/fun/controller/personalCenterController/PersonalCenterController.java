@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import wakoo.fun.vo.AdvertDtoVo;
 import wakoo.fun.vo.CarouselVo;
 import wakoo.fun.config.UserLoginToken;
+import wakoo.fun.vo.DeleteVo;
 import wakoo.fun.vo.MsgVo;
 import wakoo.fun.dto.AdvertDto;
 import wakoo.fun.pojo.Advert;
@@ -181,10 +182,10 @@ public class PersonalCenterController {
     @ApiOperation(value = "广告删除")
     @UserLoginToken
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
-    @DeleteMapping("/removeSpecifiedAds")
-    public MsgVo removeSpecifiedAds(Integer id) {
+    @DeleteMapping("/removeSpecifiedAds/{ids}")
+    public MsgVo removeSpecifiedAds(@PathVariable Integer[] ids) {
         try {
-            Boolean aBoolean = advertService.removeSpecifiedAds(id);
+            Boolean aBoolean = advertService.removeSpecifiedAds(ids);
             if (aBoolean) {
                 return new MsgVo(200, "删除成功", true);
             } else {
@@ -298,9 +299,9 @@ public class PersonalCenterController {
     @ApiOperation(value = "删除轮播图")
     @UserLoginToken
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
-    @DeleteMapping("/deleteASpecifiedWheelMap")
-    public ResponseEntity<MsgVo> deleteASpecifiedWheelMap(Integer status, Integer id) {
-        boolean isSuccess = advertService.deleteASpecifiedWheelMap(id);
+    @DeleteMapping("/deleteASpecifiedWheelMap/{ids}")
+    public ResponseEntity<MsgVo> deleteASpecifiedWheelMap(@PathVariable Integer[] ids) {
+        boolean isSuccess = advertService.deleteASpecifiedWheelMap(ids);
         if (isSuccess) {
             MsgVo message = new MsgVo(200,"删除成功",true);
             return ResponseEntity.ok(message);

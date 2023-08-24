@@ -2,8 +2,7 @@ package wakoo.fun.service.impl;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
-import wakoo.fun.vo.AdminVo;
-import wakoo.fun.vo.AllId;
+import wakoo.fun.vo.*;
 import wakoo.fun.dto.*;
 import wakoo.fun.mapper.AdministrationMapper;
 import wakoo.fun.pojo.FaAdmin;
@@ -76,7 +75,7 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
     }
 
     @Override
-    public Boolean UpdStatus(Integer id, String status) {
+    public Boolean UpdStatus(Integer[] id, Integer status) {
         return adminAdministration.UpdStatus(id, status);
     }
 
@@ -155,7 +154,7 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
     }
 
     @Override
-    public Integer getTheRoleId(Integer userId) {
+    public String getTheRoleId(Integer userId) {
         return adminAdministration.getTheRoleId(userId);
     }
 
@@ -185,8 +184,8 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
     }
 
     @Override
-    public List<Map<String, String>> getNoUserperson(Integer id) {
-        return adminAdministration.getNoUserperson(id);
+    public List<Map<String, String>> getNoUserperson(Integer id,Integer role) {
+        return adminAdministration.getNoUserperson(id,role);
     }
 
     @Override
@@ -198,4 +197,46 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
     public String getCampusId(Integer userId) {
         return adminAdministration.getCampusId(userId);
     }
+
+    @Override
+    public List<AgentIdrId> getRoles() {
+        return adminAdministration.getRoles();
+    }
+
+    @Override
+    public Integer getRoleId(Integer rid) {
+        return adminAdministration.getRoleId(rid);
+    }
+
+    @Override
+    public String getTheAgentId(Integer userId) {
+        return adminAdministration.getTheAgentId(userId);
+    }
+
+    @Override
+    public List<Map<String, String>> getAProxyRole(Integer id) {
+        return adminAdministration.getAProxyRole(id);
+    }
+
+    @Override
+    public List<Map<String, String>> agency(Integer id) {
+        return adminAdministration.agency(id);
+    }
+
+    @Override
+    public List<Integer> getPro_In_Id(Integer id) {
+        return adminAdministration.getPro_In_Id(id);
+    }
+
+    @Override
+    public List<Map<String, String>> all() {
+        return adminAdministration.all();
+    }
+
+    @Override
+    public Boolean destroyAccount(Integer[] ids) {
+        return adminAdministration.destroyAccount(ids);
+    }
+
+
 }

@@ -6,6 +6,7 @@ import wakoo.fun.vo.CarouselVo;
 import wakoo.fun.dto.AdvertDto;
 import wakoo.fun.pojo.Advert;
 import wakoo.fun.pojo.Carousel;
+import wakoo.fun.vo.DeleteVo;
 
 import java.util.List;
 
@@ -34,10 +35,10 @@ public interface AdvertService {
     Boolean updAvate(@Param("Advert") AdvertDtoVo advertDtoVo);
     /**
      * 删除广告
-     * @param id 要删除的id
+     * @param ids
      * @return 删除成功返回true！false
      */
-    Boolean removeSpecifiedAds(@Param("id") Integer id);
+    Boolean removeSpecifiedAds(Integer[] ids);
     /**
      * 添加轮播图
      * @return
@@ -67,11 +68,9 @@ public interface AdvertService {
     Boolean updCaouselVo(@Param("carousel") Carousel carousel);
     /**
      * 修改轮播图的状态
-     * @param id
-     * @param status
      * @return
      */
-    Boolean deleteASpecifiedWheelMap(@Param("id") Integer id);
+    Boolean deleteASpecifiedWheelMap(Integer[] ids);
     /**
      * 通过id查询用户原有顺序
      * @return

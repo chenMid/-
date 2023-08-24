@@ -1,13 +1,19 @@
 package wakoo.fun.service.PersonUserService.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import wakoo.fun.mapper.PersonUserMapper;
 import wakoo.fun.pojo.Agent;
+import wakoo.fun.pojo.Orders;
 import wakoo.fun.pojo.PersonUser;
 import wakoo.fun.service.PersonUserService.PersonUserService;
+import wakoo.fun.vo.PersonUserVo;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * PersonUser实现类
@@ -15,6 +21,7 @@ import java.util.List;
  */
 @Service
 public class PersonUserServiceImpl implements PersonUserService {
+    private static Lock lock = new ReentrantLock();
     @Resource
     private PersonUserMapper personUserMapper;
 
@@ -59,7 +66,54 @@ public class PersonUserServiceImpl implements PersonUserService {
     }
 
     @Override
-    public List<Agent> acquireOtherThanPersonnel(Integer userId, String iphone) {
-        return personUserMapper.acquireOtherThanPersonnel(userId, iphone );
+    public List<Agent> acquireOtherThanPersonnel(Integer userId, Integer parentId) {
+        return personUserMapper.acquireOtherThanPersonnel(userId, parentId );
     }
+
+    @Override
+    public List<Agent> purchaser(Integer personId) {
+        return personUserMapper.purchaser(personId);
+    }
+
+    @Override
+    public List<PersonUserVo> inquireAboutTheOwnersCourse(Integer campusId) {
+        return personUserMapper.inquireAboutTheOwnersCourse(campusId);
+    }
+    @Override
+    @Transactional
+    public Boolean addPurchaseCourse(PersonUserVo personUserVo) {
+        Boolean aBoolean = false;
+        lock.lock();
+        try {
+            aBoolean = personUserMapper.addPurchaseCourse(personUserVo);
+            if (aBoolean){
+                Orders orders = personUserMapper.checkOrderStatus(personUserVo.getId());
+                int qty=orders.getNumberOfUse()+1;
+                int number=orders.getTotalQuantity();
+                int rqty=number-qty;
+                if (rqty==0 || rqty< 0){
+                    personUserMapper.modifyOrderStatusOr(orders.getId());
+                }
+                Boolean aBoolean1 = personUserMapper.modifyOrderStatus(number,qty,rqty, orders.getId());
+                if (aBoolean1 == null || !aBoolean1) {
+                    // 手动触发事务回滚
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    aBoolean = false;
+                }
+            }
+        } catch (Exception e) {
+            // 手动触发事务回滚
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            aBoolean = false;
+        } finally {
+            lock.unlock();
+        }
+        return aBoolean;
+        }
+
+    @Override
+    public List<PersonUserVo> accessExistingCourses(Integer campusId) {
+        return personUserMapper.accessExistingCourses(campusId);
+    }
+
 }

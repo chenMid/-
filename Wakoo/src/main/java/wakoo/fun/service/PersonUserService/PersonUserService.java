@@ -1,8 +1,10 @@
 package wakoo.fun.service.PersonUserService;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.transaction.annotation.Transactional;
 import wakoo.fun.pojo.Agent;
 import wakoo.fun.pojo.PersonUser;
+import wakoo.fun.vo.PersonUserVo;
 
 import java.util.List;
 
@@ -69,8 +71,36 @@ public interface PersonUserService {
     /**
      *  获取他人不与指定的人关联的信息
      * @param userId 用户id
-     * @param iphone 电话号码
+     * @param parentId 父级id
      * @return 对象
      */
-    List<Agent> acquireOtherThanPersonnel(@Param("userId") Integer userId, @Param("iphone") String iphone);
+    List<Agent> acquireOtherThanPersonnel(Integer userId, Integer parentId);
+
+    /**
+     *  备注的查询
+     * @param personId id
+     * @return 对象
+     */
+    List<Agent> purchaser(Integer personId);
+
+    /**
+     * 查询所属课程
+     * @param campusId 所属人id
+     * @return 对象
+     */
+    List<PersonUserVo> inquireAboutTheOwnersCourse(Integer campusId);
+
+    /**
+     *   添加购买的课程
+     * @param personUserVo 购买课程
+     * @return 是否成功
+     */
+    Boolean addPurchaseCourse(@Param("person") PersonUserVo personUserVo);
+
+    /**
+     * 获取已有课程
+     * @param campusId 所属人id
+     * @return 对象
+     */
+    List<PersonUserVo> accessExistingCourses(Integer campusId);
 }

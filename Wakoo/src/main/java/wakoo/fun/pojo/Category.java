@@ -17,5 +17,4 @@ public class Category {
     private String status;
     private String createTime;
     private String updateTime;
-    private MultipartFile file;
 }

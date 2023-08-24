@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import wakoo.fun.service.AdminAdministrationService;
+import wakoo.fun.utils.RoleUtils;
+import wakoo.fun.vo.AgentIdrId;
 import wakoo.fun.vo.MsgVo;
 import wakoo.fun.config.UserLoginToken;
 import wakoo.fun.dto.*;
@@ -32,7 +34,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 @Api(tags = "Role")
 public class RoleController {
-
+    @Resource
+    private AdminAdministrationService adminAdministrationService;
     @Resource
     private RoleService roleService;
 
@@ -86,6 +89,34 @@ public class RoleController {
     @PostMapping("/addRole")
     public MsgVo addRole(@RequestBody RoleButtonDto role) {
         try {
+            // 调用adminAdministrationService的getRoles方法，获取角色列表，并赋值给roles变量
+            List<AgentIdrId> roles = adminAdministrationService.getRoles();
+            // 初始化一个整型变量a，并赋值为0
+            int parentId=0;
+            int a = 0;
+            // 定义一个整型数组validIds，包含有效的角色ID
+            int[] validIds = {0, 1, 2, 3};
+            for (int b:validIds) {
+                if (role.getFId().equals(b)){
+                    parentId=role.getFId();
+                    break;
+                }else {
+                    parentId = RoleUtils.findParent(roles, role.getFId(), validIds);
+                }
+            }
+            // 调用RoleUtils的findParent方法，传入roles、id和validIds参数，获取父级ID，并赋值给parentId变量
+            System.out.println(parentId);
+            System.out.println(role.getFId());
+            if (parentId==0){
+                role.setRoleCode("admin");
+            }else if (parentId==1){
+                role.setRoleCode("总部");
+            }else if (parentId==2){
+                role.setRoleCode("总代");
+            }else if (parentId==3){
+                role.setRoleCode("代理");
+            }
+
             // 创建一个Set集合，用于存储唯一的ID
             Set<Integer> uniqueIds = new HashSet<>();
 
@@ -98,10 +129,6 @@ public class RoleController {
             }
             // 将Set集合转换为逗号分隔的字符串
             String ids = StringUtils.join(uniqueIds, ",");
-//            Boolean aBoolean1 = roleService.exampleQueryWhetherARoleIsDisplayed(role.getFId());
-//            if (aBoolean1) {
-//                return new MsgVo(200, "角色权限重复,请重新添加", aBoolean1);
-//            }
             Boolean aBoolean = roleService.addRole(role, ids);
             return new MsgVo(200, "添加成功", aBoolean);
         } catch (Exception ex) {
@@ -135,13 +162,6 @@ public class RoleController {
     @UserLoginToken
     @PutMapping("/udpRoleMess")
     public MsgVo udpRoleMess(@RequestBody UpdRoleDto updRoleDto) {
-//        Integer integer1 = roleService.exampleQueryTheParentIdUnderId(updRoleDto.getId());
-//        Integer integer = roleService.exampleQueryWhetherTheParentExists(updRoleDto.getRid()+1);
-//        if (!integer1.equals(updRoleDto.getRid())) {
-//            if (integer != null) {
-//                return new MsgVo(403, "已有父级不可复用", false);
-//            }
-//        }
         StringBuilder number = new StringBuilder();
         for (Integer a : updRoleDto.getList()) {
             number.append(number.length() == 0 ? a : ("," + a));

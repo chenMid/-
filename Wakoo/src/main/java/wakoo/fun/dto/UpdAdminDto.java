@@ -16,6 +16,7 @@ public class UpdAdminDto {
     private Integer userId;
     private Integer roleName;
     private Integer name;
+    private String agentId;
     private String username;
     @NotBlank(message = "邮箱不能为空")
     @Pattern(regexp = "^(?:\\w+@(?:qq|163)\\.com)$", message = "邮箱格式错误")

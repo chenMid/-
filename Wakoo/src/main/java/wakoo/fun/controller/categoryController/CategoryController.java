@@ -41,18 +41,12 @@ public class CategoryController {
     public ResponseEntity<MsgVo> addCategory(@RequestBody Category category) {
         try {
             // 上传到七牛云
-            MsgVo msgVo = QiniuUtils.uploadAvatar(category.getFile(), accessKey, secretKey, bucketName,null);
-            if (msgVo.getCode() == 200) {
-                category.setParentImage((String) msgVo.getData());
                 boolean isAdded = categoryService.addCategory(category);
                 if (isAdded) {
                     return ResponseEntity.ok(new MsgVo(200, "添加成功", true));
                 } else {
                     return ResponseEntity.ok(new MsgVo(500, "添加失败", false));
                 }
-            } else {
-                return ResponseEntity.ok(new MsgVo(msgVo.getCode(), "七牛云上传错误", false));
-            }
         } catch (Exception e) {
             // 出现异常，返回错误消息
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MsgVo(500, "服务器错误", false));
@@ -63,8 +57,8 @@ public class CategoryController {
     @UserLoginToken
     @GetMapping("/getAllCategory")
     public ResponseEntity<MsgVo> getAllCategory(String keyword, Integer pageSize, Integer pageNumber) {
-        pageSize = (pageSize == null || pageSize <= 0) ? 10 : pageSize; // 默认每页显示10条数据
-        pageNumber = (pageNumber == null || pageNumber <= 0) ? 1 : pageNumber; // 默认显示第一页
+        pageSize = (pageSize == null || pageSize <= 0) ? 10 : pageSize;
+        pageNumber = (pageNumber == null || pageNumber <= 0) ? 1 : pageNumber;
 
         PageHelper.startPage(pageNumber, pageSize);
         List<Category> allCategory = categoryService.getAllCategory(keyword);
@@ -90,21 +84,26 @@ public class CategoryController {
     @PutMapping("/updCategory")
     public ResponseEntity<MsgVo> updCategory(@RequestBody Category category) throws IOException {
         try {
-            MsgVo msgVo = QiniuUtils.uploadAvatar(category.getFile(), accessKey, secretKey, bucketName,null);
-            if (msgVo.getCode() == 200) {
-                category.setParentImage((String) msgVo.getData());
                 Boolean aBoolean = categoryService.updCategory(category);
                 if (aBoolean) {
                     return ResponseEntity.ok(new MsgVo(200, "修改成功", true));
                 } else {
                     return ResponseEntity.ok(new MsgVo(500, "修改失败", false));
                 }
-            } else {
-                return ResponseEntity.ok(new MsgVo(msgVo.getCode(), "七牛云上传错误", false));
-            }
         } catch (Exception e) {
             // 出现异常，返回错误消息
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MsgVo(500, "服务器错误", false));
         }
+    }
+
+    @ApiOperation(value = "删除父类信息")
+    @UserLoginToken
+    @DeleteMapping ("/deleteTheSuperclassInformation/{ids}")
+    public ResponseEntity<MsgVo> deleteTheSuperclassInformation(@PathVariable Integer[] ids){
+        Boolean aBoolean = categoryService.deleteSuperclassesInBatches(ids);
+        if (aBoolean){
+            return ResponseEntity.ok(new MsgVo(200,"删除成功",true));
+        }
+        return ResponseEntity.ok(new MsgVo(500,"删除失败",false));
     }
 }

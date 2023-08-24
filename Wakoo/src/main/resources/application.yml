@@ -16,18 +16,18 @@ spring:
       max-file-size: 1000MB
       max-request-size: 1000MB
       enabled: true
-#  redis:
-#    port: 6379
-#    host: 192.168.21.132
-#    password:
-#    database: 15
-#    jedis:
-#      pool:
-#        max-active: 100
-#        max-idle: 8
-#        min-idle: 0
-#        max-wait: 60000
-#    timeout: 1000
+  redis:
+    port: 6379
+    host: 192.168.21.132
+    password:
+    database: 15
+    jedis:
+      pool:
+        max-active: 100
+        max-idle: 8
+        min-idle: 0
+        max-wait: 60000
+    timeout: 1000
 
 #mybatis
 mybatis:

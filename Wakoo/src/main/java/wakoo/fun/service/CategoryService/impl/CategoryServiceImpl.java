@@ -32,4 +32,9 @@ public class CategoryServiceImpl implements CategoryService {
     public Boolean updCategory(Category category) {
         return categoryMapper.updCategory(category);
     }
+
+    @Override
+    public Boolean deleteSuperclassesInBatches(Integer[] ids) {
+        return categoryMapper.deleteSuperclassesInBatches(ids);
+    }
 }

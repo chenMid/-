@@ -6,6 +6,7 @@ import wakoo.fun.vo.CarouselVo;
 import wakoo.fun.dto.AdvertDto;
 import wakoo.fun.pojo.Advert;
 import wakoo.fun.pojo.Carousel;
+import wakoo.fun.vo.DeleteVo;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public interface AdvertMapper {
      * @param id 要删除的id
      * @return 删除成功返回true！false
      */
-    Boolean removeSpecifiedAds(@Param("id") Integer id);
+    Boolean removeSpecifiedAds(@Param("ids") Integer[] ids);
 
     /**
      * 添加轮播图
@@ -75,10 +76,10 @@ public interface AdvertMapper {
 
     /**
      * 修改轮播图的状态
-     * @param id 轮播图id
+     * @param ids 轮播图id
      * @return 成功true！
      */
-    Boolean deleteASpecifiedWheelMap(@Param("id") Integer id);
+    Boolean deleteASpecifiedWheelMap(@Param("ids") Integer[] ids);
 
     /**
      * 查询所有的顺序

@@ -1,8 +1,11 @@
 package wakoo.fun.mapper;
 
 import org.apache.ibatis.annotations.Param;
+import wakoo.fun.dto.OrdersDto;
 import wakoo.fun.pojo.Agent;
+import wakoo.fun.pojo.Orders;
 import wakoo.fun.pojo.PersonUser;
+import wakoo.fun.vo.PersonUserVo;
 
 import java.util.List;
 
@@ -78,8 +81,61 @@ public interface PersonUserMapper {
     /**
      *  获取他人不与指定的人关联的信息
      * @param userId 用户id
-     * @param iphone 电话号码
+     * @param parentId 父级id
      * @return 对象
      */
-    List<Agent> acquireOtherThanPersonnel(@Param("userId") Integer userId, @Param("iphone") String iphone);
+    List<Agent> acquireOtherThanPersonnel(@Param("userId") Integer userId, @Param("parentId") Integer parentId);
+
+    /**
+     *  备注的查询
+     * @param personId id
+     * @return 对象
+     */
+    List<Agent> purchaser(Integer personId);
+
+    /**
+     * 查询所属课程
+     * @param campusId 所属人id
+     * @return 对象
+     */
+    List<PersonUserVo> inquireAboutTheOwnersCourse(Integer campusId);
+
+    /**
+     *   添加购买的课程
+     * @param personUserVo 购买课程
+     * @return 是否成功
+     */
+    Boolean addPurchaseCourse(@Param("person") PersonUserVo personUserVo);
+
+    /**
+     *  检查订单状态
+     * @param campusId campusId
+     * @return  订单对象
+     */
+    Orders checkOrderStatus(@Param("campusId") Integer campusId);
+
+    /**
+     *  修改订单数量
+     * @param number 订单号
+     * @param qty 订单数量
+     * @param rqty 输入的订单数量
+     * @param userId 用户id
+     * @return 是否成功
+     */
+    Boolean modifyOrderStatus(@Param("number") Integer number, @Param("qty") Integer qty, @Param("rqty") Integer rqty, @Param("userId") Integer userId);
+
+    /**
+     *  订单状态或者被修改订单状态，自动也要改
+     * @param id 订单号
+     * @return 是否成功
+     */
+    Boolean modifyOrderStatusOr(Integer id);
+
+    /**
+     * 获取已有课程
+     * @param campusId 所属人id
+     * @return 对象
+     */
+    List<PersonUserVo> accessExistingCourses(Integer campusId);
+
 }
