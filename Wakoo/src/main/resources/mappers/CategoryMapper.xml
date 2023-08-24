@@ -6,7 +6,7 @@
         VALUES (#{category.typeName}, #{category.parentImage}, now());
     </insert>
     <update id="updCategory">
-        UPDATE categories SET type_name=#{category.typeName},parent_image=#{category.parentImage},status=#{category.status},update_time=NOW() where id=#{category.id}
+        UPDATE categories SET type_name=#{category.typeName},parent_image=#{category.parentImage},update_time=NOW() where id=#{category.id}
     </update>
     <delete id="deleteSuperclassesInBatches">
         DELETE FROM categories
@@ -24,5 +24,12 @@
     </select>
     <select id="getAllById" resultType="wakoo.fun.pojo.Category">
         SELECT id,type_name, parent_image, status FROM categories WHERE id=#{id}
+    </select>
+    <select id="queryWhetherThereAreSubclasses" resultType="wakoo.fun.pojo.Category">
+        SELECT type_name FROM class_type
+        WHERE class_ftype_id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </select>
 </mapper>

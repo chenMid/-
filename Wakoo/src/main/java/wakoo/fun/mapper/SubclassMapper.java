@@ -83,9 +83,11 @@ public interface SubclassMapper {
      * @return
      */
     Integer getStypeageByid(Integer zid);
+
     /**
-     * 修改状态
-     * @return
+     *  删除子类
+     * @param ids ID数组
+     * @return 删除数量
      */
-    Boolean setstatussubclass(@Param("id") Integer id, @Param("status") Integer status);
+    Boolean deleteSubclass(Integer[] ids);
 }

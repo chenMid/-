@@ -37,4 +37,11 @@ public interface CategoryMapper {
      * @return true删除成功，false删除失败
      */
     Boolean deleteSuperclassesInBatches(Integer[] ids);
+
+    /**
+     *  判断指定id的父类是否存在子类
+     * @param ids 查询的id
+     * @return 判断存在
+     */
+    List<Category> queryWhetherThereAreSubclasses(Integer[] ids);
 }

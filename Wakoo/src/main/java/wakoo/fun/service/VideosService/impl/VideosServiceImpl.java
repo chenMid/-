@@ -47,7 +47,12 @@ public class VideosServiceImpl implements VideosService {
     }
 
     @Override
-    public Boolean modifyTheCourseVideo(VideosVo videosVo, Integer parentClassID) {
-        return videosMapper.modifyTheCourseVideo(videosVo, parentClassID);
+    public Boolean modifyTheCourseVideo(VideosVo videosVo) {
+        return videosMapper.modifyTheCourseVideo(videosVo);
+    }
+
+    @Override
+    public Boolean deleteVideo(Integer[] ids) {
+        return videosMapper.deleteVideo(ids);
     }
 }

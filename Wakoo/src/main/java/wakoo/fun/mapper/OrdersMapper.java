@@ -64,4 +64,11 @@ public interface OrdersMapper {
      * @return 返回对象
      */
     Boolean modifyOrderInformation(@Param("ordersDto") OrdersDto ordersDto);
+
+    /**
+     *  删除订单
+     * @param ids 订单id
+     * @return 返回对象
+     */
+    Boolean delOrder(Integer[] ids);
 }

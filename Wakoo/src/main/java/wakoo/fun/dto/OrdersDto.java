@@ -14,11 +14,13 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class OrdersDto {
     private Integer id;
-    private Integer classCampusId;
-    private Integer classTypeId;
+    private Integer name;
+    private Integer subclassName;
     private Integer classFtypeId;
     private BigDecimal money;
     private String expiry;
+    private String outExpiry;
+    private String select;
     private Integer totalQuantity;
     private Integer numberOfUse;
     private Integer remainingOrder;

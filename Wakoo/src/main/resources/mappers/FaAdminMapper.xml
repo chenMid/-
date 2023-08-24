@@ -96,7 +96,7 @@
     </select>
     <!--    登录返回个人信息-->
     <select id="ListFadmin" resultType="wakoo.fun.pojo.FaAdminLogin">
-        SELECT user_id,
+        SELECT user_id id,
                username,
                nickname,
                password,

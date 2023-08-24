@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class VideosVo {
     private Integer id;
-    private String subclassName;
+    private String classTypeName;
     @NotNull(message = "视频标题不能为空")
     @NotBlank(message = "视频标题不能为空")
     private String title;

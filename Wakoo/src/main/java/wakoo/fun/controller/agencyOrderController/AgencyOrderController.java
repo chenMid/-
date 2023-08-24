@@ -4,29 +4,23 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import wakoo.fun.common.Log;
 import wakoo.fun.config.UserLoginToken;
-import wakoo.fun.controller.administrationController.AdministrationController;
-import wakoo.fun.dto.AdminAdministraltion;
 import wakoo.fun.dto.OrdersDto;
+import wakoo.fun.log.Constants;
 import wakoo.fun.pojo.Agent;
 import wakoo.fun.pojo.Orders;
 import wakoo.fun.service.AdminAdministrationService;
 import wakoo.fun.service.OrdersService.OrdersService;
-import wakoo.fun.service.VideosService.VideosService;
 import wakoo.fun.utils.RoleUtils;
 import wakoo.fun.vo.AgentIdrId;
 import wakoo.fun.vo.MsgVo;
-import wakoo.fun.vo.SubclassVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -52,87 +46,106 @@ public class AgencyOrderController {
     @ApiOperation(value = "查询所有代理订单")
     @UserLoginToken
     @GetMapping("/checkAllAgentOrders")
-    public ResponseEntity<MsgVo> checkAllAgentOrders(String keyword, Integer pageSize, Integer pageNumber, HttpServletRequest request) {
-        //获取当前用户id
+    public MsgVo checkAllAgentOrders(String keyword, Integer pageSize, Integer pageNumber, HttpServletRequest request) {
+        // 获取当前用户id
         Object userId = request.getAttribute("userId");
-        System.out.println(userId);
-        //分页
+        // 分页
         PageHelper.startPage(pageNumber, pageSize);
-        //查询数据
+        // 查询数据，调用ordersService的getAllAgentInformation方法，传入keyword和userId参数
         List<Orders> allAgentInformation = ordersService.getAllAgentInformation(keyword, (Integer) userId);
-        for (Orders orders:allAgentInformation) {
-            if (orders.getExpiry()!=null){
+        // 遍历allAgentInformation列表
+        for (Orders orders : allAgentInformation) {
+            if (orders.getExpiry() != null) {
+                // 若orders的expiry属性不为null，调用calculateDaysDifference方法计算expiry与当前日期的天数差，并将结果赋值给s
                 String s = calculateDaysDifference(orders.getExpiry());
+                // 将s设置为orders的expiry属性
                 orders.setExpiry(s);
-            }else {
+            } else {
+                // 若orders的expiry属性为null，将"永久"设置为orders的expiry属性
                 orders.setExpiry("永久");
             }
         }
-        //进行分页
+        // 进行分页，将分页后的数据放入PageInfo对象中
         PageInfo<Orders> pageInfo = new PageInfo<>(allAgentInformation);
-        //  响应消息
-        return ResponseEntity.ok(new MsgVo(200, "请求成功", pageInfo));
+        // 返回一个包含成功信息和pageInfo的MsgVo对象
+        return new MsgVo(200, "查询成功", pageInfo);
     }
 
     @ApiOperation(value = "人员下拉框")
     @UserLoginToken
     @GetMapping("/addAgentOrder")
-    public ResponseEntity<MsgVo> personnelDropDownBox(HttpServletRequest request) {
-        //从token获取id
-        Object userId = request.getAttribute("userId");
-        // 判断当前用户的类型是代理还是的人员
-        Integer rId = ordersService.returnsTheParentId((Integer) userId);
-        //  返回代理
-        System.out.println(rId);
-        int parentId=0;
-        RoleUtils roleUtils=new RoleUtils();
-        List<AgentIdrId> roles = adminAdministrationService.getRoles();
-        parentId = roleUtils.getParentId(parentId, rId,roles);
-        List<Agent> agents;
-        if (parentId == 2) {
-            // 获取当前用户的代理信息
-            agents = ordersService.acquisitionPersonnel((Integer) userId);
-        } else {
-            // 获取当前用户的代理信息
-            Integer thePreviousLevelRid = ordersService.getThePreviousLevelRid(parentId);
-            if (thePreviousLevelRid == null || thePreviousLevelRid == 2) {
-                // 当前用户的为代理
+    public MsgVo personnelDropDownBox(HttpServletRequest request) {
+        try {
+            // 从token中获取id
+            Object userId = request.getAttribute("userId");
+            // 根据当前用户id获取其角色类型（代理或普通人员）
+            Integer rId = ordersService.returnsTheParentId((Integer) userId);
+            System.out.println(rId);
+
+            int parentId = 0;
+            RoleUtils roleUtils = new RoleUtils();
+            List<AgentIdrId> roles = adminAdministrationService.getRoles();
+            // 根据角色类型获取其上级的角色id
+            parentId = roleUtils.getParentId(parentId, rId, roles);
+
+            List<Agent> agents;
+            if (parentId == 2) {
+                // 如果上级角色id为2，则表示当前用户为代理，获取当前用户的代理信息
                 agents = ordersService.acquisitionPersonnel((Integer) userId);
             } else {
-                // 获取当前用户的代理信息
-                agents = ordersService.acquisitionPersonnel(thePreviousLevelRid);
+                // 如果上级角色id不为2，则需要继续获取上级的代理信息
+                Integer thePreviousLevelRid = ordersService.getThePreviousLevelRid(parentId);
+                if (thePreviousLevelRid == null || thePreviousLevelRid == 2) {
+                    // 若上级角色id为null或为2，则表示当前用户为代理，获取当前用户的代理信息
+                    agents = ordersService.acquisitionPersonnel((Integer) userId);
+                } else {
+                    // 获取上级角色的代理信息
+                    agents = ordersService.acquisitionPersonnel(thePreviousLevelRid);
+                }
             }
+
+            // 返回一个包含成功信息和agents的MsgVo对象
+            return new MsgVo(200, "请求成功", agents);
+        } catch (Exception e) {
+            // 处理异常
+            e.printStackTrace();
+            // 返回一个包含错误信息的MsgVo对象
+            return new MsgVo(500, "请求处理失败", null);
         }
-        return ResponseEntity.ok(new MsgVo(200, "请求成功", agents));
     }
 
 
     @ApiOperation(value = "添加代理订单")
     @UserLoginToken
+    @Log(modul = "代理订单页面-添加订单", type = Constants.INSERT, desc = "操作添加按钮")
     @PostMapping("/addAgentOrder")
-    public ResponseEntity<MsgVo> addAgentOrder(@RequestBody OrdersDto ordersDto) {
+    public MsgVo addAgentOrder(@RequestBody OrdersDto ordersDto) {
+        if (ordersDto.getExpiry().isEmpty()) {
+            ordersDto.setExpiry(null);
+        }
         ordersDto.setRemainingOrder(ordersDto.getTotalQuantity());
         Boolean aBoolean = ordersService.addAgentOrder(ordersDto);
         if (aBoolean) {
-            return ResponseEntity.ok(new MsgVo(200, "添加成功", true));
+            return new MsgVo(200, "添加成功", true);
         }
-        return ResponseEntity.ok(new MsgVo(200, "添加失败", false));
+        return new MsgVo(200, "添加失败", false);
     }
 
     @ApiOperation(value = "修改回显信息")
     @UserLoginToken
     @GetMapping("/modifyAgentOrder")
-    public ResponseEntity<MsgVo> modifyAgentOrder(Integer id) {
+    public MsgVo modifyAgentOrder(Integer id) {
         OrdersDto orderById = ordersService.getOrderById(id);
-        if (orderById.getExpiry() == null){
+        if (orderById.getExpiry() == null) {
             //如果是空那么就是永久的订单
-            orderById.setExpiry("永久");
-        }else {
+            orderById.setSelect("1");
+        } else {
             // 获取当前时间
+            orderById.setSelect("0");
             String s = calculateDaysDifference(orderById.getExpiry());
-            orderById.setExpiry(s);
+            orderById.setOutExpiry(s);
         }
-        return ResponseEntity.ok(new MsgVo(200, "请求成功", orderById));
+        return new MsgVo(200, "请求成功", orderById);
     }
 
     public static String calculateDaysDifference(String expiryDateStr) {
@@ -152,26 +165,34 @@ public class AgencyOrderController {
 
     @ApiOperation(value = "修改订单信息")
     @UserLoginToken
+    @Transactional(rollbackFor = Exception.class)
+    @Log(modul = "代理订单页面-修改订单", type = Constants.UPDATE, desc = "操作修改按钮")
     @PutMapping("/modifyOrder")
-    public ResponseEntity<MsgVo> modifyOrder(@RequestBody OrdersDto ordersDto) {
-        OrdersDto orderById = ordersService.getOrderById(ordersDto.getId());
-        if (ordersDto.getExpiry()!=null){
-            if (ordersDto.getStatus()==0){
-                return ResponseEntity.ok(new MsgVo(403,"状态不能为失效",false));
-            }else if (ordersDto.getStatus().equals(orderById.getStatus())&& orderById.getExpiry().equals(ordersDto.getExpiry())){
-                return ResponseEntity.ok(new MsgVo(403,"请先修改信息在执行",false));
-            }
-        }else {
-            if (orderById.getExpiry()==null){
-                if (ordersDto.getStatus().equals(orderById.getStatus())){
-                    return ResponseEntity.ok(new MsgVo(403,"请先修改信息在执行",false));
-                }
-            }
+    public MsgVo modifyOrder(@RequestBody OrdersDto ordersDto) {
+        if (ordersDto.getExpiry().isEmpty()) {
+            ordersDto.setExpiry(null);
         }
+        // 修改订单信息
         Boolean aBoolean = ordersService.modifyOrderInformation(ordersDto);
         if (aBoolean) {
-            return ResponseEntity.ok(new MsgVo(200, "修改成功", true));
+            // 返回一个包含成功信息的MsgVo对象
+            return new MsgVo(200, "修改成功", true);
         }
-        return ResponseEntity.ok(new MsgVo(200, "修改失败", false));
+
+        // 返回一个包含失败信息的MsgVo对象
+        return new MsgVo(403, "修改失败", false);
+    }
+
+    @ApiOperation(value = "删除订单信息")
+    @UserLoginToken
+    @Log(modul = "代理订单页面-删除订单", type = Constants.DELETE, desc = "操作软删除按钮")
+    @DeleteMapping("/modelOrder")
+    public MsgVo modelOrder(@RequestBody Map<String, Integer[]> requestBody,HttpServletRequest request) {
+        Integer[] ids = requestBody.get("ids");
+        Boolean aBoolean = ordersService.delOrder(ids);
+        if (aBoolean) {
+            return new MsgVo(200, "删除成功", true);
+        }
+        return new MsgVo(403, "删除失败", false);
     }
 }

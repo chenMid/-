@@ -52,5 +52,11 @@ public interface VideosService {
      * @param videosVo 修改课程实体类包含要修改的属性
      * @return 成功返回true~false
      */
-    Boolean modifyTheCourseVideo(@Param("videosVo") VideosVo videosVo, @Param("parentClassID") Integer parentClassID);
+    Boolean modifyTheCourseVideo(@Param("videosVo") VideosVo videosVo);
+    /**
+     *  删除课程视频
+     * @param ids 删除视频Id
+     * @return 成功返回true，否则返回false
+     */
+    Boolean deleteVideo(Integer[] ids);
 }

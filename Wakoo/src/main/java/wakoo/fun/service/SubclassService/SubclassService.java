@@ -79,8 +79,9 @@ public interface SubclassService {
     Integer getStypeageByid(Integer zid);
 
     /**
-     * 修改状态
-     * @return
+     *  删除子类
+     * @param ids ID数组
+     * @return 删除数量
      */
-    Boolean setstatussubclass(Integer id,Integer status);
+    Boolean deleteSubclass(Integer[] ids);
 }

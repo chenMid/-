@@ -18,7 +18,7 @@
     </update>
     <update id="updTypeClass">
         UPDATE class_type
-        SET class_ftype_id=#{subclass.id},
+        SET class_ftype_id=#{subclass.typeName},
             type_name=#{subclass.name},
             type_age=#{subclass.typeAge},
             inage_image=#{subclass.inageImage},
@@ -26,19 +26,20 @@
             material=#{subclass.material},
             sort=#{subclass.sort},
             update_time=NOW()
-        where id = #{subclass.zId}
+        where id = #{subclass.id}
     </update>
     <update id="updBySort">
-        UPDATE class_type SET sort=#{sort} WHERE type_name=#{typeName}
-    </update>
-    <update id="setstatussubclass">
         UPDATE class_type
-        <set>
-            <if test="status==1">status=0</if>
-            <if test="status==0">status=1</if>
-        </set>
-        WHERE id=#{id}
+        SET sort=#{sort}
+        WHERE type_name = #{typeName}
     </update>
+    <delete id="deleteSubclass">
+        DELETE FROM class_type
+        WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
     <select id="getAllSubclass" resultType="wakoo.fun.pojo.Subclass">
         SELECT ct.id,
                cs.type_name,
@@ -48,7 +49,8 @@
                ct.age_image,
                ct.sort,
                ct.material,
-               ct.create_time
+               ct.create_time,
+               ct.update_time
         FROM class_type ct
                  JOIN categories cs ON ct.class_ftype_id = cs.id
         WHERE (cs.type_name LIKE CONCAT('%', #{keyword}, '%')
@@ -73,7 +75,7 @@
     </select>
     <select id="getSubclass" resultType="wakoo.fun.pojo.Subclass">
         SELECT id,
-               type_name,
+               class_ftype_id typeName,
                type_name AS name,
                type_age,
                inage_image,
@@ -82,7 +84,7 @@
                material,
                create_time
         FROM class_type
-        where id=#{id}
+        where id = #{id}
     </select>
     <select id="getfType" resultType="wakoo.fun.dto.SubclassDto">
         SELECT id, type_name
@@ -101,18 +103,13 @@
     </select>
     <select id="getStypeageByid" resultType="java.lang.Integer">
         select type_age
-        from class_type where id=#{zId}
+        from class_type
+        where id = #{zId}
     </select>
     <insert id="addSubclasss">
-        INSERT INTO class_type (class_ftype_id,
-                                type_name,
-                                type_age,
-                                inage_image,
-                                age_image,
-                                material,
-                                create_time,
-        VALUES (#{subclass.id}, #{subclass.name}, #{subclass.typeAge}, #{subclass.inageImage}, #{subclass.ageImage},
-                #{subclass.material}, NOW())
+        INSERT INTO class_type (class_ftype_id, type_name, type_age, inage_image, age_image, material,sort ,create_time)
+        VALUES (#{subclass.typeName}, #{subclass.name}, #{subclass.typeAge}, #{subclass.inageImage}, #{subclass.ageImage},
+                #{subclass.material}, #{subclass.sort},NOW())
     </insert>
 
 </mapper>

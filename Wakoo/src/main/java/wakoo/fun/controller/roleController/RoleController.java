@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import wakoo.fun.common.Log;
+import wakoo.fun.log.Constants;
 import wakoo.fun.service.AdminAdministrationService;
 import wakoo.fun.utils.RoleUtils;
 import wakoo.fun.vo.AgentIdrId;
@@ -28,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@EnableTransactionManagement//数据库事务管理
+@EnableTransactionManagement
 @CrossOrigin
 @RestController
 @RequestMapping("/api")
@@ -40,7 +42,6 @@ public class RoleController {
     private RoleService roleService;
 
     @ApiOperation(value = "角色")
-    @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @UserLoginToken
     @GetMapping("/SelectRole")
     public MsgVo selectRole(String keyword, Integer pageSize, Integer pageNumber, HttpServletRequest request) {
@@ -53,7 +54,6 @@ public class RoleController {
     }
 
     @ApiOperation(value = "权限操作")
-    @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @UserLoginToken
     @GetMapping("/getButton")
     public MsgVo getButton(Integer roleId) {
@@ -83,12 +83,11 @@ public class RoleController {
     }
 
     @ApiOperation(value = "角色添加")
-    @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @UserLoginToken
+    @Log(modul = "角色页面-角色添加", type = Constants.SELECT, desc = "操作添加按钮")
     @PostMapping("/addRole")
     public MsgVo addRole(@RequestBody RoleButtonDto role) {
-        try {
             // 调用adminAdministrationService的getRoles方法，获取角色列表，并赋值给roles变量
             List<AgentIdrId> roles = adminAdministrationService.getRoles();
             // 初始化一个整型变量a，并赋值为0
@@ -131,13 +130,9 @@ public class RoleController {
             String ids = StringUtils.join(uniqueIds, ",");
             Boolean aBoolean = roleService.addRole(role, ids);
             return new MsgVo(200, "添加成功", aBoolean);
-        } catch (Exception ex) {
-            return new MsgVo(500, "请勾选至少一个权限", null);
-        }
     }
 
     @ApiOperation(value = "查询添加权限")
-    @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @UserLoginToken
     @GetMapping("/updgetRole")
     public MsgVo updgetRole(Integer id) {
@@ -157,9 +152,9 @@ public class RoleController {
 
 
     @ApiOperation(value = "修改角色信息")
-    @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @UserLoginToken
+    @Log(modul = "角色页面-角色修改", type = Constants.INSERT, desc = "操作修改按钮")
     @PutMapping("/udpRoleMess")
     public MsgVo udpRoleMess(@RequestBody UpdRoleDto updRoleDto) {
         StringBuilder number = new StringBuilder();
@@ -213,9 +208,9 @@ public class RoleController {
     }
 
     @ApiOperation(value = "修改角色状态")
-    @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @UserLoginToken
+    @Log(modul = "角色页面-修改角色状态", type = Constants.UPDATE, desc = "操作修改状态")
     @PutMapping("/updRoleStatus")
     public MsgVo updRoleStatus(Integer id, Integer status) {
         Integer roleNum = roleService.getRoleNum(id);
@@ -245,7 +240,7 @@ public class RoleController {
     @ApiOperation(value = "获取当前页面按钮状态")
     @UserLoginToken
     @GetMapping("/getButtonMenus")
-    public ResponseEntity<MsgVo> getButtonMenus(HttpServletRequest request, Integer menuId) {
+    public MsgVo getButtonMenus(HttpServletRequest request, Integer menuId) {
         try {
             Object userId = request.getAttribute("userId");
             List<Map<String, Boolean>> buttonRolea = roleService.getButtonRolea((Integer) userId, menuId);
@@ -263,10 +258,10 @@ public class RoleController {
                 }
             }
 
-            return ResponseEntity.ok(new MsgVo(200, "请求成功", towButton));
+            return new MsgVo(200, "请求成功", towButton);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.ok(new MsgVo(500, "服务器内部错误", null));
+            return new MsgVo(500, "服务器内部错误", null);
         }
     }
 }

@@ -33,6 +33,7 @@ public class MenuController {
     @ApiOperation(value = "menu")
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @UserLoginToken
+
     @PostMapping("/menu")
     public MsgVo menu(HttpServletRequest request) {
         Object userId = request.getAttribute("userId");
@@ -49,9 +50,9 @@ public class MenuController {
     public MsgVo Role(HttpServletRequest request) {
         List<SysRole> role = menuService.getRole();
         if (role != null) {
-            return new MsgVo(200, "角色列表", role);
+            return new MsgVo(200, "查询成功", role);
         } else {
-            return new MsgVo(MsgUtils.FAILED);
+            return new MsgVo(403, "查询失败", null);
         }
     }
 

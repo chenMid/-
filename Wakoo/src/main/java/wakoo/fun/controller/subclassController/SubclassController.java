@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import wakoo.fun.common.Log;
+import wakoo.fun.log.Constants;
 import wakoo.fun.vo.MsgVo;
 import wakoo.fun.config.UserLoginToken;
 import wakoo.fun.dto.FileInformationDto;
@@ -30,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @EnableTransactionManagement//数据库事务管理
 @CrossOrigin
@@ -50,50 +53,47 @@ public class SubclassController {
     @ApiOperation(value = "查询所有")
     @UserLoginToken
     @GetMapping("/getAllsubclass")
-    public ResponseEntity<MsgVo> getAllsubclass(String keyword, Integer pageSize, Integer pageNumber) {
-        pageSize = (pageSize == null || pageSize <= 0) ? 10 : pageSize;
-        // 默认每页显示10条数据
-        pageNumber = (pageNumber == null || pageNumber <= 0) ? 1 : pageNumber;
-        // 默认显示第一页
-
+    public MsgVo getAllsubclass(String keyword, Integer pageSize, Integer pageNumber) {
         PageHelper.startPage(pageNumber, pageSize);
         List<Subclass> allSubclass = subclassService.getAllSubclass(keyword);
         PageInfo<Subclass> pageInfo = new PageInfo<>(allSubclass);
-        return ResponseEntity.ok(new MsgVo(200, "请求成功", pageInfo));
+        pageInfo.setPageSize(pageSize);
+        return new MsgVo(200, "请求成功", pageInfo);
     }
 
 
     @ApiOperation(value = "上传")
     @UserLoginToken
     @PostMapping("/addImg")
-    public ResponseEntity<MsgVo> addImg(@RequestPart MultipartFile file) throws IOException {
+    public MsgVo addImg(@RequestPart MultipartFile file) throws IOException {
         try {
             // 上传头像到七牛云
-            MsgVo msgVo = QiniuUtils.uploadAvatar(file, accessKey, secretKey, bucketName,null);
+            MsgVo msgVo = QiniuUtils.uploadAvatar(file, accessKey, secretKey, bucketName, null);
             if (msgVo.getCode() == 200) {
                 // 返回成功消息
-                return ResponseEntity.ok(new MsgVo(200, "上传成功", msgVo.getData()));
+                return new MsgVo(200, "上传成功", msgVo.getData());
             } else {
                 // 上传失败
-                return ResponseEntity.ok(new MsgVo(500, "上传失败", false));
+                return new MsgVo(403, "上传失败", false);
             }
         } catch (Exception e) {
             // 出现异常，返回错误消息
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MsgVo(500, "服务器错误", false));
+            return new MsgVo(500, "服务器错误", false);
         }
     }
 
 
     @ApiOperation(value = "添加子类")
     @UserLoginToken
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
+    @Log(modul = "子类页面-子类添加", type = Constants.INSERT, desc = "操作添加按钮")
     @PostMapping("/addsubclass")
-    public ResponseEntity<MsgVo> addSubclass(@RequestBody Subclass subclass) {
-        List<Integer> ageList = subclassService.getAgeList(subclass.getId(), subclass.getTypeAge(), subclass.getName());
+    public MsgVo addSubclass(@RequestBody Subclass subclass) {
+        List<Integer> ageList = subclassService.getAgeList(Integer.parseInt(subclass.getTypeName()), subclass.getTypeAge(), subclass.getName());
         if (!ageList.isEmpty()) {
-            return ResponseEntity.ok(new MsgVo(403, "年龄重复", false));
+            new MsgVo(403, "年龄重复", false);
         }
-        List<Integer> typeIdList = subclassService.getTypeIdByName(subclass.getId(), subclass.getName());
+        List<Integer> typeIdList = subclassService.getTypeIdByName(Integer.parseInt(subclass.getTypeName()),subclass.getName());
         if (typeIdList == null || typeIdList.isEmpty()) {
             subclass.setSort(1);
         } else {
@@ -103,62 +103,60 @@ public class SubclassController {
         String[] fruits1 = subclass.getAgeImage().split(",");
         int startAge = subclass.getTypeAge();
         for (int i = 0; i < fruits.length; i++) {
-            Subclass subclass1 = new Subclass(subclass.getId(), subclass.getName(), startAge + i, fruits[i], fruits1[i], subclass.getMaterial(), subclass.getSort());
+            Subclass subclass1 = new Subclass(subclass.getTypeName(),subclass.getName(), startAge + i, fruits[i], fruits1[i], subclass.getMaterial(), subclass.getSort());
             subclassService.addSubclasss(subclass1);
         }
-        return ResponseEntity.ok(new MsgVo(200, "请求成功", true));
+        return new MsgVo(200, "添加成功", true);
     }
 
     @ApiOperation(value = "修改回显")
     @UserLoginToken
     @GetMapping("/getUpdSubclass")
-    public ResponseEntity<MsgVo> getUpdSubclass(Integer id) {
+    public MsgVo getUpdSubclass(Integer id) {
         Subclass subclass = subclassService.getSubclass(id);
-        return ResponseEntity.ok(new MsgVo(200, "请求成功", subclass));
+        return new MsgVo(200, "请求成功", subclass);
     }
 
     @ApiOperation(value = "父类回显")
     @UserLoginToken
     @GetMapping("/getfType")
-    public ResponseEntity<MsgVo> getfType() {
-        return ResponseEntity.ok(new MsgVo(200, "请求成功", subclassService.getfType()));
+    public MsgVo getfType() {
+        return new MsgVo(200, "请求成功", subclassService.getfType());
     }
 
     @ApiOperation(value = "修改子类")
     @UserLoginToken
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
+    @Log(modul = "子类页面-子类修改", type = Constants.UPDATE, desc = "操作修改按钮")
     @PutMapping("/updSubclass")
-    public ResponseEntity<MsgVo> updSubclass(@RequestBody Subclass subclass) {
-        try {
-            Integer stypeageByid = subclassService.getStypeageByid(subclass.getZId());
+    public MsgVo updSubclass(@RequestBody Subclass subclass) {
+            Integer stypeageByid = subclassService.getStypeageByid(subclass.getId());
 
             if (subclass.getTypeAge().equals(stypeageByid)) {
                 List<Integer> ageList = subclassService.getAgeList(subclass.getId(), subclass.getTypeAge(), subclass.getName());
 
                 if (!ageList.isEmpty()) {
-                    return ResponseEntity.ok(new MsgVo(403, "年龄重复", false));
+                    return new MsgVo(403, "年龄重复", false);
                 }
             }
             subclassService.getBySort(subclass.getSort(), subclass.getName());
             subclassService.updTypeClass(subclass);
 
-            return ResponseEntity.ok(new MsgVo(200, "请求成功", null));
-        } catch (Exception e) {
-            // 处理异常，例如记录日志或返回错误信息
-            return ResponseEntity.ok(new MsgVo(500, "服务器错误", null));
-        }
+            return new MsgVo(200, "修改成功", null);
     }
 
 
-    @ApiOperation(value = "修改状态接口")
+    @ApiOperation(value = "删除子类")
     @UserLoginToken
-    @Transactional
-    @PutMapping("/updSubclassStatus")
-    public ResponseEntity<MsgVo> updSubclassStatus(Integer id, Integer status) {
-        Boolean setstatussubclass = subclassService.setstatussubclass(id, status);
-        return ResponseEntity.ok(new MsgVo(200, "修改成功", setstatussubclass));
+    @Log(modul = "子类页面-子类删除", type = Constants.DELETE, desc = "操作删除按钮")
+    @DeleteMapping ("/updSubclassStatus")
+    public MsgVo updSubclassStatus(@RequestBody Map<String, Integer[]> requestBody) {
+        Integer[] ids = requestBody.get("ids");
+        Boolean aBoolean = subclassService.deleteSubclass(ids);
+        if (aBoolean) {
+            return new MsgVo(200, "删除成功", true);
+        }
+        return new MsgVo(403, "删除失败", false);
     }
-
-
 }
 

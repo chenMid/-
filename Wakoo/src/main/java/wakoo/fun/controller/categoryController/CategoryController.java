@@ -9,15 +9,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.*;
+import wakoo.fun.common.Log;
+import wakoo.fun.log.Constants;
 import wakoo.fun.vo.MsgVo;
 import wakoo.fun.config.UserLoginToken;
 import wakoo.fun.pojo.Category;
 import wakoo.fun.service.CategoryService.CategoryService;
-import wakoo.fun.utils.QiniuUtils;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @EnableTransactionManagement//数据库事务管理
 @CrossOrigin
@@ -37,73 +40,69 @@ public class CategoryController {
 
     @ApiOperation(value = "添加父类")
     @UserLoginToken
+    @Log(modul = "父类页面-添加父类", type = Constants.INSERT, desc = "操作添加按钮")
     @PostMapping("/addCategory")
-    public ResponseEntity<MsgVo> addCategory(@RequestBody Category category) {
-        try {
+    public MsgVo addCategory(@RequestBody Category category) {
             // 上传到七牛云
-                boolean isAdded = categoryService.addCategory(category);
-                if (isAdded) {
-                    return ResponseEntity.ok(new MsgVo(200, "添加成功", true));
-                } else {
-                    return ResponseEntity.ok(new MsgVo(500, "添加失败", false));
-                }
-        } catch (Exception e) {
-            // 出现异常，返回错误消息
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MsgVo(500, "服务器错误", false));
-        }
+            boolean isAdded = categoryService.addCategory(category);
+            if (isAdded) {
+                return new MsgVo(200, "添加成功", true);
+            } else {
+                return new MsgVo(500, "添加失败", false);
+            }
     }
 
     @ApiOperation(value = "查询所有及模糊查询")
     @UserLoginToken
     @GetMapping("/getAllCategory")
-    public ResponseEntity<MsgVo> getAllCategory(String keyword, Integer pageSize, Integer pageNumber) {
-        pageSize = (pageSize == null || pageSize <= 0) ? 10 : pageSize;
-        pageNumber = (pageNumber == null || pageNumber <= 0) ? 1 : pageNumber;
-
+    public MsgVo getAllCategory(String keyword, Integer pageSize, Integer pageNumber) {
         PageHelper.startPage(pageNumber, pageSize);
         List<Category> allCategory = categoryService.getAllCategory(keyword);
         PageInfo<Category> pageInfo = new PageInfo<>(allCategory);
-
+        pageInfo.setPageSize(pageSize);
         if (allCategory.isEmpty()) {
-            return ResponseEntity.ok(new MsgVo(204, "未找到相关数据", null));
+            return new MsgVo(203, "未找到相关数据", null);
         } else {
-            return ResponseEntity.ok(new MsgVo(200, "请求成功", pageInfo));
+            return new MsgVo(200, "请求成功", pageInfo);
         }
     }
 
     @ApiOperation(value = "查询指定父类信息")
     @UserLoginToken
     @GetMapping("/getByIdCategory")
-    public ResponseEntity<MsgVo> getByIdCategory(Integer id) {
+    public MsgVo getByIdCategory(Integer id) {
         Category allById = categoryService.getAllById(id);
-        return ResponseEntity.ok(new MsgVo(200, "请求成功", allById));
+        return new MsgVo(200, "请求成功", allById);
     }
 
     @ApiOperation(value = "修改父类信息")
     @UserLoginToken
+    @Log(modul = "父类页面-修改父类", type = Constants.UPDATE, desc = "操作修改按钮")
     @PutMapping("/updCategory")
-    public ResponseEntity<MsgVo> updCategory(@RequestBody Category category) throws IOException {
-        try {
-                Boolean aBoolean = categoryService.updCategory(category);
-                if (aBoolean) {
-                    return ResponseEntity.ok(new MsgVo(200, "修改成功", true));
-                } else {
-                    return ResponseEntity.ok(new MsgVo(500, "修改失败", false));
-                }
-        } catch (Exception e) {
-            // 出现异常，返回错误消息
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MsgVo(500, "服务器错误", false));
-        }
+    public MsgVo updCategory(@RequestBody Category category) throws IOException {
+            Boolean aBoolean = categoryService.updCategory(category);
+            if (aBoolean) {
+                return new MsgVo(200, "修改成功", true);
+            } else {
+                return new MsgVo(500, "修改失败", false);
+            }
     }
 
     @ApiOperation(value = "删除父类信息")
     @UserLoginToken
-    @DeleteMapping ("/deleteTheSuperclassInformation/{ids}")
-    public ResponseEntity<MsgVo> deleteTheSuperclassInformation(@PathVariable Integer[] ids){
-        Boolean aBoolean = categoryService.deleteSuperclassesInBatches(ids);
-        if (aBoolean){
-            return ResponseEntity.ok(new MsgVo(200,"删除成功",true));
+    @Log(modul = "父类页面-删除父类", type = Constants.DELETE, desc = "操作删除按钮")
+    @DeleteMapping("/deleteTheSuperclassInformation")
+    public MsgVo deleteTheSuperclassInformation(@RequestBody Map<String, Integer[]> requestBody) {
+        Integer[] ids = requestBody.get("ids");
+        List<Category> categories = categoryService.queryWhetherThereAreSubclasses(ids);
+        if (categories.size() == 0) {
+            Boolean aBoolean = categoryService.deleteSuperclassesInBatches(ids);
+            if (aBoolean) {
+                return new MsgVo(200, "删除成功", categories);
+            }
+            return new MsgVo(403, "删除失败", false);
+        } else {
+            return new MsgVo(403, "请先删除子类后再删除", false);
         }
-        return ResponseEntity.ok(new MsgVo(500,"删除失败",false));
     }
 }

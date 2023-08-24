@@ -10,19 +10,26 @@
                            video_introduction,
                            video_length,
                            create_time)
-            value (#{videosVo.id},#{videosVo.videoUrl},#{videosVo.title},#{videosVo.videoImageUrl},#{videosVo.which},#{videosVo.videoIntroduction},#{videosVo.videoLength},NOW())
+            value (#{videosVo.classTypeName},#{videosVo.videoUrl},#{videosVo.title},#{videosVo.videoImageUrl},#{videosVo.which},#{videosVo.videoIntroduction},#{videosVo.videoLength},NOW())
     </insert>
     <update id="modifyTheCourseVideo">
         UPDATE videos
-        SET class_type_id =#{videosVo.id},
+        SET class_type_id =#{videosVo.classTypeName},
                     video_length=#{videosVo.videoLength},
                     title=#{videosVo.title},
                     which =#{videosVo.which},
                     video_image_url =#{videosVo.videoImageUrl},
                     video_url =#{videosVo.videoUrl},
                     video_introduction =#{videosVo.videoIntroduction}
-        WHERE id =#{parentClassID}
+        WHERE id =#{videosVo.id}
     </update>
+    <delete id="deleteVideo">
+        DELETE FROM videos
+        WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
     <select id="getAllVideos" resultType="wakoo.fun.pojo.Videos">
         SELECT videos.id,
                categories.type_name,
@@ -54,11 +61,17 @@
         select id from class_type WHERE class_ftype_id=#{id} AND type_name=#{typeName} AND type_age=#{typeAge}
     </select>
     <select id="exampleModifyTheCommandOutput" resultType="wakoo.fun.dto.VideosDto">
-        SELECT vs.id,cs.type_name,CONCAT(ct.type_name, '-', ct.type_age)subclassName,
-               vs.title,vs.which,vs.video_image_url,vs.video_url,vs.video_introduction
+        SELECT  vs.id,
+                cs.id type_name,
+                vs.class_type_id classTypeName,
+                vs.title,
+                vs.which,
+                vs.video_image_url,
+                vs.video_url,
+                vs.video_introduction
         FROM videos vs
-                 LEFT JOIN class_type ct ON vs.class_type_id=ct.id
-                 LEFT JOIN categories cs ON ct.class_ftype_id=cs.id
+                 LEFT JOIN class_type ct ON vs.class_type_id = ct.id
+                 LEFT JOIN categories cs ON cs.id = ct.class_ftype_id
         WHERE vs.id=#{specifiedEcho}
     </select>
 </mapper>

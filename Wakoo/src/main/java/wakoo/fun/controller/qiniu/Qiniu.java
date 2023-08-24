@@ -13,8 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import wakoo.fun.common.Log;
 import wakoo.fun.config.UserLoginToken;
 import wakoo.fun.dto.FileInformationDto;
+import wakoo.fun.log.Constants;
 import wakoo.fun.utils.MsgUtils;
 import wakoo.fun.utils.QiniuUtils;
 import wakoo.fun.vo.MsgVo;
@@ -41,7 +43,7 @@ public class Qiniu {
     @ApiOperation(value = "七牛")
     @UserLoginToken
     @GetMapping("/qiniu")
-    public ResponseEntity<MsgVo> qiniu(String folderPath, Integer pageSize, Integer pageNumber) {
+    public MsgVo qiniu(String folderPath, Integer pageSize, Integer pageNumber) {
 
         Auth auth = Auth.create(accessKey, secretKey);
         Configuration configuration = new Configuration();
@@ -64,7 +66,7 @@ public class Qiniu {
             if (!fileListIterator.hasNext()) {
                 // 超过文件总数，直接返回空结果
                 map.put("fileInformation", fileInformationMap);
-                return ResponseEntity.ok(new MsgVo(MsgUtils.SUCCESS, map));
+                return new MsgVo(MsgUtils.SUCCESS, map);
             }
             fileListIterator.next();
         }
@@ -110,7 +112,7 @@ public class Qiniu {
         }
 
         map.put("fileInformation", fileInformationMap);
-        return ResponseEntity.ok(new MsgVo(MsgUtils.SUCCESS, map));
+        return new MsgVo(MsgUtils.SUCCESS, map);
     }
     /**
      * 判断文件是否为图片文件
@@ -148,16 +150,17 @@ public class Qiniu {
 
     @ApiOperation(value = "七牛添加")
     @UserLoginToken
+    @Log(modul = "资源页面-资源添加", type = Constants.INSERT, desc = "操作添加按钮")
     @GetMapping("/qiniuManagement")
-    public ResponseEntity<MsgVo> qiniuManagement(@RequestPart MultipartFile file, String folderPath) throws IOException {
-        MsgVo msgVo = QiniuUtils.uploadAvatar(file, accessKey, secretKey, bucketName, folderPath);
-        return ResponseEntity.ok(msgVo);
+    public MsgVo qiniuManagement(@RequestPart MultipartFile file, String folderPath) throws IOException {
+        return QiniuUtils.uploadAvatar(file, accessKey, secretKey, bucketName, folderPath);
     }
 
     @ApiOperation(value = "七牛分类")
     @UserLoginToken
+    @Log(modul = "资源页面-资源分类", type = Constants.UPDATE, desc = "操作分配按钮")
     @GetMapping("/sevenOxClassification")
-    public ResponseEntity<MsgVo> sevenOxClassification(){
+    public MsgVo sevenOxClassification(){
         Configuration cfg = new Configuration(Region.autoRegion());
         // 实例化一个BucketManager对象
         Auth auth = Auth.create(accessKey, secretKey);

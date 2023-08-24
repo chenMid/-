@@ -6,17 +6,17 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import wakoo.fun.log.Constants;
+import wakoo.fun.common.Log;
 import wakoo.fun.utils.RoleUtils;
 import wakoo.fun.vo.AgentIdrId;
-import wakoo.fun.vo.DeleteVo;
 import wakoo.fun.vo.MsgVo;
 import wakoo.fun.config.UserLoginToken;
 import wakoo.fun.dto.*;
@@ -45,11 +45,9 @@ public class AdministrationController {
     private AdminAdministrationService adminAdministrationService;
 
     @ApiOperation(value = "管理员管理查询")
-    @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @UserLoginToken
     @GetMapping("/Administration")
     public MsgVo administration(String keyword, Integer pageSize, Integer pageNumber, HttpServletRequest request) {
-        try {
             // 初始化一个整型变量parentId，并赋值为0
             int parentId = 0;
             // 从请求中获取名为userId的属性，并赋值给变量userId
@@ -106,14 +104,7 @@ public class AdministrationController {
             // 设置pageInfo的每页大小为pageSize
             pageInfo.setPageSize(pageSize);
             // 返回一个包含请求成功信息和pageInfo的MsgVo对象
-            return new MsgVo(200, "请求成功", pageInfo);
-            // 捕捉异常
-        } catch (Exception e) {
-            // 打印异常堆栈信息
-            e.printStackTrace();
-            // 返回一个表示请求处理失败的MsgVo对象
-            return new MsgVo(500, "请求处理失败", null);
-        }
+            return new MsgVo(200, "查询成功", pageInfo);
     }
 
     @ApiOperation(value = "检查是否为管理员和总部")
@@ -177,72 +168,97 @@ public class AdministrationController {
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @UserLoginToken
     @GetMapping("/getAgentManagement")
-    public ResponseEntity<MsgVo> getAgentManagement(HttpServletRequest request, Integer id) {
+    public MsgVo getAgentManagement(HttpServletRequest request, Integer id) {
         // 初始化一个整型变量parentId，并赋值为0
         int parentId = 0;
         // 从请求中获取名为userId的属性，并赋值给变量userId
         Object userId = request.getAttribute("userId");
-        // 调用adminAdministrationService的getsTheIdOfTheRole方法，将userId强转为Integer类型后作为参数传入，获取一个角色ID，并赋值给role变量
-        Integer role = adminAdministrationService.getsTheIdOfTheRole((Integer) userId);
-        // 调用getParentId方法，传入parentId和role参数，根据规则获取新的parentId值，并赋值给parentId变量
-        parentId = getParentId(parentId, role);
-        // 创建一个ArrayList对象adminAdministrations，用于存储AdminAdministration类型的数据
-        List<AdminAdministraltion> adminAdministrations = new ArrayList<>();
-        // 创建一个容量为50的HashMap对象，用于存储数据
-        Map<String, Object> map = new HashMap<>(50);
-        System.out.println(parentId+"11111111111111");
-        if (parentId==2){
-            List<Map<String, String>> aProxyRole = adminAdministrationService.agency((Integer) userId);
-            map.put("order", aProxyRole);
-            return ResponseEntity.ok(new MsgVo(200, "查询成功", map));
+        // 声明一个变量role，用于存储角色ID
+        Integer role = null;
+        try {
+            // 调用adminAdministrationService的getsTheIdOfTheRole方法，将userId强转为Integer类型后作为参数传入，获取一个角色ID，并赋值给role变量
+            role = adminAdministrationService.getsTheIdOfTheRole((Integer) userId);
+            // 调用getParentId方法，传入parentId和role参数，根据规则获取新的parentId值，并赋值给parentId变量
+            parentId = getParentId(parentId, role);
+            // 创建一个ArrayList对象adminAdministrations，用于存储AdminAdministration类型的数据
+            List<AdminAdministraltion> adminAdministrations = new ArrayList<>();
+            // 创建一个容量为50的HashMap对象，用于存储数据
+            Map<String, Object> map = new HashMap<>(50);
+
+            if (parentId == 2) {
+                // 调用adminAdministrationService的agency方法，传入userId参数，获取代理角色列表aProxyRole，并将其存入map
+                List<Map<String, String>> aProxyRole = adminAdministrationService.agency((Integer) userId);
+                map.put("order", aProxyRole);
+                // 返回一个包含成功信息和map的MsgVo对象
+                return new MsgVo(200, "查询成功", map);
+            }
+            // 调用adminAdministrationService的getsAllUsersWithSpecifiedPermissions方法，传入参数1和userId，获取用户列表adminAdministrations，并将其存入map
+            adminAdministrations = adminAdministrationService.getsAllUsersWithSpecifiedPermissions(1, (Integer) userId);
+            map.put("order", adminAdministrations);
+            // 返回一个包含成功信息和map的MsgVo对象
+            return new MsgVo(200, "查询成功", map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 返回一个表示请求处理失败的MsgVo对象
+            return new MsgVo(500, "请求处理失败", null);
         }
-        adminAdministrations = adminAdministrationService.getsAllUsersWithSpecifiedPermissions(1, (Integer) userId);
-        map.put("order", adminAdministrations);
-        // 返回一个包含成功信息和map的MsgVo对象
-        return ResponseEntity.ok(new MsgVo(200, "查询成功", map));
     }
 
     @ApiOperation(value = "管理员所属代理")
     @Transactional
     @UserLoginToken
     @GetMapping("/administratorOwnedAgent")
-    public ResponseEntity<MsgVo> administratorOwnedAgent(HttpServletRequest request, String id) {
+    public MsgVo administratorOwnedAgent(HttpServletRequest request, String id) {
+        // 从请求中获取名为userId的属性，并赋值给变量userId
         Object userId = request.getAttribute("userId");
+// 调用adminAdministrationService的getsTheIdOfTheRole方法，将userId强转为Integer类型后作为参数传入，获取一个角色ID，并赋值给role变量
         Integer role = adminAdministrationService.getsTheIdOfTheRole((Integer) userId);
-        // 调用adminAdministrationService的getRoles方法，获取角色列表，并赋值给roles变量
+// 创建一个容量为50的HashMap对象，用于存储数据
         Map<String, Object> map = new HashMap<>(50);
+// 创建一个ArrayList对象adminAdministrations，用于存储AdminAdministration类型的数据
         List<AdminAdministraltion> adminAdministrations = new ArrayList<>();
-        // 初始化一个整型变量a，并赋值为0
+// 初始化一个整型变量a，并赋值为0
         int a = 0;
+// 调用getParentId方法，传入a和role参数，根据规则获取新的a值，并赋值给a变量
         a = getParentId(a, role);
+
         if (id == null || "".equals(id)) {
             if (a == 3) {
-                    List<Map<String, String>> aProxyRole = adminAdministrationService.getAProxyRole((Integer) userId);
-                    map.put("Order", aProxyRole);
-                    return ResponseEntity.ok(new MsgVo(200, "查询成功", map));
+                // 调用adminAdministrationService的getAProxyRole方法，传入userId参数，获取代理角色列表aProxyRole，并将其存入map
+                List<Map<String, String>> aProxyRole = adminAdministrationService.getAProxyRole((Integer) userId);
+                map.put("Order", aProxyRole);
+                // 返回一个包含成功信息和map的MsgVo对象
+                return new MsgVo(200, "查询成功", map);
             }
         } else {
-            if (a==0 || a==1){
+            if (a == 0 || a == 1) {
+                // 调用adminAdministrationService的getNoUserperson方法，传入id和参数1，获取特定条件下的用户列表noUserperson
                 List<Map<String, String>> noUserperson = adminAdministrationService.getNoUserperson(Integer.valueOf(id), 1);
+                // 调用adminAdministrationService的all方法，获取所有用户列表all
                 List<Map<String, String>> all = adminAdministrationService.all();
+                // 创建一个HashSet对象proInId，并将noUserperson和all的元素添加到proInId
                 Set<Map<String, String>> proInId = new HashSet<>();
                 proInId.addAll(noUserperson);
                 proInId.addAll(all);
                 map.put("Order", proInId);
-                return ResponseEntity.ok(new MsgVo(200, "查询成功", map));
-            }else {
-                List<Map<String, String>> noUserperson = adminAdministrationService.getNoUserperson(Integer.valueOf(id),2);
+                // 返回一个包含成功信息和map的MsgVo对象
+                return new MsgVo(200, "查询成功", map);
+            } else {
+                // 调用adminAdministrationService的getNoUserperson方法，传入id和参数2，获取特定条件下的用户列表noUserperson
+                List<Map<String, String>> noUserperson = adminAdministrationService.getNoUserperson(Integer.valueOf(id), 2);
                 map.put("Order", noUserperson);
-                return ResponseEntity.ok(new MsgVo(200, "查询成功", map));
+                // 返回一个包含成功信息和map的MsgVo对象
+                return new MsgVo(200, "查询成功", map);
             }
         }
-        return ResponseEntity.ok(new MsgVo(403, "查询失败", null));
+// 返回一个包含查询失败信息的MsgVo对象
+        return new MsgVo(403, "查询失败", null);
     }
 
     @ApiOperation(value = "管理员管理添加")
-    @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @UserLoginToken
+    @Log(modul = "管理员页面-添加账号", type = Constants.INSERT, desc = "操作添加")
     @PostMapping("addAdminUser")
     public MsgVo addAdminUser(@Validated @RequestBody AdmininistraltionDto admininistraltionDto, BindingResult result, HttpServletRequest request) {
         // 声明一个布尔型变量userAdmin，并初始化为true
@@ -293,11 +309,6 @@ public class AdministrationController {
             // 将administrationDto的代理ID设置为"*"
             admininistraltionDto.setAgentId("*");
         }
-
-        try {
-            // 打印输出parentId是否等于2
-            System.out.println(parentId == 2);
-
             // 如果parentId等于2
             if (parentId == 3) {
                 // 如果administrationDto的代理ID为空或者等于空字符串
@@ -317,33 +328,29 @@ public class AdministrationController {
                 return new MsgVo(200, "添加成功", true);
             }
             // 添加返回值，确保在未满足条件时有返回结果
-            // 捕捉异常
-        } catch (Exception e) {
-            // 在发生异常时进行事务回滚
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            // 返回一个表示失败的MsgVo对象
-            return new MsgVo(MsgUtils.FAILED);
-        }
         // 返回一个表示权限不足的MsgVo对象
         return new MsgVo(403, "权限不足", false);
     }
 
     @ApiOperation(value = "管理员管理修改状态")
-    @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @UserLoginToken
+    @Log(modul = "管理员页面-删除", type = Constants.UPDATE, desc = "操作删除按钮")
     @PutMapping("status")
     public MsgVo status(@RequestBody StatusVo status) {
         Boolean aBoolean = adminAdministrationService.UpdStatus(status.getId(), status.getStatus());
-        return new MsgVo(200,"删除成功", aBoolean);
+        return new MsgVo(200, "删除成功", aBoolean);
     }
 
 
     @ApiOperation(value = "销毁账号")
     @UserLoginToken
-    @DeleteMapping ("/destroyAccount/{ids}")
-    public MsgVo destroyAccount(@PathVariable Integer[] ids) {
+    @Log(modul = "管理员页面-回收站销毁", type = Constants.DELETE, desc = "操作销毁按钮")
+    @DeleteMapping("/destroyAccount")
+    public MsgVo destroyAccount(@RequestBody Map<String, Integer[]> requestBody) {
+        // 获取接收的用户ID数组
+        Integer[] ids = requestBody.get("ids");
         Boolean aBoolean = adminAdministrationService.destroyAccount(ids);
-        return new MsgVo(200,"销毁成功", aBoolean);
+        return new MsgVo(200, "销毁成功", aBoolean);
     }
 
     @ApiOperation(value = "获取指定用户信息")
@@ -358,104 +365,100 @@ public class AdministrationController {
     }
 
     @ApiOperation(value = "管理员管理修改")
-    @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @UserLoginToken
+    @Log(modul = "管理员页面-修改", type = Constants.UPDATE, desc = "操作修改按钮")
     @PutMapping("/updIpAdmin")
-    public ResponseEntity<MsgVo> updIpAdmin(@Validated @Valid @RequestBody UpdAdminDto updAdminDto, BindingResult result, HttpServletRequest request) {
-        try {
-        if (result.hasErrors()) {
-            String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
-            MsgVo response = new MsgVo(403, errorMessage, false);
-            return ResponseEntity.ok(response);
-        }
-        boolean success = false;
-        // 检查是否存在重复的用户名、邮箱或手机号
-        List<UpdAdminDto> updAdminDtoList = adminAdministrationService.isUpdAdminDto(updAdminDto);
-        FaAdmin faAdmin = adminAdministrationService.getFaAdmin(updAdminDto.getUserId());
-        String username = updAdminDto.getUsername();
-        if (username != null && !username.equals(faAdmin.getUserName())) {
-            // 检查是否修改了用户名，并检查是否重复
-            for (UpdAdminDto u : updAdminDtoList) {
-                if (u.getUsername().equals(username)) {
-                    // 用户名重复
-                    MsgVo response = new MsgVo(403, "用户名重复", false);
-                    return ResponseEntity.ok(response);
+    public MsgVo updIpAdmin(@Validated @Valid @RequestBody UpdAdminDto updAdminDto, BindingResult result, HttpServletRequest request) {
+            if (result.hasErrors()) {
+                String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
+                return new MsgVo(403, errorMessage, false);
+            }
+            boolean success = false;
+            // 检查是否存在重复的用户名、邮箱或手机号
+            List<UpdAdminDto> updAdminDtoList = adminAdministrationService.isUpdAdminDto(updAdminDto);
+            FaAdmin faAdmin = adminAdministrationService.getFaAdmin(updAdminDto.getUserId());
+            String username = updAdminDto.getUsername();
+            if (username != null && !username.equals(faAdmin.getUserName())) {
+                // 检查是否修改了用户名，并检查是否重复
+                for (UpdAdminDto u : updAdminDtoList) {
+                    if (u.getUsername().equals(username)) {
+                        // 用户名重复
+                        return new MsgVo(403, "用户名重复", false);
+                    }
                 }
             }
-        }
-        String email = updAdminDto.getEmail();
-        if (email != null && !email.equals(faAdmin.getEmail())) {
-            // 检查是否修改了邮箱，并检查是否重复
-            for (UpdAdminDto u : updAdminDtoList) {
-                if (u.getEmail().equals(email)) {
-                    // 邮箱重复
-                    MsgVo response = new MsgVo(403, "邮箱重复", false);
-                    return ResponseEntity.ok(response);
+            String email = updAdminDto.getEmail();
+            if (email != null && !email.equals(faAdmin.getEmail())) {
+                // 检查是否修改了邮箱，并检查是否重复
+                for (UpdAdminDto u : updAdminDtoList) {
+                    if (u.getEmail().equals(email)) {
+                        // 邮箱重复
+                        return new MsgVo(403, "邮箱重复", false);
+                    }
                 }
             }
-        }
-        String mobile = updAdminDto.getMobile();
-        if (mobile != null && !mobile.equals(faAdmin.getMobile())) {
-            // 检查是否修改了手机号，并检查是否重复
-            for (UpdAdminDto u : updAdminDtoList) {
-                if (u.getMobile().equals(mobile)) {
-                    // 手机号重复
-                    MsgVo response = new MsgVo(403, "手机号重复", false);
-                    return ResponseEntity.ok(response);
+            String mobile = updAdminDto.getMobile();
+            if (mobile != null && !mobile.equals(faAdmin.getMobile())) {
+                // 检查是否修改了手机号，并检查是否重复
+                for (UpdAdminDto u : updAdminDtoList) {
+                    if (u.getMobile().equals(mobile)) {
+                        // 手机号重复
+                        return new MsgVo(403, "手机号重复", false);
+                    }
                 }
             }
-        }
 
-        String password = updAdminDto.getPassword();
-        if (password != null) {
-            // 检查是否修改了密码
-            // 更新密码为哈希值
-            updAdminDto.setPassword(HashUtils.hash(password));
-        } else {
-            // 如果密码未被修改，则保持原密码不变
-            updAdminDto.setPassword(faAdmin.getPassword());
-        }
+            String password = updAdminDto.getPassword();
+            if (password != null) {
+                // 检查是否修改了密码
+                // 更新密码为哈希值
+                updAdminDto.setPassword(HashUtils.hash(password));
+            } else {
+                // 如果密码未被修改，则保持原密码不变
+                updAdminDto.setPassword(faAdmin.getPassword());
+            }
 
-        // 更新用户角色
-        success = adminAdministrationService.updUserRole(updAdminDto);
+            // 更新用户角色
+            success = adminAdministrationService.updUserRole(updAdminDto);
 
 
-        // 更新用户信息
-        if (success) {
-            success = adminAdministrationService.updAdminUser(updAdminDto);
-        }
+            // 更新用户信息
+            if (success) {
+                success = adminAdministrationService.updAdminUser(updAdminDto);
+            }
 
-        // 更新成功
-        if (success) {
-            MsgVo response = new MsgVo(200, "更新成功", true);
-            return ResponseEntity.ok(response);
-        } else {
-            // 更新失败
-            MsgVo response = new MsgVo(500, "更新失败", false);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-        } catch (Exception e) {
-            // 异常处理
-            MsgVo response = new MsgVo(500, "服务器内部错误", false);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
+            // 更新成功
+            if (success) {
+                return new MsgVo(200, "更新成功", true);
+            } else {
+                // 更新失败
+                return new MsgVo(403, "更新失败", false);
+            }
     }
 
     @ApiOperation(value = "下拉框权限")
     @UserLoginToken
     @GetMapping("verifyTheGroupLinkageOfAllStores")
-    public ResponseEntity<MsgVo> verifyTheGroupLinkageOfAllStores(HttpServletRequest request) {
+    public MsgVo verifyTheGroupLinkageOfAllStores(HttpServletRequest request) {
         String roleId = request.getParameter("id");
-        int role = Integer.parseInt(roleId);
+        int role;
         Map<String, Boolean> map = new HashMap<>(50);
-        if (role == 0 || role == 1) {
-            map.put("key", true);
-        } else {
-            map.put("key", false);
+        try {
+            role = Integer.parseInt(roleId);
+            if (role == 0 || role == 1) {
+                map.put("key", true);
+            } else {
+                map.put("key", false);
+            }
+            // 返回一个包含成功信息和map的MsgVo对象
+            return new MsgVo(200, "请求成功", map);
+        } catch (NumberFormatException e) {
+            // 处理数值解析异常
+            e.printStackTrace();
+            // 返回一个包含错误信息的MsgVo对象
+            return new MsgVo(500, "请求失败：参数解析错误", null);
         }
-
-        return ResponseEntity.ok(new MsgVo(200, "请求成功", map));
     }
 }
 

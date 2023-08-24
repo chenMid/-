@@ -57,4 +57,9 @@ public class OrdersServiceImpl implements OrdersService {
     public Boolean modifyOrderInformation(OrdersDto ordersDto) {
         return ordersMapper.modifyOrderInformation(ordersDto);
     }
+
+    @Override
+    public Boolean delOrder(Integer[] ids) {
+        return ordersMapper.delOrder(ids);
+    }
 }

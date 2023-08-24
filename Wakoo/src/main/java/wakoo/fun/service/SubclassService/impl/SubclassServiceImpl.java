@@ -84,7 +84,9 @@ public class SubclassServiceImpl implements SubclassService {
     }
 
     @Override
-    public Boolean setstatussubclass(Integer id, Integer status) {
-        return subclassMapper.setstatussubclass(id, status);
+    public Boolean deleteSubclass(Integer[] ids) {
+        return subclassMapper.deleteSubclass(ids);
     }
+
+
 }

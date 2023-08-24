@@ -37,4 +37,9 @@ public class CategoryServiceImpl implements CategoryService {
     public Boolean deleteSuperclassesInBatches(Integer[] ids) {
         return categoryMapper.deleteSuperclassesInBatches(ids);
     }
+
+    @Override
+    public List<Category> queryWhetherThereAreSubclasses(Integer[] ids) {
+        return categoryMapper.queryWhetherThereAreSubclasses(ids);
+    }
 }
