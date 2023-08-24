@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wakoo.fun.mapper.SubclassMapper">
+
+    <insert id="insertSubclasss" useGeneratedKeys="true" keyProperty="tid">
+        INSERT INTO type_name(type_id, name, sort)
+        VALUES (#{subclass.id}, #{subclass.name}, #{subclass.sort})
+    </insert>
+    <update id="Maxonejia">
+        UPDATE type_name
+        SET sort = sort + 1
+        WHERE sort >= #{sort} ORDER BY sort DESC
+    </update>
+    <update id="updByIdSort">
+        UPDATE type_name
+        SET sort=#{sort}
+        WHERE id = #{id}
+    </update>
+    <update id="updTypeClass">
+        UPDATE class_type
+        SET class_ftype_id=#{subclass.id},
+            type_name=#{subclass.name},
+            type_age=#{subclass.typeAge},
+            inage_image=#{subclass.inageImage},
+            age_image=#{subclass.ageImage},
+            material=#{subclass.material},
+            sort=#{subclass.sort},
+            update_time=NOW()
+        where id = #{subclass.zId}
+    </update>
+    <update id="updBySort">
+        UPDATE class_type SET sort=#{sort} WHERE type_name=#{typeName}
+    </update>
+    <update id="setstatussubclass">
+        UPDATE class_type
+        <set>
+            <if test="status==1">status=0</if>
+            <if test="status==0">status=1</if>
+        </set>
+        WHERE id=#{id}
+    </update>
+    <select id="getAllSubclass" resultType="wakoo.fun.pojo.Subclass">
+        SELECT ct.id,
+               cs.type_name,
+               ct.type_name AS name,
+               ct.type_age,
+               ct.inage_image,
+               ct.age_image,
+               ct.sort,
+               ct.material,
+               ct.create_time
+        FROM class_type ct
+                 JOIN categories cs ON ct.class_ftype_id = cs.id
+        WHERE (cs.type_name LIKE CONCAT('%', #{keyword}, '%')
+            OR ct.type_name LIKE CONCAT('%', #{keyword}, '%')
+            OR ct.type_age LIKE CONCAT('%', #{keyword}, '%')
+            OR ct.material LIKE CONCAT('%', #{keyword}, '%'))
+          AND ct.status = 1
+        ORDER BY cs.type_name, ct.type_name, ct.type_age
+    </select>
+    <select id="getAgeList" resultType="java.lang.Integer">
+        SELECT type_age
+        FROM class_type
+        WHERE class_ftype_id = #{id}
+          AND type_age = #{age}
+          AND type_name = #{name}
+    </select>
+    <select id="getTypeIdByName" resultType="java.lang.Integer">
+        SELECT sort
+        FROM class_type
+        WHERE type_name = #{name}
+          AND class_ftype_id = #{id}
+    </select>
+    <select id="getSubclass" resultType="wakoo.fun.pojo.Subclass">
+        SELECT id,
+               type_name,
+               type_name AS name,
+               type_age,
+               inage_image,
+               age_image,
+               sort,
+               material,
+               create_time
+        FROM class_type
+        where id=#{id}
+    </select>
+    <select id="getfType" resultType="wakoo.fun.dto.SubclassDto">
+        SELECT id, type_name
+        FROM categories
+    </select>
+    <select id="getByid" resultType="java.lang.Integer">
+        SELECT id
+        FROM type_name
+        WHERE `name` = #{name}
+          AND type_id = #{id}
+    </select>
+    <select id="getMaxSort" resultType="java.lang.Integer">
+        SELECT MAX(sort)
+        FROM type_name
+        WHERE type_id = #{typeId}
+    </select>
+    <select id="getStypeageByid" resultType="java.lang.Integer">
+        select type_age
+        from class_type where id=#{zId}
+    </select>
+    <insert id="addSubclasss">
+        INSERT INTO class_type (class_ftype_id,
+                                type_name,
+                                type_age,
+                                inage_image,
+                                age_image,
+                                material,
+                                create_time,
+        VALUES (#{subclass.id}, #{subclass.name}, #{subclass.typeAge}, #{subclass.inageImage}, #{subclass.ageImage},
+                #{subclass.material}, NOW())
+    </insert>
+
+</mapper>

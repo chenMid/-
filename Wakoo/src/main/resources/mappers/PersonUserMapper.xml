@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wakoo.fun.mapper.PersonUserMapper">
+    <insert id="addCommonUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO common_user (classname, `password`, sex, age, iphone, create_time)
+        VALUES (#{person.classname}, #{person.password}, #{person.sex}, #{person.age}, #{person.iphone}, now());
+    </insert>
+    <insert id="addAgentsAndHumanRelationships">
+        INSERT INTO person_common (common_id, person_id)
+        VALUES (#{commonId}, #{personId});
+    </insert>
+    <insert id="addPurchaseCourse">
+        INSERT INTO common_videos_table(common_id,videos,create_time)
+        VALUES(#{person.id},#{person.typeName},NOW())
+    </insert>
+    <update id="modifyingCommonUser">
+        UPDATE common_user
+        SET classname=#{person.classname},
+            `password`=#{person.password},
+            sex=#{person.sex},
+            age=#{person.age}
+        WHERE id = #{person.id}
+    </update>
+    <update id="modifyOrderStatus">
+        UPDATE orders SET number=#{number},qty=#{qty},rqty=#{rqty} WHERE id=#{userId}
+    </update>
+    <update id="modifyOrderStatusOr">
+        UPDATE orders SET `status`=0 WHERE id=#{id}
+    </update>
+    <select id="getRegularUsers" resultType="wakoo.fun.pojo.PersonUser">
+        SELECT cu.id,
+               cu.classname,
+               cu.`password`,
+               cu.sex,
+               cu.age,
+               cu.iphone,
+               cu.image,
+               cu.create_time,
+               cu.update_time,
+               GROUP_CONCAT(DISTINCT am.`name` SEPARATOR ',') AS agentName
+        FROM person_common pc
+                 INNER JOIN common_user cu ON pc.person_id = cu.id
+                 LEFT JOIN agent_management am ON am.id = pc.common_id
+        WHERE pc.person_id IN (
+            SELECT person_id
+            FROM person_common
+            WHERE common_id = (
+                SELECT CASE
+                           WHEN (SELECT campus_id FROM sys_user WHERE id = #{userId}) = '*'
+                               THEN common_id
+                           WHEN (SELECT campus_id FROM sys_user WHERE id = #{userId}) = '**'
+                               THEN common_id
+                           ELSE (SELECT campus_id FROM sys_user WHERE id = #{userId})
+                           END
+            )
+        )
+        GROUP BY cu.id, cu.classname, cu.`password`, cu.sex, cu.age, cu.iphone, cu.image, cu.create_time, cu.update_time
+
+    </select>
+    <select id="getPersonUserByUserIdAnd" resultType="wakoo.fun.pojo.Agent">
+        SELECT id, `name`
+        FROM agent_management
+        WHERE id = (SELECT campus_id FROM sys_user WHERE id = #{id})
+    </select>
+    <select id="getThePhoneNumber" resultType="java.lang.String">
+        SELECT iphone
+        FROM common_user
+        WHERE iphone = #{iphone}
+    </select>
+    <select id="theCommandOutputIsModified" resultType="wakoo.fun.pojo.PersonUser">
+        SELECT cu.id, cu.classname, cu.`password`, cu.sex, cu.age, cu.iphone ,am.`name`,am.create_time
+        FROM person_common pc
+                 INNER JOIN common_user cu ON pc.person_id=cu.id
+                 INNER JOIN agent_management am ON pc.common_id=am.id
+        WHERE pc.person_id=#{id}
+            LIMIT 0,1
+    </select>
+    <select id="queryByMobilePhoneNumber" resultType="wakoo.fun.pojo.PersonUser">
+        SELECT cu.id,
+               cu.classname,
+               cu.sex,
+               cu.age,
+               cu.iphone,
+               am.`name` agentName
+        FROM person_common pc
+                 INNER JOIN common_user cu ON pc.person_id = cu.id
+                 LEFT JOIN agent_management am ON am.id = pc.common_id
+        WHERE iphone = #{iphone}
+    </select>
+    <select id="acquireOtherThanPersonnel" resultType="wakoo.fun.pojo.Agent">
+        SELECT id, `name`
+        FROM agent_management am
+        WHERE id in (SELECT campus_id FROM sys_user WHERE agent_id = (SELECT agent_id FROM sys_user WHERE id = #{userId})
+        )
+
+        <if test="parentId==1">
+            OR id in  (SELECT agent_id FROM user_agent_role)
+        </if>
+        <if test="parentId!=1">
+            OR id in (SELECT agent_id FROM user_agent_role WHERE user_id = #{userId})
+        </if>
+    </select>
+    <select id="purchaser" resultType="wakoo.fun.pojo.Agent">
+        SELECT id, `name`
+        FROM agent_management
+        WHERE id in (SELECT common_id FROM person_common WHERE person_id = #{personId})
+    </select>
+    <select id="inquireAboutTheOwnersCourse" resultType="wakoo.fun.vo.PersonUserVo">
+        SELECT DISTINCT cs.type_name,ct.id, CONCAT(ct.type_name, '-', ct.type_age) AS subclassName
+        FROM orders os
+                 INNER JOIN class_type ct ON os.class_type_id = ct.id
+                 INNER JOIN categories cs ON ct.class_ftype_id = cs.id
+        WHERE os.class_campus_id = #{campusId} AND os.status=1 AND
+            os.class_type_id NOT IN(SELECT videos FROM common_videos_table WHERE common_id=#{campusId})
+    </select>
+    <select id="checkOrderStatus" resultType="wakoo.fun.pojo.Orders">
+        SELECT id,number totalQuantity,qty numberOfUse,rqty remainingOrder FROM orders WHERE class_campus_id=#{campusId} AND `status`=1 ORDER BY create_time LIMIT 0,1
+    </select>
+    <select id="accessExistingCourses" resultType="wakoo.fun.vo.PersonUserVo">
+        SELECT DISTINCT cs.type_name,ct.id, CONCAT(ct.type_name, '-', ct.type_age) AS subclassName
+        FROM orders os
+                 INNER JOIN class_type ct ON os.class_type_id = ct.id
+                 INNER JOIN categories cs ON ct.class_ftype_id = cs.id
+        WHERE os.class_type_id IN(SELECT videos FROM common_videos_table WHERE common_id=#{campusId}) AND os.status=1
+    </select>
+</mapper>

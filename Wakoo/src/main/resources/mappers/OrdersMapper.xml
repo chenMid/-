@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wakoo.fun.mapper.OrdersMapper">
+    <insert id="addAgentOrder">
+        INSERT INTO orders(class_campus_id, class_type_id, money, expiry, `number`, rqty, create_time,
+                           update_time,status)
+            value (#{orders.classCampusId},#{orders.classTypeId},#{orders.money},#{orders.expiry},#{orders.totalQuantity}
+            ,#{orders.remainingOrder},NOW(),NOW(),#{orders.status}
+            )
+    </insert>
+    <update id="modifyOrderInformation">
+        UPDATE orders SET `status`=#{ordersDto.status},expiry=#{ordersDto.expiry} WHERE id=#{ordersDto.id}
+    </update>
+    <select id="getAllAgentInformation" resultType="wakoo.fun.pojo.Orders">
+        SELECT os.id,
+               st.name,
+               CONCAT(ct.type_name, '-', ct.type_age) AS subclassName,
+               os.expiry,
+               os.money,
+               os.status,
+               os.number                                 totalQuantity,
+               os.qty                                    numberOfUse,
+               os.rqty                                   remainingOrder,
+               os.create_time,
+               os.update_time
+        FROM orders os
+                 INNER JOIN agent_management st ON os.class_campus_id = st.id
+                 INNER JOIN class_type ct ON os.class_type_id = ct.id
+        WHERE
+          os.class_campus_id=(SELECT campus_id FROM sys_user WHERE id=#{userId})
+        OR (SELECT campus_id FROM sys_user WHERE id=#{userId})='*'
+        OR (SELECT campus_id FROM sys_user WHERE id=#{userId})='**'
+        and ( os.id LIKE '%' || #{keyword} || '%'
+                OR st.name LIKE '%' || #{keyword} || '%'
+                OR CONCAT(ct.type_name, '-', ct.type_age) LIKE '%' || #{keyword} || '%'
+                OR os.money LIKE '%' || #{keyword} || '%'
+                OR os.number LIKE '%' || #{keyword} || '%'
+                OR os.qty LIKE '%' || #{keyword} || '%'
+                OR os.rqty LIKE '%' || #{keyword} || '%'
+                OR os.create_time LIKE '%' || #{keyword} || '%'
+                OR os.update_time LIKE '%' || #{keyword} || '%')
+        ORDER BY st.name ASC, subclassName ASC
+    </select>
+    <select id="acquisitionPersonnel" resultType="wakoo.fun.pojo.Agent">
+        SELECT am.id,am.`name` FROM user_agent_role uar
+                                        INNER JOIN agent_management am ON am.id=uar.agent_id
+        WHERE user_id IN(SELECT id FROM sys_user
+                         WHERE agent_id=(SELECT agent_id FROM sys_user WHERE id=#{userId})
+                            OR (SELECT agent_id FROM sys_user WHERE id=#{userId})='*'
+                            OR (SELECT agent_id FROM sys_user WHERE id=#{userId})='**'
+        )
+    </select>
+    <select id="returnsTheParentId" resultType="java.lang.Integer">
+        SELECT rid
+        FROM sys_role
+        WHERE id = (SELECT role_id FROM sys_user_role WHERE user_id = #{userId})
+    </select>
+    <select id="getThePreviousLevelRid" resultType="java.lang.Integer">
+        SELECT rid
+        FROM sys_role
+        WHERE id = #{userId}
+    </select>
+    <select id="querySubclassId" resultType="java.lang.Integer">
+        SELECT id
+        FROM class_type
+        WHERE type_name = #{typeName}
+          AND type_age = #{typeAge}
+    </select>
+    <select id="getOrderById" resultType="wakoo.fun.dto.OrdersDto">
+        SELECT os.id,os.class_campus_id,ct.class_ftype_id,os.class_type_id,os.money,os.expiry,os.status,os.update_time
+        FROM orders os JOIN class_type ct ON  ct.id=os.class_type_id WHERE os.id=#{id}
+    </select>
+</mapper>

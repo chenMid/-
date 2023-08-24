@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wakoo.fun.mapper.CategoryMapper">
+    <insert id="addCategory">
+        INSERT INTO categories (type_name, parent_image, create_time)
+        VALUES (#{category.typeName}, #{category.parentImage}, now());
+    </insert>
+    <update id="updCategory">
+        UPDATE categories SET type_name=#{category.typeName},parent_image=#{category.parentImage},status=#{category.status},update_time=NOW() where id=#{category.id}
+    </update>
+    <delete id="deleteSuperclassesInBatches">
+        DELETE FROM categories
+        WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="getAllCategory" resultType="wakoo.fun.pojo.Category">
+        SELECT id,type_name, parent_image, status, update_time,create_time
+        FROM categories
+        WHERE type_name LIKE CONCAT('%', #{keyword}, '%')
+           OR parent_image LIKE CONCAT('%', #{keyword}, '%')
+           OR status LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+    <select id="getAllById" resultType="wakoo.fun.pojo.Category">
+        SELECT id,type_name, parent_image, status FROM categories WHERE id=#{id}
+    </select>
+</mapper>
