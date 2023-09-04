@@ -204,7 +204,6 @@ public class AgentController {
     @GetMapping("/city")
     public MsgVo city(@Parameter(description = "地区编码") @RequestParam("code") String code) {
         List<District> districts1 = districtService.queryDistrictList();
-        System.out.println(districts1);
         List<District> districts = districtService.queryCity(code);
         return new MsgVo(200, "请求成功", districts);
     }

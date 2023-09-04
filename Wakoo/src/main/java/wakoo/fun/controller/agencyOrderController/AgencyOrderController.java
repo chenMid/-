@@ -95,7 +95,6 @@ public class AgencyOrderController {
                                           String status,
                                           HttpServletRequest request
                                           ){
-        System.out.println(status);
         Object userId = request.getAttribute("userId");
         PageHelper.startPage(pageNumber, pageSize);
         // 获取全部的订单列表

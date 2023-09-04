@@ -77,7 +77,6 @@ public class ValidateCode {
     private String drawString(Graphics g, String randomStr, int i) {
         g.setFont(getFont());
         g.setColor(getRandomColor(108, 190));
-        System.out.println(random.nextInt(randomString.length()));
         String rand = getRandomString(random.nextInt(randomString.length()));
         randomStr += rand;
         g.translate(random.nextInt(3), random.nextInt(6));
@@ -108,7 +107,6 @@ public class ValidateCode {
             random_string = drawString(g, random_string, i);
         }
 
-        System.out.println(random_string);
 
         g.dispose();
 
@@ -126,53 +124,6 @@ public class ValidateCode {
     }
     public Boolean isSession(String user,HttpServletRequest request){
         Object attribute = request.getSession().getAttribute(sessionKey);
-        System.out.println(attribute);
         return null;
     }
-
-//    public String getRandomCodeBase64(HttpServletRequest request, HttpServletResponse response) {
-//        HttpSession session = request.getSession();
-//        // BufferedImage类是具有缓冲区的Image类,Image类是用于描述图像信息的类
-//        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
-//        Graphics g = image.getGraphics();
-//        g.fillRect(0, 0, width, height);
-//        g.setColor(getRandomColor(105, 189));
-//        g.setFont(getFont());
-//
-//        // 绘制干扰线
-//        for (int i = 0; i < lineSize; i++) {
-//            drawLine(g);
-//        }
-//
-//        // 绘制随机字符
-//        String random_string = "";
-//        for (int i = 0; i < stringNum; i++) {
-//            random_string = drawString(g, random_string, i);
-//        }
-//
-//        System.out.println(random_string);
-//
-//        g.dispose();
-//
-//        session.removeAttribute(sessionKey);
-//        session.setAttribute(sessionKey, random_string);
-//
-//        String base64String = "";
-//        try {
-//            //  直接返回图片
-//            //  ImageIO.write(image, "PNG", response.getOutputStream());
-//            //返回 base64
-//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//            ImageIO.write(image, "PNG", bos);
-//
-//            byte[] bytes = bos.toByteArray();
-//            Base64.Encoder encoder = Base64.getEncoder();
-//            base64String = encoder.encodeToString(bytes);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        return base64String;
-//    }
 }

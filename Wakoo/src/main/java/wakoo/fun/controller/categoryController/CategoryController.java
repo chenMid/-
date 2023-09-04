@@ -18,9 +18,7 @@ import wakoo.fun.service.CategoryService.CategoryService;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @EnableTransactionManagement//数据库事务管理
 @CrossOrigin

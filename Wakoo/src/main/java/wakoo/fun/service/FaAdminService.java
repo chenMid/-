@@ -3,6 +3,7 @@ package wakoo.fun.service;
 import org.apache.ibatis.annotations.Param;
 import wakoo.fun.pojo.FaAdmin;
 import wakoo.fun.pojo.FaAdminLogin;
+import wakoo.fun.vo.FadminVo;
 
 import java.util.List;
 
@@ -40,5 +41,14 @@ public interface FaAdminService {
      * @return
      */
     FaAdminLogin ListFadmin(@Param("username") String username);
+
+
+    /**
+     *  保存个人信息
+     * @param fadminVo FadminVo
+     * @return Boolean
+     */
+
+    Boolean modifyPersonalInformation(@Param("fadminVo") FadminVo fadminVo);
 
 }

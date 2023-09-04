@@ -266,4 +266,11 @@ public interface AdministrationMapper {
      * @return 返回一个list
      */
     List<AdminAdministraltion> multiConditionQuery(@Param("username") String username, @Param("roleName") String roleName, @Param("name") String name, @Param("email") String email, @Param("mobile") String mobile, @Param("status") Integer status, @Param("userId") Integer userId);
+
+    /**
+     * 获取指定用户
+     * @param id
+     * @return
+     */
+    FadminVo personalInformation(Integer id);
 }

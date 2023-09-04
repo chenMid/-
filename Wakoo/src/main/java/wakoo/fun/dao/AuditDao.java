@@ -1,10 +1,13 @@
 package wakoo.fun.dao;
 
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 import wakoo.fun.pojo.Audit;
 import wakoo.fun.pojo.Orders;
+import wakoo.fun.vo.AuditVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author HASEE
@@ -40,12 +43,6 @@ public interface AuditDao {
      */
     Audit getAssignedAudit(Integer userId);
 
-    /**
-     * 添加合同信息
-     * @param contract 合同信息
-     * @return 是否添加成功
-     */
-    Boolean additionContract(String contract,Integer userId);
 
     /**
      *  获取当前发起的审核
@@ -85,4 +82,25 @@ public interface AuditDao {
      */
     Boolean deletesASpecifiedUserCourse(@Param("userId") Integer userId, @Param("studentClass") Integer studentClass);
 
+    /**
+     *  添加合同表
+     * @param  auditVo 路径
+     * @return 是否添加成功
+     */
+    Boolean addTheContractIntermediateTable(AuditVo auditVo);
+
+    /**
+     *  获取合同表的数据
+     * @param auditId 审核id
+     * @return   List<Map<String, String>> 合同列表
+     */
+    @MapKey("fileList")
+    List<Map<String,String>> obtainAContract(Integer auditId);
+
+    /**
+     *  删除合同表
+     * @param uId  用户id
+     * @return 是否删除成功
+     */
+    Boolean deletePictureContract(String uId);
 }

@@ -89,7 +89,7 @@
            or mobile = #{UpdAdminDto.mobile}
     </select>
     <select id="getFaAdmin" resultType="wakoo.fun.pojo.FaAdmin">
-        select id, username, password, email, mobile
+        select id, username, password, email, mobile,avatar
         from sys_user
         where id = #{id}
     </select>
@@ -320,6 +320,11 @@
         </if>
         GROUP BY sr.id
 
+    </select>
+    <select id="personalInformation" resultType="wakoo.fun.vo.FadminVo">
+        select id, username,nickname, email, mobile,avatar
+        from sys_user
+        where id = #{id}
     </select>
     <insert id="isUser" parameterType="wakoo.fun.dto.AdmininistraltionDto" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO sys_user(username, nickname, password, email, agent_id, campus_id, mobile, createtime)

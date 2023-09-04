@@ -28,7 +28,7 @@ public class HashUtils {
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
             // 哈希算法不可用，抛出异常或进行其他错误处理
-            throw new RuntimeException("Unable to perform hash operation", e);
+            throw new RuntimeException("无法执行哈希操作", e);
         }
     }
 }

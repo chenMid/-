@@ -56,21 +56,19 @@ public class PersonalCenterController {
 
     @ApiOperation(value = "个人简介")
     @UserLoginToken
-    @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @PostMapping("/uploadAvatar")
     public MsgVo uploadAvatar(@RequestPart MultipartFile file, @RequestParam Integer id) throws IOException {
         try {
             // 上传头像到七牛云
-            MsgVo msgVo = QiniuUtils.uploadAvatar(file, accessKey, secretKey, bucketName,null);
+            MsgVo msgVo = QiniuUtils.uploadAvatar(file, accessKey, secretKey, bucketName,"2023.6.21编程分类视频及图片/test");
             if (msgVo.getCode() == 200) {
                 // 保存用户头像信息
                 personalCenterService.avatar(id, (String) msgVo.getData());
-
                 // 返回成功消息
                 return new MsgVo(200, "上传成功", true);
             } else {
                 // 上传失败
-                return new MsgVo(500, "上传失败", false);
+                return new MsgVo(403, "上传失败", false);
             }
         } catch (Exception e) {
             // 出现异常，返回错误消息

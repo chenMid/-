@@ -32,7 +32,16 @@
     <update id="avatar">
         update sys_user
         set avatar = #{avatarPath}
-        where username = #{userName};
+        where id = #{id};
+    </update>
+    <update id="modifyPersonalInformation">
+        update sys_user
+        set nickname = #{fadminVo.nickName},
+            email = #{fadminVo.email}
+        <if test="fadminVo.password!=null and fadminVo.password!=''">
+            ,password=#{fadminVo.password}
+        </if>
+        where id = #{fadminVo.id};
     </update>
     <!--查询所有，查询指定用户-->
     <select id="faAdmin" resultMap="FaAdminMap">

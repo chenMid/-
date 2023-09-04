@@ -15,7 +15,7 @@ public class QiniuUtils {
     public static MsgVo uploadAvatar(MultipartFile file,String accessKey, String secretKey,String bucketName, String folderPath) throws IOException {
         MsgVo msg = null;
         if (file.isEmpty()) {
-            msg = new MsgVo(MsgUtils.VALIDATE_ERROR); // 如果文件为空，则返回提示信息
+            msg = new MsgVo(MsgUtils.VALIDATE_ERROR);
         } else {
             try {
                 // 创建七牛云配置对象

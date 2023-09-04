@@ -37,7 +37,6 @@ public class MenuController {
     @PostMapping("/menu")
     public MsgVo menu(HttpServletRequest request) {
         Object userId = request.getAttribute("userId");
-        System.out.println(userId);
         List<SysMenu> menu = menuService.getMenu((Integer) userId);
         List<SysMenu> menuList = new MenuTree(menu).buildTree();
         Map<String, Object> map = new HashMap<>();

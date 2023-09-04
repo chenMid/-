@@ -48,7 +48,6 @@ public class RoleController {
         pageNumber = Math.max(pageNumber, 1);
 
         Object userId = request.getAttribute("userId");
-        System.out.println(userId);
         PageHelper.startPage(pageNumber, pageSize);
         List<Role> allRole = roleService.getAllRole(keyword, (Integer) userId);
         PageInfo<Role> pageInfo = new PageInfo<>(allRole);
@@ -106,8 +105,6 @@ public class RoleController {
                 }
             }
             // 调用RoleUtils的findParent方法，传入roles、id和validIds参数，获取父级ID，并赋值给parentId变量
-            System.out.println(parentId);
-            System.out.println(role.getFId());
             if (parentId==0){
                 role.setRoleCode("admin");
             }else if (parentId==1){

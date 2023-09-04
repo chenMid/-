@@ -53,8 +53,6 @@ public class getKaptchaImage {
         // create the text for the image
         String capText = captchaProducer.createText();
 
-        System.out.println(capText);
-
         // store the text in the session
         session.setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
         Kap = (String) request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);

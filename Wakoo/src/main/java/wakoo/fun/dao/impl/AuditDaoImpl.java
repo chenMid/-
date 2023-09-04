@@ -5,9 +5,11 @@ import wakoo.fun.dao.AuditDao;
 import wakoo.fun.mapper.AuditMapper;
 import wakoo.fun.pojo.Audit;
 import wakoo.fun.pojo.Orders;
+import wakoo.fun.vo.AuditVo;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AuditDaoImpl implements AuditDao {
@@ -39,11 +41,6 @@ public class AuditDaoImpl implements AuditDao {
     }
 
     @Override
-    public Boolean additionContract(String contract, Integer userId) {
-        return auditMapper.additionContract(contract, userId );
-    }
-
-    @Override
     public Audit getSourceData(Integer userId) {
         return auditMapper.getSourceData(userId);
     }
@@ -66,5 +63,20 @@ public class AuditDaoImpl implements AuditDao {
     @Override
     public Boolean deletesASpecifiedUserCourse(Integer userId, Integer studentClass) {
         return auditMapper.deletesASpecifiedUserCourse(userId, studentClass);
+    }
+
+    @Override
+    public Boolean addTheContractIntermediateTable(AuditVo auditVo) {
+        return auditMapper.addTheContractIntermediateTable(auditVo);
+    }
+
+    @Override
+    public List<Map<String, String>> obtainAContract(Integer auditId) {
+        return auditMapper.obtainAContract(auditId);
+    }
+
+    @Override
+    public Boolean deletePictureContract(String uId) {
+        return auditMapper.deletePictureContract(uId);
     }
 }

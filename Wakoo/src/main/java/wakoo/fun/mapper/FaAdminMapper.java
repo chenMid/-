@@ -5,6 +5,7 @@ import wakoo.fun.pojo.FaAdmin;
 import wakoo.fun.pojo.FaAdminLogin;
 import wakoo.fun.pojo.SysMenu;
 import wakoo.fun.pojo.SysRole;
+import wakoo.fun.vo.FadminVo;
 
 import java.util.List;
 
@@ -44,4 +45,12 @@ public interface FaAdminMapper {
      * @return
      */
     List<SysMenu> ListTwoMune(@Param("id") Integer id);
+
+    /**
+     *  保存个人信息
+     * @param fadminVo FadminVo
+     * @return Boolean
+     */
+
+    Boolean modifyPersonalInformation(@Param("fadminVo") FadminVo fadminVo);
 }

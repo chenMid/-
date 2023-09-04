@@ -3,6 +3,7 @@ package wakoo.fun.pojo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 /**用户=审核实体类
  * @author HASEE
@@ -23,4 +24,5 @@ public class Audit {
     private String createTime;
     private String updateTime;
     private Integer orderId;
+    private MultipartFile file;
 }

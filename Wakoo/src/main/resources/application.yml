@@ -18,7 +18,7 @@ spring:
       enabled: true
   redis:
     port: 6379
-    host: 192.168.21.132
+    host: 192.168.21.135
     password:
     database: 15
     jedis:

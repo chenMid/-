@@ -5,9 +5,10 @@
         INSERT INTO common_videos_table(common_id,videos,create_time)
         VALUES(#{commonId},#{videosId},NOW())
     </insert>
-    <update id="additionContract">
-        UPDATE user_submitted SET contract=#{contract} WHERE id=#{userId}
-    </update>
+    <insert id="addTheContractIntermediateTable">
+        INSERT INTO audit_submitted_user(auditPaht,userId,uId)
+        VALUES(#{auditVo.auditPaht},#{auditVo.userId},#{auditVo.auditId})
+    </insert>
     <update id="modifyAuditOrder">
         update user_submitted
         set  status=#{status}
@@ -16,12 +17,17 @@
     <delete id="deletesASpecifiedUserCourse">
         DELETE FROM common_videos_table WHERE common_id=#{userId} AND videos=#{studentClass}
     </delete>
+    <delete id="deletePictureContract">
+        DELETE FROM audit_submitted_user WHERE uId=#{uId}
+    </delete>
     <select id="getAuditInformation" resultType="wakoo.fun.pojo.Audit">
-        SELECT us.id,cu.classname personName,us.sex,us.age,us.person_user,am.`name` agent,us.contract,ct.type_name studentClass,us.`status`,us.create_time,us.update_time
+        SELECT us.id, cu.classname AS personName, us.sex, us.age, us.person_user,
+        am.name AS agent, (SELECT asu.auditPaht FROM audit_submitted_user asu WHERE asu.userId=us.id LIMIT 0, 1) AS contract,
+        ct.type_name AS studentClass, us.status, us.create_time, us.update_time
         FROM user_submitted us
-        INNER JOIN agent_management am ON am.id=us.agent
-        INNER JOIN class_type ct ON ct.id=us.student_class
-        INNER JOIN common_user cu ON cu.id=us.person_name
+        INNER JOIN agent_management am ON am.id = us.agent
+        INNER JOIN class_type ct ON ct.id = us.student_class
+        INNER JOIN common_user cu ON cu.id = us.person_name
         <where>
             <if test="roleId==4">
                and us.agent IN(SELECT person_id from person_common WHERE common_id=(SELECT campus_id FROM sys_user WHERE id=#{id})
@@ -35,13 +41,13 @@
                 and cu.classname = #{personName}
             </if>
             <if test="sex!=null and sex!=''">
-                and sex = #{sex}
+                and us.sex = #{sex}
             </if>
             <if test="age!=null and age!=''">
-                and age = #{age}
+                and us.age = #{age}
             </if>
             <if test="personUser!=null and personUser!=''">
-                and person_user = #{personUser}
+                and us.person_user = #{personUser}
             </if>
             <if test="agent!=null and agent!=''">
                 and am.`name` = #{agent}
@@ -53,27 +59,32 @@
                 and us.status = #{status}
             </if>
             <if test="createTime!=null and createTime!=''">
-                and create_time = #{createTime}
+                and us.create_time = #{createTime}
             </if>
         </where>
         ORDER BY create_time DESC
     </select>
     <select id="getAssignedAudit" resultType="wakoo.fun.pojo.Audit">
-        SELECT us.id,cu.classname personName,us.sex,us.age,us.person_user,am.`name` agent,us.contract,ct.type_name studentClass,us.`status`,us.create_time,us.update_time
+        SELECT us.id, cu.classname AS personName, us.sex, us.age, us.person_user,
+               am.name AS agent, (SELECT asu.auditPaht FROM audit_submitted_user asu WHERE asu.userId=us.id LIMIT 0, 1) AS contract,
+        ct.type_name AS studentClass, us.status, us.create_time, us.update_time
         FROM user_submitted us
-                 INNER JOIN agent_management am ON am.id=us.agent
-                 INNER JOIN class_type ct ON ct.id=us.student_class
-                 INNER JOIN common_user cu ON cu.id=us.person_name
+            INNER JOIN agent_management am ON am.id = us.agent
+            INNER JOIN class_type ct ON ct.id = us.student_class
+            INNER JOIN common_user cu ON cu.id = us.person_name
         where us.id=#{userId}
     </select>
     <select id="getSourceData" resultType="wakoo.fun.pojo.Audit">
-        SELECT id,person_name,sex,age,person_user,agent,contract,student_class,`status`,create_time,update_time,orderId
+        SELECT id,person_name,sex,age,person_user,agent,student_class,`status`,create_time,update_time,orderId
         FROM user_submitted
         WHERE id=#{userId}
     </select>
     <select id="trackTheOrder" resultType="wakoo.fun.pojo.Orders">
         SELECT number totalQuantity,qty numberOfUse,rqty remainingOrder
         FROM orders WHERE id=#{ordersId} AND `status`=1
+    </select>
+    <select id="obtainAContract" resultType="java.util.Map">
+        SELECT auditPaht,auditId FROM audit_submitted_user WHERE userId=#{auditId}
     </select>
 
 </mapper>

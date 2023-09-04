@@ -103,7 +103,11 @@ public class LogAspect {
             if ("SELECT".equals(logInfo.getType())) {
                 logInfo.setReqParam(JSON.toJSONString(converMapNo(request.getParameterMap())));
             } else {
-                logInfo.setReqParam(JSON.toJSONString(converMap(joinPoint)));
+                if ("SPECIAL".equals(logInfo.getType())){
+                    logInfo.setReqParam(JSON.toJSONString(converMapNo(request.getParameterMap())));
+                }else {
+                    logInfo.setReqParam(JSON.toJSONString(converMap(joinPoint)));
+                }
             }
             logInfo.setResParam(JSON.toJSONString(keys));
 

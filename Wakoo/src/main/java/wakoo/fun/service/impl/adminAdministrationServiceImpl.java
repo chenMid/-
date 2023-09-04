@@ -243,5 +243,9 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
         return adminAdministration.multiConditionQuery(username, roleName, name, email, mobile, status, userId);
     }
 
+    @Override
+    public FadminVo personalInformation(Integer id) {
+        return adminAdministration.personalInformation(id);
+    }
 
 }

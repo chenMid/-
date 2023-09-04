@@ -43,6 +43,8 @@ public class Constants {
 
     public final static String DELETE = "DELETE";
 
+    public final static String SPECIAL = "SPECIAL";
+
     /**
      * 消息发送状态码
      */

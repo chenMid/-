@@ -1,17 +1,16 @@
 package wakoo.fun.controller.faAdminController;
 
+import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import wakoo.fun.common.Log;
 import wakoo.fun.controller.kaptchaController.getKaptchaImage;
 import wakoo.fun.dto.User;
-import wakoo.fun.log.Constants;
 import wakoo.fun.pojo.FaAdminLogin;
-import wakoo.fun.utils.HashUtils;
 import wakoo.fun.vo.MsgVo;
 import wakoo.fun.pojo.FaAdmin;
 import wakoo.fun.service.FaAdminService;
@@ -20,6 +19,7 @@ import wakoo.fun.utils.TokenUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author HASEE
@@ -34,11 +34,13 @@ public class FaAdminController {
     private getKaptchaImage asd;
     @Resource
     private FaAdminService faAdminService;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate ;
 
     @ApiOperation(value = "登录")
     @Log(modul = "登录", desc = "登录")
     @PostMapping("/login")
-    public MsgVo login(@RequestBody User user, HttpServletRequest request) {
+    public MsgVo login(@RequestBody User user, HttpServletRequest request) throws JsonProcessingException {
             // 调用asd的getCaptchaSession方法，获取验证码的session信息，并赋值给captchaSession变量
             String captchaSession = asd.getCaptchaSession(request);
             // 打印输出captchaSession的值
@@ -50,6 +52,9 @@ public class FaAdminController {
             }
             // 调用faAdminService的faAdmin方法，传入用户名作为参数，查询用户信息，并赋值给faAdmins变量
             List<FaAdmin> faAdmins = faAdminService.faAdmin(user.getUserName());
+            if ("0".equals(faAdmins.get(0).getStatus())){
+                return new MsgVo(403, "这个用户处于禁用状态，请联系管理员", null);
+            }
             // 判断faAdmins列表是否为空
             if (!faAdmins.isEmpty()) {
                 // 判断faAdmins列表中第一个元素的密码与用户传入的密码是否相等，如果不相等
@@ -61,8 +66,14 @@ public class FaAdminController {
                     request.setAttribute("userName", user.getUserName());
                     // 调用TokenUtils的token方法，传入用户名、密码和用户ID，生成登录凭证token
                     String token = TokenUtils.token(faAdmins.get(0).getUserName(), faAdmins.get(0).getPassword(), faAdmins.get(0).getId());
-                    // 调用faAdminService的UpdToken方法，更新用户的登录凭证token，并返回更新结果
+                    JSONObject tokenJson = new JSONObject();
+                    tokenJson.put("token", token);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    String jsonString = objectMapper.writeValueAsString(tokenJson);
+                    assert token != null;
+                    stringRedisTemplate.opsForValue().set(String.valueOf(faAdmins.get(0).getId()), jsonString, 7,TimeUnit.DAYS);
 
+                    // 调用faAdminService的UpdToken方法，更新用户的登录凭证token，并返回更新结果
                     Boolean aBoolean = faAdminService.UpdToken(token, user.getUserName());
                     // 判断更新结果是否为真
                     if (aBoolean) {

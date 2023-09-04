@@ -1,8 +1,15 @@
 package wakoo.fun.config;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -10,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import wakoo.fun.pojo.FaAdmin;
 import wakoo.fun.service.FaAdminService;
 import wakoo.fun.utils.TokenUtils;
+import wakoo.fun.vo.MsgVo;
 
 
 import javax.annotation.Resource;
@@ -17,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 @Slf4j
@@ -31,10 +40,13 @@ public class LoginInterceptor implements HandlerInterceptor {
      */
     @Resource
     private FaAdminService faAdminService;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate ;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("token");
+        response.setCharacterEncoding("UTF-8");
         // 如果不是映射到方法直接通过
         if (!(handler instanceof HandlerMethod)) {
             return true;
@@ -73,12 +85,54 @@ public class LoginInterceptor implements HandlerInterceptor {
                 }
 
                 // 验证 token
-                if (TokenUtils.verify(token)) {
-                    return true;
-                } else {
-                    throw new RuntimeException("token过期或不正确，请重新登录");
+                Object userInfo = TokenUtils.getUserInfo(token, "userId");
+                assert userInfo != null;
+                Boolean exists = stringRedisTemplate.hasKey(userInfo.toString());
+                String s = stringRedisTemplate.opsForValue().get(userInfo.toString());
+                JsonObject jsonObject = JsonParser.parseString(s).getAsJsonObject();
+                String tokens = jsonObject.get("token").getAsString();
+                if (!tokens.equals(token)){
+                    MsgVo msgVo = new MsgVo(403, "账号已在别处登录，请重新登录", false);
+                    Gson gson = new Gson();
+                    String json = gson.toJson(msgVo);
+                    response.getWriter().write(json);
+                    return false;
                 }
+                if (Boolean.TRUE.equals(exists)) {
+                    // Token 仍然有效，判断过期时间
+                    boolean isExpired = false;
+                    Long ttlInSeconds = stringRedisTemplate.getExpire(userInfo.toString(), TimeUnit.SECONDS);
+                    if (ttlInSeconds != null) {
+                        if (ttlInSeconds < 0) {
+                            // Token 已过期
+                            isExpired = true;
+                        } else if (ttlInSeconds <= 300) {
+                            // 剩余过期时间小于等于1800秒（30分钟），延长过期时间为30分钟
+                            stringRedisTemplate.expire(userInfo.toString(), 1800, TimeUnit.SECONDS);
+                        }
+                    }
 
+                    if (isExpired) {
+                        // Token 已过期，执行自动退出操作
+                        MsgVo msgVo = new MsgVo(403, "身份过期，请重新登录", false);
+                        // 将 MsgVo 对象转换为 JSON 格式的字符串
+                        Gson gson = new Gson();
+                        String json = gson.toJson(msgVo);
+                        response.getWriter().write(json);
+                        return false;
+                    } else {
+                        return true;
+                    }
+                } else {
+                    // Token 不存在或已被删除，执行自动退出操作
+                    response.setCharacterEncoding("UTF-8");
+                    MsgVo msgVo = new MsgVo(403, "身份过期，请重新登录", false);
+                    // 将 MsgVo 对象转换为 JSON 格式的字符串
+                    Gson gson = new Gson();
+                    String json = gson.toJson(msgVo);
+                    response.getWriter().write(json);
+                    return false;
+                }
             }
         }
         throw new RuntimeException("没有权限注解一律不通过");

@@ -249,4 +249,11 @@ public interface AdminAdministrationService {
      * @return 返回一个list
      */
     List<AdminAdministraltion> multiConditionQuery(String username,String roleName,String name,String email,String mobile,Integer status,Integer userId);
+
+    /**
+     * 获取指定用户
+     * @param id
+     * @return
+     */
+    FadminVo personalInformation(Integer id);
 }

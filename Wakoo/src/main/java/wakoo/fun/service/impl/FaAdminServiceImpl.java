@@ -5,6 +5,7 @@ import wakoo.fun.mapper.FaAdminMapper;
 import wakoo.fun.pojo.FaAdmin;
 import wakoo.fun.pojo.FaAdminLogin;
 import wakoo.fun.service.FaAdminService;
+import wakoo.fun.vo.FadminVo;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -37,5 +38,10 @@ public class FaAdminServiceImpl implements FaAdminService {
     @Override
     public FaAdminLogin ListFadmin(String username) {
         return faAdminMapper.ListFadmin(username);
+    }
+
+    @Override
+    public Boolean modifyPersonalInformation(FadminVo fadminVo) {
+        return faAdminMapper.modifyPersonalInformation(fadminVo);
     }
 }
