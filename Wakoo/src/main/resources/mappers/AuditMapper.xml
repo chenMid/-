@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wakoo.fun.mapper.AuditMapper">
+    <insert id="addLessonsToUsers">
+        INSERT INTO common_videos_table(common_id,videos,create_time)
+        VALUES(#{commonId},#{videosId},NOW())
+    </insert>
+    <update id="additionContract">
+        UPDATE user_submitted SET contract=#{contract} WHERE id=#{userId}
+    </update>
+    <update id="modifyAuditOrder">
+        update user_submitted
+        set  status=#{status}
+        where id=#{id};
+    </update>
+    <delete id="deletesASpecifiedUserCourse">
+        DELETE FROM common_videos_table WHERE common_id=#{userId} AND videos=#{studentClass}
+    </delete>
+    <select id="getAuditInformation" resultType="wakoo.fun.pojo.Audit">
+        SELECT us.id,cu.classname personName,us.sex,us.age,us.person_user,am.`name` agent,us.contract,ct.type_name studentClass,us.`status`,us.create_time,us.update_time
+        FROM user_submitted us
+        INNER JOIN agent_management am ON am.id=us.agent
+        INNER JOIN class_type ct ON ct.id=us.student_class
+        INNER JOIN common_user cu ON cu.id=us.person_name
+        <where>
+            <if test="roleId==4">
+               and us.agent IN(SELECT person_id from person_common WHERE common_id=(SELECT campus_id FROM sys_user WHERE id=#{id})
+                )
+            </if>
+            <if test="roleId==3">
+               and us.agent IN(SELECT person_id FROM person_common WHERE common_id in(SELECT campus_id from sys_user WHERE agent_id=(SELECT agent_id FROM sys_user WHERE id=#{id})
+                ))
+            </if>
+            <if test="personName!=null and personName!=''">
+                and cu.classname = #{personName}
+            </if>
+            <if test="sex!=null and sex!=''">
+                and sex = #{sex}
+            </if>
+            <if test="age!=null and age!=''">
+                and age = #{age}
+            </if>
+            <if test="personUser!=null and personUser!=''">
+                and person_user = #{personUser}
+            </if>
+            <if test="agent!=null and agent!=''">
+                and am.`name` = #{agent}
+            </if>
+            <if test="studentClass!=null and studentClass!=''">
+                and ct.type_name = #{studentClass}
+            </if>
+            <if test="status!=null and status!=''">
+                and us.status = #{status}
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                and create_time = #{createTime}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+    <select id="getAssignedAudit" resultType="wakoo.fun.pojo.Audit">
+        SELECT us.id,cu.classname personName,us.sex,us.age,us.person_user,am.`name` agent,us.contract,ct.type_name studentClass,us.`status`,us.create_time,us.update_time
+        FROM user_submitted us
+                 INNER JOIN agent_management am ON am.id=us.agent
+                 INNER JOIN class_type ct ON ct.id=us.student_class
+                 INNER JOIN common_user cu ON cu.id=us.person_name
+        where us.id=#{userId}
+    </select>
+    <select id="getSourceData" resultType="wakoo.fun.pojo.Audit">
+        SELECT id,person_name,sex,age,person_user,agent,contract,student_class,`status`,create_time,update_time,orderId
+        FROM user_submitted
+        WHERE id=#{userId}
+    </select>
+    <select id="trackTheOrder" resultType="wakoo.fun.pojo.Orders">
+        SELECT number totalQuantity,qty numberOfUse,rqty remainingOrder
+        FROM orders WHERE id=#{ordersId} AND `status`=1
+    </select>
+
+</mapper>
