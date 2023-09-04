@@ -14,14 +14,14 @@
     </insert>
     <update id="modifyTheCourseVideo">
         UPDATE videos
-        SET class_type_id =#{videosVo.classTypeName},
-                    video_length=#{videosVo.videoLength},
-                    title=#{videosVo.title},
-                    which =#{videosVo.which},
-                    video_image_url =#{videosVo.videoImageUrl},
-                    video_url =#{videosVo.videoUrl},
-                    video_introduction =#{videosVo.videoIntroduction}
-        WHERE id =#{videosVo.id}
+        SET class_type_id      =#{videosVo.classTypeName},
+            video_length=#{videosVo.videoLength},
+            title=#{videosVo.title},
+            which              =#{videosVo.which},
+            video_image_url    =#{videosVo.videoImageUrl},
+            video_url          =#{videosVo.videoUrl},
+            video_introduction =#{videosVo.videoIntroduction}
+        WHERE id = #{videosVo.id}
     </update>
     <delete id="deleteVideo">
         DELETE FROM videos
@@ -58,20 +58,53 @@
         ORDER BY class_type_name
     </select>
     <select id="queryParentLevel" resultType="java.lang.Integer">
-        select id from class_type WHERE class_ftype_id=#{id} AND type_name=#{typeName} AND type_age=#{typeAge}
+        select id
+        from class_type
+        WHERE class_ftype_id = #{id}
+          AND type_name = #{typeName}
+          AND type_age = #{typeAge}
     </select>
     <select id="exampleModifyTheCommandOutput" resultType="wakoo.fun.dto.VideosDto">
-        SELECT  vs.id,
-                cs.id type_name,
-                vs.class_type_id classTypeName,
-                vs.title,
-                vs.which,
-                vs.video_image_url,
-                vs.video_url,
-                vs.video_introduction
+        SELECT vs.id,
+               cs.id            type_name,
+               vs.class_type_id classTypeName,
+               vs.title,
+               vs.which,
+               vs.video_image_url,
+               vs.video_url,
+               vs.video_introduction
         FROM videos vs
                  LEFT JOIN class_type ct ON vs.class_type_id = ct.id
                  LEFT JOIN categories cs ON cs.id = ct.class_ftype_id
-        WHERE vs.id=#{specifiedEcho}
+        WHERE vs.id = #{specifiedEcho}
+    </select>
+    <select id="queryVideosBasedOnMultipleCriteria" resultType="wakoo.fun.pojo.Videos">
+        SELECT videos.id,
+        categories.type_name,
+        CONCAT(class_type.type_name, '-', class_type.type_age) AS class_type_name,
+        videos.which,
+        videos.title,
+        videos.video_image_url,
+        videos.video_length
+        FROM videos
+        LEFT JOIN class_type ON videos.class_type_id = class_type.id
+        LEFT JOIN categories ON categories.id = class_type.class_ftype_id
+        WHERE 1=1
+        <if test="typeName!=null and typeName!=''">
+            and categories.type_name = #{typeName}
+        </if>
+        <if test="classTypeName!=null and classTypeName!=''">
+            and CONCAT(class_type.type_name, '-', class_type.type_age) = #{classTypeName}
+        </if>
+        <if test="title!=null and title!=''">
+            and videos.title = #{title}
+        </if>
+        <if test="videoLength!=null and videoLength!=''">
+            and videos.video_length = #{videoLength}
+        </if>
+        <if test="which!=null and which!=''">
+            and videos.which = #{which}
+        </if>
+        ORDER BY categories.type_name, class_type_name, videos.which
     </select>
 </mapper>

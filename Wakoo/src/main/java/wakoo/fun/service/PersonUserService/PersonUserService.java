@@ -6,6 +6,7 @@ import wakoo.fun.pojo.Agent;
 import wakoo.fun.pojo.PersonUser;
 import wakoo.fun.vo.PersonUserVo;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /** 用户信息service接口
@@ -18,7 +19,7 @@ public interface PersonUserService {
      * @param keyword 搜索关键字
      * @return 返回结果
      */
-    List<PersonUser> getRegularUsers(String keyword, Integer userId);
+    List<PersonUser> getRegularUsers(String keyword, Integer userId,Integer status,Integer number);
 
     /**
      *  查询指定信息
@@ -74,7 +75,7 @@ public interface PersonUserService {
      * @param parentId 父级id
      * @return 对象
      */
-    List<Agent> acquireOtherThanPersonnel(Integer userId, Integer parentId);
+    List<Agent> acquireOtherThanPersonnel(Integer userId, Integer parentId,String iphone);
 
     /**
      *  备注的查询
@@ -88,14 +89,14 @@ public interface PersonUserService {
      * @param campusId 所属人id
      * @return 对象
      */
-    List<PersonUserVo> inquireAboutTheOwnersCourse(Integer campusId);
+    List<PersonUserVo> inquireAboutTheOwnersCourse(Integer campusId,Integer cid);
 
     /**
      *   添加购买的课程
      * @param personUserVo 购买课程
      * @return 是否成功
      */
-    Boolean addPurchaseCourse(@Param("person") PersonUserVo personUserVo);
+    Boolean addPurchaseCourse(PersonUserVo personUserVo,HttpServletRequest request);
 
     /**
      * 获取已有课程
@@ -103,4 +104,36 @@ public interface PersonUserService {
      * @return 对象
      */
     List<PersonUserVo> accessExistingCourses(Integer campusId);
+    /**
+     * 添加审核
+     * @param id 用户姓名
+     * @param sex 性别
+     * @param age   年龄
+     * @param userName 用户姓名
+     * @param agent 代理
+     * @param studentClass 课程
+     * @return 是否成功
+     */
+    Boolean addAudit(Integer id, Integer sex, Integer age, String userName, Integer agent,Integer studentClass, Integer orderId);
+    /**
+     *  软删除用户
+     * @param ids id
+     * @param status 状态
+     * @return 是否成功
+     *
+     */
+    Boolean softDeleteUser(Integer[] ids,Integer status);
+
+    /**
+     *  查询学生列表
+     *  @param number 学生
+     * @param classname 判断
+     * @param iphone 手机号
+     * @param agentName 代理
+     * @param sex 性别
+     * @param age 年龄
+     * @return 对象
+     */
+    List<PersonUser> queryUsersBasedOnMultipleCriteria (String classname,String iphone,String agentName,Integer sex,Integer age,Integer userId,Integer number,Integer status);
+
 }

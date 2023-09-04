@@ -55,4 +55,9 @@ public class VideosServiceImpl implements VideosService {
     public Boolean deleteVideo(Integer[] ids) {
         return videosMapper.deleteVideo(ids);
     }
+
+    @Override
+    public List<Videos> queryVideosBasedOnMultipleCriteria(String typeName,String classTypeName,String title,String videoLength,Integer which) {
+        return videosMapper.queryVideosBasedOnMultipleCriteria(typeName,classTypeName ,title,videoLength,which );
+    }
 }

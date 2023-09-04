@@ -29,5 +29,7 @@ public class PersonUser {
 
     private String image;
     private String createTime;
+    private String updateTime;
     private String agentName;
+    private Integer status;
 }

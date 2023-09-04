@@ -19,8 +19,8 @@ public class OrdersServiceImpl implements OrdersService {
     private OrdersMapper ordersMapper;
 
     @Override
-    public List<Orders> getAllAgentInformation(String keyword,Integer userid) {
-        return ordersMapper.getAllAgentInformation(keyword,userid);
+    public List<Orders> getAllAgentInformation(String keyword,Integer userid,Integer status,Integer number) {
+        return ordersMapper.getAllAgentInformation(keyword,userid,status,number);
     }
 
     @Override
@@ -59,7 +59,12 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
-    public Boolean delOrder(Integer[] ids) {
-        return ordersMapper.delOrder(ids);
+    public Boolean delOrder(Integer[] ids,Integer status) {
+        return ordersMapper.delOrder(ids,status);
+    }
+
+    @Override
+    public List<Orders> multiConditionQuery(String name, String subclassName, String createTime, String status, Integer userId) {
+        return ordersMapper.multiConditionQuery(name, subclassName, createTime, status, userId);
     }
 }

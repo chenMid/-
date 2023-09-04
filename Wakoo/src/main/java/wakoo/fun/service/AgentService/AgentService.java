@@ -65,20 +65,37 @@ public interface AgentService {
     Boolean modifyRoleAgent(@Param("agentId") Integer agentId, @Param("roleId") Integer roleId);
     /**
      * 修改 代理状态
-     * @param id 代理id
+     * @param ids 代理id
      * @return 是否修改成功
      */
-    Boolean alterTheState(@Param("id") Integer id, @Param("status") Integer status);
+    Boolean alterTheState(Integer[] ids, @Param("status") Integer status);
     /**
      * 删除代理
-     * @param id 代理id
+     * @param ids 代理id
      * @return 是否删除成功
      */
-    Boolean destructionAgent(@Param("id") Integer id);
+    Boolean destructionAgent(@Param("ids") Integer[] ids);
     /**
      * 销毁中间表
-     * @param userId 用户id
+     * @param ids 用户id
      * @return 是否刷新成功
      */
-    Boolean destroyIntermediateTable(Integer userId);
+    Boolean destroyIntermediateTable(Integer[] ids);
+    /**
+     *  多条件查询，变成多条件
+     * @param status 状态
+     * @param name 代理名称
+     * @param contactPhone 联系手机
+     * @param address 地
+     * @param createTime 创建时间
+     * @param roleId 角色id
+     * @return 符合条件的代理
+     */
+    List<AgentDto> agentMultiConditionQuery( Integer status,
+                                             String name,
+                                             String contactPhone,
+                                             String address,
+                                             String createTime,
+                                             String roleId,
+                                             Integer userId);
 }

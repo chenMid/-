@@ -88,5 +88,10 @@ public class SubclassServiceImpl implements SubclassService {
         return subclassMapper.deleteSubclass(ids);
     }
 
+    @Override
+    public List<Subclass> multipleConditionalQuerySubclass(String typeName, String name, String material, String createTime, String updateTime, Integer sort) {
+        return subclassMapper.multipleConditionalQuerySubclass(typeName, name, material, createTime, updateTime, sort);
+    }
+
 
 }

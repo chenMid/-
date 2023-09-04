@@ -90,4 +90,21 @@ public interface SubclassMapper {
      * @return 删除数量
      */
     Boolean deleteSubclass(Integer[] ids);
+
+    /**
+     *  多条件复合查询
+     * @param typeName 子类名称
+     * @param name 姓名
+     * @param material 描述
+     * @param createTime 创建时间
+     * @param updateTime 更新时间
+     * @param sort 排序
+     * @return 返回符合条件的实体数组
+     */
+    List<Subclass> multipleConditionalQuerySubclass(String typeName,
+                                                    String name,
+                                                    String material,
+                                                    String createTime,
+                                                    String updateTime,
+                                                    Integer sort);
 }

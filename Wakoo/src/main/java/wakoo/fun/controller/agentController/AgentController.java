@@ -1,5 +1,6 @@
 package wakoo.fun.controller.agentController;
 
+import com.alibaba.fastjson2.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -46,9 +47,10 @@ public class AgentController {
     @GetMapping("/getAllAgent")
     public MsgVo getAllAgent(HttpServletRequest request, String keyword, Integer pageSize, Integer pageNumber,Integer status) {
         try {
+            pageNumber = Math.max(pageNumber, 1);
+
             PageHelper.startPage(pageNumber, pageSize);
             Object userId = request.getAttribute("userId");
-            System.out.println(userId);
             List<AgentDto> adverts = agentService.listAdcert(keyword, (Integer) userId,status);
 
             PageInfo<AgentDto> pageInfo = new PageInfo<>(adverts);
@@ -59,6 +61,36 @@ public class AgentController {
             return new MsgVo(500, "请求处理失败", null);
         }
     }
+
+    @ApiOperation(value = "代理多条件查询")
+    @UserLoginToken
+    @GetMapping("/agentMultiConditionQuery")
+    public MsgVo agentMultiConditionQuery(HttpServletRequest request,
+                                          Integer pageSize,
+                                          Integer pageNumber,
+                                          Integer status,
+                                          String name,
+                                          String contactPhone,
+                                          String address,
+                                          String createTime,
+                                          String roleId){
+        Object userId = request.getAttribute("userId");
+        pageNumber = Math.max(pageNumber, 1);
+        PageHelper.startPage(pageNumber, pageSize);
+        try{
+            List<AgentDto> agentDtos = agentService.agentMultiConditionQuery(status, name, contactPhone, address, createTime, roleId, (Integer) userId);
+            PageInfo<AgentDto> pageInfo = new PageInfo<>(agentDtos);
+            pageInfo.setPageSize(pageSize);
+            return new MsgVo(200, "请求成功", pageInfo);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new MsgVo(500, "请求失败", false);
+        }
+    }
+
+
+
+
 
     @ApiOperation(value = "添加代理")
     @UserLoginToken
@@ -236,13 +268,17 @@ public class AgentController {
     @ApiOperation(value = "删除代理软删除")
     @UserLoginToken
     @Log(modul = "代理页面-删除", type = Constants.UPDATE, desc = "操作删除按钮")
-    @PutMapping("/deleteProxySoftDelete")
-    public MsgVo deleteProxySoftDelete(Integer id,Integer status){
-        Boolean aBoolean=false;
-        if (id!=null){
-            aBoolean = agentService.alterTheState(id,status);
-        }
-        if (aBoolean) {
+    @SuppressWarnings("unchecked")
+    @DeleteMapping("/deleteProxySoftDelete")
+    public MsgVo deleteProxySoftDelete(@RequestBody Map<String, Object> requestBody) {
+        List<Integer> idsList = (List<Integer>) requestBody.get("ids");
+        Integer status = (Integer) requestBody.get("status");
+
+        Integer[] ids = idsList.toArray(new Integer[0]);
+
+        Boolean success = false;
+        success = agentService.alterTheState(ids, status);
+        if (success) {
             return new MsgVo(200, "操作成功", true);
         } else {
             return new MsgVo(403, "操作失败", false);
@@ -254,13 +290,14 @@ public class AgentController {
     @Transactional(rollbackFor = Exception.class)
     @Log(modul = "代理页面-销毁代理", type = Constants.DELETE, desc = "操作销毁按钮")
     @DeleteMapping ("destructionAgent")
-    public MsgVo destructionAgent(Integer id){
+    public MsgVo destructionAgent(@RequestBody Map<String, Integer[]> requestBody){
+        Integer[] ids = requestBody.get("ids");
         Boolean aBoolean=false;
-        if (id!=null){
-            aBoolean = agentService.destructionAgent(id);
+        if (ids!=null){
+            aBoolean = agentService.destructionAgent(ids);
         }
         if (aBoolean) {
-            Boolean aBoolean1 = agentService.destroyIntermediateTable(id);
+            Boolean aBoolean1 = agentService.destroyIntermediateTable(ids);
             if (aBoolean1){
                 return new MsgVo(200, "销毁成功", true);
             }

@@ -76,7 +76,7 @@
     <select id="getSubclass" resultType="wakoo.fun.pojo.Subclass">
         SELECT id,
                class_ftype_id typeName,
-               type_name AS name,
+               type_name AS   name,
                type_age,
                inage_image,
                age_image,
@@ -106,10 +106,47 @@
         from class_type
         where id = #{zId}
     </select>
+    <select id="multipleConditionalQuerySubclass" resultType="wakoo.fun.pojo.Subclass">
+        SELECT ct.id,
+        cs.type_name,
+        ct.type_name AS name,
+        ct.type_age,
+        ct.inage_image,
+        ct.age_image,
+        ct.sort,
+        ct.material,
+        ct.create_time,
+        ct.update_time
+        FROM class_type ct
+        JOIN categories cs ON ct.class_ftype_id = cs.id
+        WHERE 1=1
+        <if test="typeName!=null and typeName!=''">
+            and cs.type_name = #{typeName}
+        </if>
+        <if test="name!=null and name!=''">
+            and ct.type_name = #{name}
+        </if>
+        <if test="material!=null and material!=''">
+            and ct.material = #{material}
+        </if>
+        <if test="createTime!=null and createTime!=''">
+            and ct.create_time = #{createTime}
+        </if>
+        <if test="updateTime!=null and updateTime!=''">
+            and ct.update_time = #{updateTime}
+        </if>
+        <if test="sort!=null and sort!=''">
+            and ct.sort = #{sort}
+        </if>
+        AND ct.status = 1
+        ORDER BY cs.type_name, ct.type_name, ct.type_age
+    </select>
     <insert id="addSubclasss">
-        INSERT INTO class_type (class_ftype_id, type_name, type_age, inage_image, age_image, material,sort ,create_time)
-        VALUES (#{subclass.typeName}, #{subclass.name}, #{subclass.typeAge}, #{subclass.inageImage}, #{subclass.ageImage},
-                #{subclass.material}, #{subclass.sort},NOW())
+        INSERT INTO class_type (class_ftype_id, type_name, type_age, inage_image, age_image, material, sort,
+                                create_time)
+        VALUES (#{subclass.typeName}, #{subclass.name}, #{subclass.typeAge}, #{subclass.inageImage},
+                #{subclass.ageImage},
+                #{subclass.material}, #{subclass.sort}, NOW())
     </insert>
 
 </mapper>

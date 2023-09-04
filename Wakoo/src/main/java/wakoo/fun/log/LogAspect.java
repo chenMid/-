@@ -22,10 +22,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author HASEE
@@ -108,12 +107,16 @@ public class LogAspect {
             }
             logInfo.setResParam(JSON.toJSONString(keys));
 
-            if (userId != null){
+            if (userId != null) {
                 logInfo.setUserId(String.valueOf(userId));
                 logInfo.setUserName(all.getUsername());
-            }else {
+            } else {
                 FaAdminLogin faAdminLogin = faAdminService.ListFadmin((String) userName);
-                logInfo.setUserId(String.valueOf(faAdminLogin.getId()));
+                if (faAdminLogin==null){
+                    logInfo.setUserId(String.valueOf("null"));
+                }else {
+                    logInfo.setUserId(String.valueOf(faAdminLogin.getId()));
+                }
                 logInfo.setUserName((String) userName);
             }
             logInfo.setIp(IPUtils.getIpAddress(request));
@@ -166,9 +169,16 @@ public class LogAspect {
     }
 
     public String converMap(JoinPoint joinPoint) throws JsonProcessingException {
-        Object videosVo = joinPoint.getArgs()[0];
+        Object videosVo=null;
+        String name = joinPoint.getSignature().getName();
+        if ("addCommonUser".equals(name)){
+             videosVo = joinPoint.getArgs()[1];
+        }else {
+             videosVo = joinPoint.getArgs()[0];
+        }
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(videosVo);
+
     }
 
     public Map<String, String> converMapNo(Map<String, String[]> paramMap) {

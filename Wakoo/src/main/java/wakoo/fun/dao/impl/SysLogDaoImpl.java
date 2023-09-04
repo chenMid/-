@@ -25,7 +25,32 @@ public class SysLogDaoImpl implements SysLogDao {
     }
 
     @Override
-    public List<LogInfo> queryLog(String keyword, Integer roleId,String userName) {
-        return sysLogMapper.queryLog(keyword, roleId,userName);
+    public List<LogInfo> queryLog(String userName, String module, String type, String ip, String version, String createTime,Integer roleId,Integer userId) {
+        return sysLogMapper.queryLog(userName, module, type, ip, version, createTime,roleId,userId);
+    }
+
+    @Override
+    public Boolean delLog(String[] ids) {
+        return sysLogMapper.delLog(ids);
+    }
+
+    @Override
+    public List<LogErrorInfo> queryErrorLog(Integer roleId,String userName,String ip,String version,String createTime,Integer userId) {
+        return sysLogMapper.queryErrorLog( roleId, userName, ip , version ,createTime,userId);
+    }
+
+    @Override
+    public Boolean delErrorLog(String[] ids) {
+        return sysLogMapper.delErrorLog(ids);
+    }
+
+    @Override
+    public LogInfo detailLog(String logId) {
+        return sysLogMapper.detailLog(logId);
+    }
+
+    @Override
+    public LogErrorInfo detailExceptionLog(String logErrorId) {
+        return sysLogMapper.detailExceptionLog(logErrorId);
     }
 }

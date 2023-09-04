@@ -17,7 +17,7 @@ public interface OrdersService {
      * @param keyword 模糊查询字段
      * @return 成功返回，不成功返回null
      */
-    List<Orders> getAllAgentInformation(@Param("keyword") String keyword, @Param("userId") Integer userId);
+    List<Orders> getAllAgentInformation(@Param("keyword") String keyword, @Param("userId") Integer userId, @Param("status") Integer status, Integer number);
 
     /**
      * 获取人员列表
@@ -74,5 +74,21 @@ public interface OrdersService {
      * @param ids 订单id
      * @return 返回对象
      */
-    Boolean delOrder(Integer[] ids);
+    Boolean delOrder(Integer[] ids,Integer status);
+
+    /**
+     * 多条件查询
+     *
+     * @param name         名称
+     * @param subclassName 子类名称
+     * @param createTime   创建时间
+     * @param status       状态
+     * @param userId       用户id
+     * @return 返回列表
+     */
+    List<Orders> multiConditionQuery(@Param("name") String name,
+                                     @Param("subclassName") String subclassName,
+                                     @Param("createTime") String createTime,
+                                     @Param("status") String status,
+                                     @Param("userId") Integer userId);
 }

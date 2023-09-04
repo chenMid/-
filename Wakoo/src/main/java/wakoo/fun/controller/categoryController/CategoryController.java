@@ -56,6 +56,7 @@ public class CategoryController {
     @UserLoginToken
     @GetMapping("/getAllCategory")
     public MsgVo getAllCategory(String keyword, Integer pageSize, Integer pageNumber) {
+        pageNumber = Math.max(pageNumber, 1);
         PageHelper.startPage(pageNumber, pageSize);
         List<Category> allCategory = categoryService.getAllCategory(keyword);
         PageInfo<Category> pageInfo = new PageInfo<>(allCategory);

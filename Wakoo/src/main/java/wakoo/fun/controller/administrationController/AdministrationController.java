@@ -44,11 +44,29 @@ public class AdministrationController {
     @Resource
     private AdminAdministrationService adminAdministrationService;
 
+    @ApiOperation(value = "管理员多条件查询")
+    @UserLoginToken
+    @GetMapping("/administratorsCanQueryMultipleCriteria")
+    public MsgVo administratorsCanQueryMultipleCriteria(HttpServletRequest request,String username,String roleName,String name,String email,String mobile,Integer status,Integer pageNumber, Integer pageSize){
+        pageNumber = Math.max(pageNumber, 1);
+        PageHelper.startPage(pageNumber, pageSize);
+        Object userId = request.getAttribute("userId");
+        List<AdminAdministraltion> adminAdministraltions = adminAdministrationService.multiConditionQuery(username, roleName, name, email, mobile, status, (Integer) userId);
+        PageInfo<AdminAdministraltion> pageInfo = new PageInfo<>(adminAdministraltions);
+        pageInfo.setPageSize(pageSize);
+        return new MsgVo(200,"查询成功",pageInfo);
+    }
+
+
+
+
     @ApiOperation(value = "管理员管理查询")
     @UserLoginToken
     @GetMapping("/Administration")
     public MsgVo administration(String keyword, Integer pageSize, Integer pageNumber, HttpServletRequest request) {
-            // 初始化一个整型变量parentId，并赋值为0
+        pageNumber = Math.max(pageNumber, 1);
+
+        // 初始化一个整型变量parentId，并赋值为0
             int parentId = 0;
             // 从请求中获取名为userId的属性，并赋值给变量userId
             Object userId = request.getAttribute("userId");
@@ -332,25 +350,17 @@ public class AdministrationController {
         return new MsgVo(403, "权限不足", false);
     }
 
-    @ApiOperation(value = "管理员管理修改状态")
-    @UserLoginToken
-    @Log(modul = "管理员页面-删除", type = Constants.UPDATE, desc = "操作删除按钮")
-    @PutMapping("status")
-    public MsgVo status(@RequestBody StatusVo status) {
-        Boolean aBoolean = adminAdministrationService.UpdStatus(status.getId(), status.getStatus());
-        return new MsgVo(200, "删除成功", aBoolean);
-    }
-
-
     @ApiOperation(value = "销毁账号")
     @UserLoginToken
+    @Transactional(rollbackFor = Exception.class)
     @Log(modul = "管理员页面-回收站销毁", type = Constants.DELETE, desc = "操作销毁按钮")
     @DeleteMapping("/destroyAccount")
     public MsgVo destroyAccount(@RequestBody Map<String, Integer[]> requestBody) {
         // 获取接收的用户ID数组
         Integer[] ids = requestBody.get("ids");
         Boolean aBoolean = adminAdministrationService.destroyAccount(ids);
-        return new MsgVo(200, "销毁成功", aBoolean);
+        Boolean aBoolean1 = adminAdministrationService.UpdStatus(ids);
+        return new MsgVo(200, "销毁成功", aBoolean&&aBoolean1);
     }
 
     @ApiOperation(value = "获取指定用户信息")

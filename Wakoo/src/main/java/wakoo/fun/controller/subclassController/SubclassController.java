@@ -54,10 +54,30 @@ public class SubclassController {
     @UserLoginToken
     @GetMapping("/getAllsubclass")
     public MsgVo getAllsubclass(String keyword, Integer pageSize, Integer pageNumber) {
+        pageNumber = Math.max(pageNumber, 1);
         PageHelper.startPage(pageNumber, pageSize);
         List<Subclass> allSubclass = subclassService.getAllSubclass(keyword);
         PageInfo<Subclass> pageInfo = new PageInfo<>(allSubclass);
         pageInfo.setPageSize(pageSize);
+        return new MsgVo(200, "请求成功", pageInfo);
+    }
+
+    @ApiOperation(value = "多条件查询子类")
+    @UserLoginToken
+    @GetMapping("/multipleConditionalQuerySubclass")
+    public MsgVo multipleConditionalQuerySubclass(Integer pageSize,
+                                                  Integer pageNumber,
+                                                  String typeName,
+                                                  String name,
+                                                  String material,
+                                                  String createTime,
+                                                  String updateTime,
+                                                  Integer sort
+    ){
+        pageNumber = Math.max(pageNumber, 1);
+        PageHelper.startPage(pageNumber, pageSize);
+        List<Subclass> subclasses = subclassService.multipleConditionalQuerySubclass(typeName, name, material, createTime, updateTime, sort);
+        PageInfo<Subclass> pageInfo = new PageInfo<>(subclasses);
         return new MsgVo(200, "请求成功", pageInfo);
     }
 
@@ -101,12 +121,41 @@ public class SubclassController {
         }
         String[] fruits = subclass.getInageImage().split(",");
         String[] fruits1 = subclass.getAgeImage().split(",");
+
         int startAge = subclass.getTypeAge();
         for (int i = 0; i < fruits.length; i++) {
             Subclass subclass1 = new Subclass(subclass.getTypeName(),subclass.getName(), startAge + i, fruits[i], fruits1[i], subclass.getMaterial(), subclass.getSort());
             subclassService.addSubclasss(subclass1);
         }
         return new MsgVo(200, "添加成功", true);
+    }
+
+    @ApiOperation(value = "年龄标记图")
+    @UserLoginToken
+    @GetMapping("/ageMarkChart")
+    public MsgVo ageMarkChart(Integer typeAge, Integer typeAges,String inageImage){
+        return getMsgVo(typeAge, typeAges, inageImage);
+    }
+
+    @ApiOperation(value = "年龄封面图")
+    @UserLoginToken
+    @GetMapping("/ageCover")
+    public MsgVo ageCover(Integer typeAge, Integer typeAges,String ageImage){
+        return getMsgVo(typeAge, typeAges, ageImage);
+    }
+
+    private MsgVo getMsgVo(Integer typeAge, Integer typeAges, String imageImage) {
+        int num=0;
+        for (int i = typeAge; i <= typeAges ; i++) {
+            num++;
+        }
+        String[] fruits = imageImage.split(",");
+        if (num < fruits.length) {
+            return new MsgVo(200, "图片数量有误",false);
+        }else if (num > fruits.length){
+            return new MsgVo(200, "缺少图片请检查",false);
+        }
+        return new MsgVo(200, "",true);
     }
 
     @ApiOperation(value = "修改回显")

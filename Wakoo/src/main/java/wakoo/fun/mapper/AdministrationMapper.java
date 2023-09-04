@@ -54,11 +54,10 @@ public interface AdministrationMapper {
 
     /**
      * 修改用户状态
-     * @param id
-     * @param status
-     * @return
+     * @param ids id
+     * @return 提示的结果
      */
-    Boolean UpdStatus(@Param("id") Integer[] id, @Param("status") Integer status);
+    Boolean UpdStatus(@Param("ids") Integer[] ids);
 
     /**
      * 查询指定用户信息
@@ -254,4 +253,17 @@ public interface AdministrationMapper {
      * @return 返回一个list
      */
     Boolean destroyAccount(@Param("ids") Integer[] ids);
+
+    /**
+     *      多条件查询的控制
+     * @param username 用户名
+     * @param roleName 角色名
+     * @param name 姓名
+     * @param email 邮箱
+     * @param mobile 手机
+     * @param status 可存
+     * @param userId id
+     * @return 返回一个list
+     */
+    List<AdminAdministraltion> multiConditionQuery(@Param("username") String username, @Param("roleName") String roleName, @Param("name") String name, @Param("email") String email, @Param("mobile") String mobile, @Param("status") Integer status, @Param("userId") Integer userId);
 }

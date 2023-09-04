@@ -17,28 +17,38 @@
         WHERE id = #{agent.id}
     </update>
     <update id="modifyRoleAgent">
-        UPDATE user_agent_role SET role_id=#{roleId} WHERE agent_id=#{agentId}
+        UPDATE user_agent_role
+        SET role_id=#{roleId}
+        WHERE agent_id = #{agentId}
     </update>
     <update id="alterTheState">
         UPDATE agent_management
         SET status = CASE
-                         WHEN status = 1 THEN 0
-                         WHEN status = 0 THEN 1
-            END
-        WHERE id = #{id};
-
-        UPDATE agent_management
-        SET delete_time = CASE
-                              WHEN status = 0 THEN now()
-                              WHEN status = 1 THEN NULL
-            END
-        WHERE id = #{id};
+        WHEN status = 1 THEN 0
+        WHEN status = 0 THEN 1
+        END,
+        delete_time = CASE
+        WHEN status = 0 THEN now()
+        WHEN status = 1 THEN NULL
+        END
+        WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </update>
     <delete id="destructionAgent">
-        DELETE FROM agent_management WHERE id=#{id}
+        DELETE FROM agent_management
+        WHERE id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </delete>
     <delete id="destroyIntermediateTable">
-        DELETE FROM user_agent_role WHERE agent_id=#{userId}
+        DELETE FROM user_agent_role
+        WHERE agent_id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </delete>
     <select id="listAdcert" resultType="wakoo.fun.dto.AgentDto">
         SELECT am.id,
@@ -76,7 +86,7 @@
                      ELSE NULL
                      END DESC,
                  CASE
-                     WHEN am.delete_time IS NULL AND #{status} = 1 THEN NULL
+                     WHEN am.delete_time IS NULL AND #{status} != 1 THEN NULL
                      ELSE am.update_time
                      END DESC
     </select>
@@ -110,7 +120,56 @@
         FROM user_agent_role uar
                  INNER JOIN agent_management am ON am.id = uar.agent_id
                  INNER JOIN sys_role sr ON uar.role_id = sr.id
-        WHERE am.id=#{getProxyId}
+        WHERE am.id = #{getProxyId}
+    </select>
+    <select id="agentMultiConditionQuery" resultType="wakoo.fun.dto.AgentDto">
+        SELECT am.id,
+        am.name,
+        sr.role_name roleId,
+        am.contact_phone,
+        am.email,
+        am.address,
+        am.status,
+        am.create_time,
+        am.longitude,
+        am.latitude,
+        am.update_time,
+        am.delete_time
+        FROM user_agent_role uar
+        INNER JOIN agent_management am ON am.id = uar.agent_id
+        INNER JOIN sys_role sr ON uar.role_id = sr.id
+        WHERE uar.user_id IN (SELECT id
+        FROM sys_user
+        WHERE agent_id = (SELECT agent_id FROM sys_user WHERE id = #{userId})
+        OR (SELECT agent_id FROM sys_user WHERE id = #{userId}) = '*'
+        OR (SELECT agent_id FROM sys_user WHERE id = #{userId}) = '**')
+        AND am.status = #{status}
+        <if test="status!=null and status!=''">
+            AND am.status = #{status}
+        </if>
+        <if test="name!=null and name!=''">
+            AND am.name = #{name}
+        </if>
+        <if test="contactPhone!=null and contactPhone!=''">
+            AND am.contact_phone = #{contactPhone}
+        </if>
+        <if test="address!=null and address!=''">
+            AND am.address LIKE CONCAT('%', #{address}, '%')
+        </if>
+        <if test="createTime!=null and createTime!=''">
+            AND am.create_time LIKE CONCAT('%', #{createTime}, '%')
+        </if>
+        <if test="roleId!=null and roleId!=''">
+            AND sr.role_name = #{roleId}
+        </if>
+        ORDER BY CASE
+        WHEN am.delete_time IS NULL AND #{status} = 1 THEN am.id
+        ELSE NULL
+        END DESC,
+        CASE
+        WHEN am.delete_time IS NULL AND #{status} != 1 THEN NULL
+        ELSE am.update_time
+        END DESC
     </select>
 
 

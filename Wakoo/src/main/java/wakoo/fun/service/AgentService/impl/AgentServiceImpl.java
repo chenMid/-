@@ -61,17 +61,22 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public Boolean alterTheState(Integer id, Integer status) {
-        return agentMapper.alterTheState(id, status);
+    public Boolean alterTheState(Integer[] ids, Integer status) {
+        return agentMapper.alterTheState(ids, status);
     }
 
     @Override
-    public Boolean destructionAgent(Integer id) {
-        return agentMapper.destructionAgent(id);
+    public Boolean destructionAgent(Integer[] ids) {
+        return agentMapper.destructionAgent(ids);
     }
 
     @Override
-    public Boolean destroyIntermediateTable(Integer userId) {
-        return agentMapper.destroyIntermediateTable(userId);
+    public Boolean destroyIntermediateTable(Integer[] ids) {
+        return agentMapper.destroyIntermediateTable(ids);
+    }
+
+    @Override
+    public List<AgentDto> agentMultiConditionQuery(Integer status, String name, String contactPhone, String address, String createTime, String roleId,Integer userId) {
+        return agentMapper.agentMultiConditionQuery(status, name, contactPhone, address, createTime, roleId,userId);
     }
 }

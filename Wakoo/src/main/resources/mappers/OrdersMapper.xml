@@ -15,40 +15,73 @@
         WHERE id = #{ordersDto.id}
     </update>
     <delete id="delOrder">
-        UPDATE orders set `status`=0
+        UPDATE orders
+        SET status = CASE
+        WHEN status = 1 THEN 0
+        WHEN status = 0 THEN 1
+        END,
+        delete_time = CASE
+        WHEN status = 0 THEN now()
+        WHEN status = 1 THEN NULL
+        END
         WHERE id IN
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
     <select id="getAllAgentInformation" resultType="wakoo.fun.pojo.Orders">
-        SELECT os.id,
-               st.name,
-               CONCAT(ct.type_name, '-', ct.type_age) AS subclassName,
-               os.expiry,
-               os.money,
-               os.status,
-               os.number                                 totalQuantity,
-               os.qty                                    numberOfUse,
-               os.rqty                                   remainingOrder,
-               os.create_time,
-               os.update_time
+        SELECT os.id, st.name, CONCAT(ct.type_name, '-', ct.type_age) AS subclassName, os.expiry, os.money, os.status, os.number AS totalQuantity,
+        os.qty AS numberOfUse, os.rqty AS remainingOrder, os.create_time, os.update_time
         FROM orders os
-                 INNER JOIN agent_management st ON os.class_campus_id = st.id
-                 INNER JOIN class_type ct ON os.class_type_id = ct.id
-        WHERE os.class_campus_id = (SELECT campus_id FROM sys_user WHERE id = #{userId})
-           OR (SELECT campus_id FROM sys_user WHERE id = #{userId}) = '*'
-           OR (SELECT campus_id FROM sys_user WHERE id = #{userId}) = '**'
-            and (os.id LIKE '%' || #{keyword} || '%'
-                OR st.name LIKE '%' || #{keyword} || '%'
-                OR CONCAT(ct.type_name, '-', ct.type_age) LIKE '%' || #{keyword} || '%'
-                OR os.money LIKE '%' || #{keyword} || '%'
-                OR os.number LIKE '%' || #{keyword} || '%'
-                OR os.qty LIKE '%' || #{keyword} || '%'
-                OR os.rqty LIKE '%' || #{keyword} || '%'
-                OR os.create_time LIKE '%' || #{keyword} || '%'
-                OR os.update_time LIKE '%' || #{keyword} || '%')
-        ORDER BY st.name ASC, subclassName ASC
+        INNER JOIN agent_management st ON os.class_campus_id = st.id
+        INNER JOIN class_type ct ON os.class_type_id = ct.id
+        WHERE 1=1
+        <if test="number!=3">
+            and os.class_campus_id IN (
+            SELECT agent_id FROM sys_user WHERE agent_id = (
+            SELECT agent_id FROM sys_user WHERE id = #{userId}
+            )
+            )
+            OR os.class_campus_id IN (
+            SELECT campus_id FROM sys_user WHERE agent_id = (
+            SELECT agent_id FROM sys_user WHERE id =  #{userId}
+            )
+            )
+            OR (
+            SELECT campus_id FROM sys_user WHERE id =  #{userId}
+            ) IN ('*', '**')
+        </if>
+       <if test="number==3">
+           and os.class_campus_id IN (
+           SELECT campus_id FROM sys_user WHERE agent_id = (
+           SELECT agent_id FROM sys_user WHERE id = #{userId}
+           )
+           )
+       </if>
+            <if test="status != 0">
+                AND os.status != 0
+            </if>
+            <if test="status == 0">
+                AND os.status = 0
+            </if>
+        AND (
+        os.id LIKE CONCAT('%', #{keyword}, '%')
+        OR st.name LIKE CONCAT('%', #{keyword}, '%')
+        OR CONCAT(ct.type_name, '-', ct.type_age) LIKE CONCAT('%', #{keyword}, '%')
+        OR os.money LIKE CONCAT('%', #{keyword}, '%')
+        OR os.number LIKE CONCAT('%', #{keyword}, '%')
+        OR os.qty LIKE CONCAT('%', #{keyword}, '%')
+        OR os.rqty LIKE CONCAT('%', #{keyword}, '%')
+        OR os.create_time LIKE CONCAT('%', #{keyword}, '%')
+        OR os.update_time LIKE CONCAT('%', #{keyword}, '%')
+        )ORDER BY
+        <if test="status != 0">
+            st.name ASC, subclassName ASC
+        </if>
+        <if test="status == 0">
+            os.create_time ASC, st.name ASC, subclassName ASC
+        </if>
+
     </select>
     <select id="acquisitionPersonnel" resultType="wakoo.fun.pojo.Agent">
         SELECT am.id, am.`name`
@@ -90,5 +123,41 @@
         FROM orders os
                  JOIN class_type ct ON ct.id = os.class_type_id
         WHERE os.id = #{id}
+    </select>
+    <select id="multiConditionQuery" resultType="wakoo.fun.pojo.Orders">
+        SELECT os.id, st.name, CONCAT(ct.type_name, '-', ct.type_age) AS subclassName, os.expiry, os.money, os.status, os.number AS totalQuantity,
+        os.qty AS numberOfUse, os.rqty AS remainingOrder, os.create_time, os.update_time
+        FROM orders os
+        INNER JOIN agent_management st ON os.class_campus_id = st.id
+        INNER JOIN class_type ct ON os.class_type_id = ct.id
+        WHERE
+        (os.class_campus_id = (SELECT campus_id FROM sys_user WHERE id = #{userId})
+        OR (SELECT campus_id FROM sys_user WHERE id = #{userId}) = '*'
+        OR (SELECT campus_id FROM sys_user WHERE id = #{userId}) = '**')
+        <if test="status != 0 || status==null || status==''">
+            AND os.status != 0
+        </if>
+        <if test="status == 0 and status!=null and status!=''">
+            AND os.status = 0
+        </if>
+        <if test="name != null and name!=''">
+            AND st.name = #{name}
+        </if>
+        <if test="subclassName != null and subclassName!=''">
+            AND CONCAT(ct.type_name, '-', ct.type_age) = #{subclassName}
+        </if>
+        <if test="createTime != null and createTime!=''">
+            AND os.create_time = #{name}
+        </if>
+        <if test="status != null and status!=''">
+            AND os.status = #{status}
+        </if>
+        ORDER BY
+        <if test="status != 0">
+            st.name ASC, subclassName ASC
+        </if>
+        <if test="status == 0">
+            os.create_time ASC, st.name ASC, subclassName ASC
+        </if>
     </select>
 </mapper>

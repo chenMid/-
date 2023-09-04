@@ -29,6 +29,7 @@ spring:
         max-wait: 60000
     timeout: 1000
 
+
 #mybatis
 mybatis:
   type-aliases-package: wakoo.fun.pojo

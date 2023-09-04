@@ -44,14 +44,12 @@ public class Qiniu {
     @UserLoginToken
     @GetMapping("/qiniu")
     public MsgVo qiniu(String folderPath, Integer pageSize, Integer pageNumber) {
-
         Auth auth = Auth.create(accessKey, secretKey);
         Configuration configuration = new Configuration();
         BucketManager bucketManager = new BucketManager(auth, configuration);
 
         List<FileInformationDto> fileInformationMap = new ArrayList<>();
         Map<String, Object> map = new HashMap<>(50);
-
         // 计算起始位置
         int start = (pageNumber - 1) * pageSize;
 

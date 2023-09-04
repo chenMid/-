@@ -45,6 +45,8 @@ public class RoleController {
     @UserLoginToken
     @GetMapping("/SelectRole")
     public MsgVo selectRole(String keyword, Integer pageSize, Integer pageNumber, HttpServletRequest request) {
+        pageNumber = Math.max(pageNumber, 1);
+
         Object userId = request.getAttribute("userId");
         System.out.println(userId);
         PageHelper.startPage(pageNumber, pageSize);
@@ -85,7 +87,7 @@ public class RoleController {
     @ApiOperation(value = "角色添加")
     @Transactional(rollbackFor = Exception.class)
     @UserLoginToken
-    @Log(modul = "角色页面-角色添加", type = Constants.SELECT, desc = "操作添加按钮")
+    @Log(modul = "角色页面-角色添加", type = Constants.INSERT, desc = "操作添加按钮")
     @PostMapping("/addRole")
     public MsgVo addRole(@RequestBody RoleButtonDto role) {
             // 调用adminAdministrationService的getRoles方法，获取角色列表，并赋值给roles变量

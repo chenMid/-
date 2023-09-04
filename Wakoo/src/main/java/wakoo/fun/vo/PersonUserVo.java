@@ -1,5 +1,6 @@
 package wakoo.fun.vo;
 
+import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PersonUserVo {
     private Integer id;
-    private String typeName;
+    private Integer agentId;
     private String subclassName;
 }

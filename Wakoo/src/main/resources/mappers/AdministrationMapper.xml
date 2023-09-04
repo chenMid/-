@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="wakoo.fun.mapper.AdministrationMapper">
     <delete id="destroyAccount">
-            DELETE FROM sys_user
-            WHERE id IN
-            <foreach item="id" collection="ids" open="(" separator="," close=")">
-                #{id}
-            </foreach>
+        DELETE FROM sys_user
+        WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </delete>
     <select id="getAllAdministraltion" resultType="wakoo.fun.dto.AdminAdministraltion">
         SELECT sr.id,
@@ -91,7 +91,7 @@
     <select id="getFaAdmin" resultType="wakoo.fun.pojo.FaAdmin">
         select id, username, password, email, mobile
         from sys_user
-        where id = #{id};
+        where id = #{id}
     </select>
     <select id="getAgentId" resultType="wakoo.fun.vo.AllId">
         SELECT id
@@ -150,22 +150,25 @@
               (SELECT campus_id FROM sys_user WHERE id IN (SELECT user_id FROM sys_user_role WHERE role_id = #{id}))
     </select>
     <select id="getsAllUsersWithSpecifiedPermissions" resultType="wakoo.fun.dto.AdminAdministraltion">
-        SELECT id,`name` FROM agent_management WHERE id IN(
-        SELECT campus_id
-        FROM sys_user
-        WHERE agent_id = #{userId}
-        UNION
-        SELECT agent_id
-        FROM user_agent_role
-        WHERE user_id IN (
-        SELECT user_id
-        FROM sys_user_role
-        WHERE user_id IN (
-        SELECT id
-        FROM sys_user
-        WHERE agent_id = #{userId}
-        )
-        )or role_id=3)
+        SELECT id, `name`
+        FROM agent_management
+        WHERE id IN (
+            SELECT campus_id
+            FROM sys_user
+            WHERE agent_id = #{userId}
+            UNION
+            SELECT agent_id
+            FROM user_agent_role
+            WHERE user_id IN (
+                SELECT user_id
+                FROM sys_user_role
+                WHERE user_id IN (
+                    SELECT id
+                    FROM sys_user
+                    WHERE agent_id = #{userId}
+                )
+            )
+               or role_id = 3)
     </select>
     <select id="getEveryoneWhoDoesnTHaveAnAccount" resultType="java.util.Map">
         SELECT id, `name`
@@ -185,23 +188,23 @@
     </select>
     <select id="getNoUserperson" resultType="java.util.Map">
         SELECT id,`name` FROM agent_management WHERE id IN(
-            SELECT campus_id
-            FROM sys_user
-            WHERE agent_id = #{id}
-            UNION
-            SELECT agent_id
-            FROM user_agent_role
-            WHERE user_id IN (
-                SELECT user_id
-                FROM sys_user_role
-                WHERE user_id IN (
-                    SELECT id
-                    FROM sys_user
-                    WHERE agent_id = #{id}
-                )
+        SELECT campus_id
+        FROM sys_user
+        WHERE agent_id = #{id}
+        UNION
+        SELECT agent_id
+        FROM user_agent_role
+        WHERE user_id IN (
+        SELECT user_id
+        FROM sys_user_role
+        WHERE user_id IN (
+        SELECT id
+        FROM sys_user
+        WHERE agent_id = #{id}
+        )
         <if test="role != null and role != ''">
             <if test="role == 1">
-                OR  role_id=4))
+                OR role_id=4))
             </if>
             <if test="role == 2">
                 OR user_id=#{id} AND role_id=4))
@@ -258,11 +261,65 @@
         WHERE id = (SELECT agent_id FROM sys_user WHERE id = #{id})
     </select>
     <select id="getPro_In_Id" resultType="java.lang.Integer">
-        SELECT agent_id FROM user_agent_role WHERE agent_id in(SELECT campus_id FROM sys_user WHERE agent_id=#{id}) AND role_id=4
+        SELECT agent_id
+        FROM user_agent_role
+        WHERE agent_id in (SELECT campus_id FROM sys_user WHERE agent_id = #{id})
+          AND role_id = 4
     </select>
     <select id="all" resultType="java.util.Map">
-        SELECT id,`name` FROM agent_management WHERE id in(SELECT agent_id FROM user_agent_role WHERE agent_id NOT in(SELECT campus_id FROM sys_user WHERE campus_id IN(SELECT agent_id FROM user_agent_role WHERE user_id=1)
-        ) AND role_id=4)
+        SELECT id, `name`
+        FROM agent_management
+        WHERE id in (SELECT agent_id
+                     FROM user_agent_role
+                     WHERE agent_id NOT in (SELECT campus_id
+                                            FROM sys_user
+                                            WHERE campus_id IN (SELECT agent_id FROM user_agent_role WHERE user_id = 1)
+                     )
+                       AND role_id = 4)
+    </select>
+    <select id="multiConditionQuery" resultType="wakoo.fun.dto.AdminAdministraltion">
+        SELECT sr.id,
+               sr.username,
+               sr.nickname,
+               sr.campus_id                                                                                 agent_id,
+               sr.email,
+               IFNULL((SELECT am.name FROM agent_management am WHERE am.id = sr.campus_id),
+                      (SELECT am.name FROM agent_management am WHERE am.id = sr.agent_id))               AS `name`,
+               se.role_name,
+               sr.mobile,
+               sr.status,
+               IFNULL((SELECT am.name FROM agent_management am WHERE am.id = sr.agent_id), se.role_name) AS roleFather,
+               sr.logintime
+        FROM sys_user sr
+                 LEFT JOIN agent_management AS am ON am.id = sr.campus_id
+                 INNER JOIN sys_user_role sur ON sur.user_id = sr.id
+                 INNER JOIN sys_role se ON sur.role_id = se.id
+        WHERE (sr.agent_id = (SELECT agent_id FROM sys_user WHERE id = #{userId})
+            OR (SELECT agent_id FROM sys_user WHERE id = #{userId}) = '*'
+            OR (SELECT agent_id FROM sys_user WHERE id = #{userId}) = '**')
+        <if test="username!=null and username!=''">
+           and sr.username = #{username}
+        </if>
+        <if test="roleName!=null and roleName!=''">
+            and se.role_name = #{roleName}
+        </if>
+        <if test="name!=null and name!=''">
+            and `name` = #{name}
+        </if>
+        <if test="email!=null and email!=''">
+            and sr.email = #{email}
+        </if>
+        <if test="mobile!=null and mobile!=''">
+            and sr.mobile = #{mobile}
+        </if>
+        <if test="status!=null and status!=''">
+            and sr.status = #{status}
+        </if>
+        <if test="status==null and status==''">
+            and sr.status = 1
+        </if>
+        GROUP BY sr.id
+
     </select>
     <insert id="isUser" parameterType="wakoo.fun.dto.AdmininistraltionDto" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO sys_user(username, nickname, password, email, agent_id, campus_id, mobile, createtime)
@@ -276,21 +333,13 @@
         VALUES (#{uid}, #{rid})
     </insert>
 
-    <update id="UpdStatus">
-            UPDATE sys_user
-            <set>
-                <if test="status == 1">
-                    status = 0
-                </if>
-                <if test="status == 0">
-                    status = 1
-                </if>
-            </set>
-            WHERE id IN
-            <foreach item="id" collection="id" open="(" separator="," close=")">
-                #{id}
-            </foreach>
-    </update>
+    <delete id="UpdStatus">
+        DELETE FROM sys_user_role
+        WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
     <update id="updUserRole">
         UPDATE sys_user_role
         SET role_id=#{uAdmin.roleName}

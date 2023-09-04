@@ -26,9 +26,47 @@ public interface SysLogDao {
     /**
      * 查询后台日志
      *
-     * @param roleId  角色id
-     * @param keyword 关键词
      * @return 结果集
      */
-    List<LogInfo> queryLog(String keyword, Integer roleId,String userName);
+    List<LogInfo> queryLog(String userName,String module,String type,String ip,String version,String createTime,Integer roleId,Integer userId);
+    /**
+     * 删除日志
+     *
+     * @param ids 所需删除的日志id
+     * @return Boolean
+     */
+    Boolean delLog(String[] ids);
+
+    /**
+     * 查询后台日志
+     *
+     * @param roleId   角色id
+     * @param userName 用户名
+     * @return 结果集
+     */
+    List<LogErrorInfo> queryErrorLog(Integer roleId,String userName,String ip,String version,String createTime,Integer userId);
+
+    /**
+     * 删除日志
+     *
+     * @param ids 所需删除的日志id
+     * @return Boolean
+     */
+    Boolean delErrorLog(@Param("ids") String[] ids);
+
+    /**
+     * 根据id查询日志对象
+     *
+     * @param logId 日志id
+     * @return 日志实体
+     */
+    LogInfo detailLog(@Param("logId") String logId);
+
+    /**
+     * 根据id查询日志对象
+     *
+     * @param logErrorId 日志id
+     * @return 日志实体
+     */
+    LogErrorInfo detailExceptionLog(@Param("logErrorId") String logErrorId);
 }

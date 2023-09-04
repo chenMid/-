@@ -53,9 +53,19 @@ public class VideosController {
     @UserLoginToken
     @GetMapping("/getAllVideos")
     public MsgVo getAllVideos(String keyword, Integer pageSize, Integer pageNumber) {
-
         PageHelper.startPage(pageNumber, pageSize);
         List<Videos> allVideos = videosService.getAllVideos(keyword);
+        PageInfo<Videos> pageInfo = new PageInfo<>(allVideos);
+        pageInfo.setPageSize(pageSize);
+        return new MsgVo(200, "请求成功", pageInfo);
+    }
+
+    @ApiOperation(value = "多条件查询视频")
+    @UserLoginToken
+    @GetMapping("/queryVideosBasedOnMultipleCriteria")
+    public MsgVo queryVideosBasedOnMultipleCriteria(Integer pageSize, Integer pageNumber,String typeName,String classTypeName,String title,String videoLength,Integer which){
+        PageHelper.startPage(pageNumber, pageSize);
+        List<Videos> allVideos = videosService.queryVideosBasedOnMultipleCriteria(typeName, classTypeName, title, videoLength, which);
         PageInfo<Videos> pageInfo = new PageInfo<>(allVideos);
         pageInfo.setPageSize(pageSize);
         return new MsgVo(200, "请求成功", pageInfo);
@@ -84,7 +94,7 @@ public class VideosController {
 
     @ApiOperation(value = "添加课程")
     @UserLoginToken
-    @Log(modul = "视频课程页面-添加课程", type = Constants.SELECT, desc = "操作添加按钮")
+    @Log(modul = "视频课程页面-添加课程", type = Constants.INSERT, desc = "操作添加按钮")
     @PostMapping("/addCourse")
     public MsgVo addCourse(@RequestBody VideosVo videosVo) throws MalformedURLException, EncoderException {
             videosVo.setVideoLength(BigDecimal.valueOf(new MultimediaObject(new URL(videosVo.getVideoUrl())).getInfo().getDuration()));

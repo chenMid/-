@@ -100,7 +100,9 @@ public class PersonalCenterController {
     @UserLoginToken
     @GetMapping("/selectAvatar")
     public MsgVo selectAvatar(String keyword, Integer pageSize, Integer pageNumber) {
-            PageHelper.startPage(pageNumber, pageSize);
+        pageNumber = Math.max(pageNumber, 1);
+
+        PageHelper.startPage(pageNumber, pageSize);
             List<AdvertDto> avate = advertService.getAvate(keyword);
             PageInfo<AdvertDto> pageInfo = new PageInfo<>(avate);
             pageInfo.setPageSize(pageSize);
@@ -197,7 +199,9 @@ public class PersonalCenterController {
     @UserLoginToken
     @GetMapping("/getAllCarousel")
     public MsgVo getAllCarousel(String keyword, Integer pageSize, Integer pageNumber) {
-            PageHelper.startPage(pageNumber, pageSize);
+        pageNumber = Math.max(pageNumber, 1);
+
+        PageHelper.startPage(pageNumber, pageSize);
             List<CarouselVo> allConouselVo = advertService.getAllConouselVo(keyword);
             PageInfo<CarouselVo> pageInfo = new PageInfo<>(allConouselVo);
 

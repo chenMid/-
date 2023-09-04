@@ -54,12 +54,11 @@ public interface AdminAdministrationService {
      */
     Boolean isUserRoleOrder(@Param("uid") Integer uid, @Param("rid") Integer rid);
     /**
-     * 修改用户状态
-     * @param id
-     * @param status
-     * @return
+     * 修改用户中间表
+     * @param ids id
+     * @return 提示的结果
      */
-    Boolean UpdStatus(Integer[] id, Integer status);
+    Boolean UpdStatus(Integer[] ids);
     /**
      * 查询指定用户信息
      * @param id
@@ -237,4 +236,17 @@ public interface AdminAdministrationService {
      * @return 返回一个list
      */
     Boolean destroyAccount(Integer[] ids);
+
+    /**
+     *      多条件查询的控制
+     * @param username 用户名
+     * @param roleName 角色名
+     * @param name 姓名
+     * @param email 邮箱
+     * @param mobile 手机
+     * @param status 可存
+     * @param userId id
+     * @return 返回一个list
+     */
+    List<AdminAdministraltion> multiConditionQuery(String username,String roleName,String name,String email,String mobile,Integer status,Integer userId);
 }

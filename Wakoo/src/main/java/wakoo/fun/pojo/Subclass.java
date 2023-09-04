@@ -14,6 +14,7 @@ public class Subclass {
     private String typeName;
     private String name;
     private Integer typeAge;
+    private Integer typeAges;
     private String inageImage;
     private String ageImage;
     private String material;

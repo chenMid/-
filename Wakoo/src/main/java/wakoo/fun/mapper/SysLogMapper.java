@@ -12,6 +12,7 @@ import java.util.List;
 public interface SysLogMapper {
     /**
      * 保存系统日志实体 *
+     *
      * @param logInfo 日志实体
      **/
     void save(@Param("sysLog") LogInfo logInfo);
@@ -26,9 +27,48 @@ public interface SysLogMapper {
     /**
      * 查询后台日志
      *
-     * @param keyword 关键词
-     * @param roleId  角色id
      * @return 结果集
      */
-    List<LogInfo> queryLog(@Param("keyword") String keyword, @Param("roleId") Integer roleId, @Param("userName") String userName);
+    List<LogInfo> queryLog(@Param("userName") String userName, @Param("module") String module, @Param("type") String type, @Param("ip") String ip, @Param("version") String version, @Param("createTime") String createTime, @Param("roleId") Integer roleId, @Param("userId") Integer userId);
+
+    /**
+     * 删除日志
+     *
+     * @param ids 所需删除的日志id
+     * @return Boolean
+     */
+    Boolean delLog(String[] ids);
+
+    /**
+     * 查询后台日志
+     *
+     * @param roleId   角色id
+     * @param userName 用户名
+     * @return 结果集
+     */
+    List<LogErrorInfo> queryErrorLog(@Param("roleId") Integer roleId, @Param("userName") String userName, @Param("ip") String ip, @Param("version") String version, @Param("createTime") String createTime, @Param("userId") Integer userId);
+
+    /**
+     * 删除日志
+     *
+     * @param ids 所需删除的日志id
+     * @return Boolean
+     */
+    Boolean delErrorLog(@Param("ids") String[] ids);
+
+    /**
+     * 根据id查询日志对象
+     *
+     * @param logId 日志id
+     * @return 日志实体
+     */
+    LogInfo detailLog(@Param("logId") String logId);
+
+    /**
+     * 根据id查询日志对象
+     *
+     * @param logErrorId 日志id
+     * @return 日志实体
+     */
+    LogErrorInfo detailExceptionLog(@Param("logErrorId") String logErrorId);
 }

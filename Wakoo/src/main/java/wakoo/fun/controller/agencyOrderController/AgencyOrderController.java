@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import wakoo.fun.common.Log;
 import wakoo.fun.config.UserLoginToken;
+import wakoo.fun.dto.AdminAdministraltion;
 import wakoo.fun.dto.OrdersDto;
 import wakoo.fun.log.Constants;
 import wakoo.fun.pojo.Agent;
@@ -46,13 +47,24 @@ public class AgencyOrderController {
     @ApiOperation(value = "查询所有代理订单")
     @UserLoginToken
     @GetMapping("/checkAllAgentOrders")
-    public MsgVo checkAllAgentOrders(String keyword, Integer pageSize, Integer pageNumber, HttpServletRequest request) {
+    public MsgVo checkAllAgentOrders(String keyword, Integer pageSize, Integer pageNumber,Integer status, HttpServletRequest request) {
         // 获取当前用户id
         Object userId = request.getAttribute("userId");
         // 分页
         PageHelper.startPage(pageNumber, pageSize);
         // 查询数据，调用ordersService的getAllAgentInformation方法，传入keyword和userId参数
-        List<Orders> allAgentInformation = ordersService.getAllAgentInformation(keyword, (Integer) userId);
+        int parentId=0;
+        Integer rId = ordersService.returnsTheParentId((Integer) userId);
+        RoleUtils roleUtils = new RoleUtils();
+        List<AgentIdrId> roles = adminAdministrationService.getRoles();
+        parentId = roleUtils.getParentId(parentId, rId, roles);
+        // 根据角色类型获取其上级的角色id
+        List<Orders> allAgentInformation;
+        if (parentId!=3){
+            allAgentInformation = ordersService.getAllAgentInformation(keyword, (Integer) userId,status,1);
+        }else {
+            allAgentInformation = ordersService.getAllAgentInformation(keyword, (Integer) userId,status,3);
+        }
         // 遍历allAgentInformation列表
         for (Orders orders : allAgentInformation) {
             if (orders.getExpiry() != null) {
@@ -67,9 +79,33 @@ public class AgencyOrderController {
         }
         // 进行分页，将分页后的数据放入PageInfo对象中
         PageInfo<Orders> pageInfo = new PageInfo<>(allAgentInformation);
+        pageInfo.setPageSize(pageSize);
         // 返回一个包含成功信息和pageInfo的MsgVo对象
         return new MsgVo(200, "查询成功", pageInfo);
     }
+
+    @ApiOperation(value = "订单多条件查询")
+    @UserLoginToken
+    @GetMapping("/orderMultiConditionQuery")
+    public MsgVo orderMultiConditionQuery(Integer pageSize,
+                                          Integer pageNumber,
+                                          String name,
+                                          String subclassName,
+                                          String createTime,
+                                          String status,
+                                          HttpServletRequest request
+                                          ){
+        System.out.println(status);
+        Object userId = request.getAttribute("userId");
+        PageHelper.startPage(pageNumber, pageSize);
+        // 获取全部的订单列表
+        List<Orders> orders = ordersService.multiConditionQuery(name, subclassName, createTime, status, (Integer) userId);
+        PageInfo<Orders> pageInfo = new PageInfo<>(orders);
+        pageInfo.setPageSize(pageSize);
+        return new MsgVo(200,"查询成功", pageInfo);
+    }
+
+
 
     @ApiOperation(value = "人员下拉框")
     @UserLoginToken
@@ -80,7 +116,6 @@ public class AgencyOrderController {
             Object userId = request.getAttribute("userId");
             // 根据当前用户id获取其角色类型（代理或普通人员）
             Integer rId = ordersService.returnsTheParentId((Integer) userId);
-            System.out.println(rId);
 
             int parentId = 0;
             RoleUtils roleUtils = new RoleUtils();
@@ -185,14 +220,18 @@ public class AgencyOrderController {
 
     @ApiOperation(value = "删除订单信息")
     @UserLoginToken
+    @SuppressWarnings("unchecked")
     @Log(modul = "代理订单页面-删除订单", type = Constants.DELETE, desc = "操作软删除按钮")
     @DeleteMapping("/modelOrder")
-    public MsgVo modelOrder(@RequestBody Map<String, Integer[]> requestBody,HttpServletRequest request) {
-        Integer[] ids = requestBody.get("ids");
-        Boolean aBoolean = ordersService.delOrder(ids);
-        if (aBoolean) {
-            return new MsgVo(200, "删除成功", true);
+    public MsgVo modelOrder(@RequestBody Map<String, Object> requestBody) {
+        List<Integer> idsList = (List<Integer>) requestBody.get("ids");
+        Integer status = (Integer) requestBody.get("status");
+        Integer[] ids = idsList.toArray(new Integer[0]);
+        Boolean success = false;
+        success = ordersService.delOrder(ids,status);
+        if (success) {
+                return new MsgVo(200, "操作成功", true);
         }
-        return new MsgVo(403, "删除失败", false);
+        return new MsgVo(403, "操作失败", false);
     }
 }

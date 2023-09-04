@@ -75,8 +75,8 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
     }
 
     @Override
-    public Boolean UpdStatus(Integer[] id, Integer status) {
-        return adminAdministration.UpdStatus(id, status);
+    public Boolean UpdStatus(Integer[] ids) {
+        return adminAdministration.UpdStatus(ids);
     }
 
     @Override
@@ -236,6 +236,11 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
     @Override
     public Boolean destroyAccount(Integer[] ids) {
         return adminAdministration.destroyAccount(ids);
+    }
+
+    @Override
+    public List<AdminAdministraltion> multiConditionQuery(String username, String roleName, String name, String email, String mobile, Integer status, Integer userId) {
+        return adminAdministration.multiConditionQuery(username, roleName, name, email, mobile, status, userId);
     }
 
 

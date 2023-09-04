@@ -22,7 +22,7 @@ public interface PersonUserMapper {
      * @param userId  id
      * @param keyword 搜索关键字
      */
-    List<PersonUser> getRegularUsers(String keyword, Integer userId);
+    List<PersonUser> getRegularUsers(String keyword, Integer userId,Integer status,Integer number);
 
     /**
      * 查询指定信息
@@ -84,7 +84,7 @@ public interface PersonUserMapper {
      * @param parentId 父级id
      * @return 对象
      */
-    List<Agent> acquireOtherThanPersonnel(@Param("userId") Integer userId, @Param("parentId") Integer parentId);
+    List<Agent> acquireOtherThanPersonnel(@Param("userId") Integer userId, @Param("parentId") Integer parentId, @Param("iphone") String iphone);
 
     /**
      *  备注的查询
@@ -98,7 +98,7 @@ public interface PersonUserMapper {
      * @param campusId 所属人id
      * @return 对象
      */
-    List<PersonUserVo> inquireAboutTheOwnersCourse(Integer campusId);
+    List<PersonUserVo> inquireAboutTheOwnersCourse(Integer campusId,Integer cid);
 
     /**
      *   添加购买的课程
@@ -137,5 +137,36 @@ public interface PersonUserMapper {
      * @return 对象
      */
     List<PersonUserVo> accessExistingCourses(Integer campusId);
+
+    /**
+     * 添加审核
+     * @param id 订单号
+     * @param sex 性别
+     * @param age   年龄
+     * @param userName 用户姓名
+     * @param agent 代理
+     * @param studentClass 课程
+     * @return 是否成功
+     */
+    Boolean addAudit(@Param("id") Integer id, @Param("sex") Integer sex, @Param("age") Integer age, @Param("userName") String userName, @Param("agent") Integer agent, @Param("studentClass") Integer studentClass, @Param("orderId") Integer orderId);
+
+    /**
+     *  软删除用户
+     * @param ids id
+     * @param status 状态
+     * @return 是否成功
+     */
+    Boolean softDeleteUser(Integer[] ids,Integer status);
+
+    /**
+     *  查询学生列表
+     * @param classname 判断
+     * @param iphone 手机号
+     * @param agentName 代理
+     * @param sex 性别
+     * @param age 年龄
+     * @return 对象
+     */
+    List<PersonUser> queryUsersBasedOnMultipleCriteria (String classname,String iphone,String agentName,Integer sex,Integer age,Integer userId,Integer number,Integer status);
 
 }

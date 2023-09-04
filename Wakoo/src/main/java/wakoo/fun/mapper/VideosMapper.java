@@ -64,4 +64,14 @@ public interface VideosMapper {
      * @return 成功返回true，否则返回false
      */
     Boolean deleteVideo(Integer[] ids);
+
+    /**
+     *  分页查询视频列表
+     * @param typeName - 类型名称
+     * @param classTypeName - 班级名称
+     * @param title - 视频标题
+     * @return 视频列表，参数类型为Pagerbd
+     */
+    List<Videos> queryVideosBasedOnMultipleCriteria(String typeName,String classTypeName,String title,String videoLength,Integer which);
+
 }

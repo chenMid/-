@@ -11,6 +11,7 @@ import wakoo.fun.service.PersonUserService.PersonUserService;
 import wakoo.fun.vo.PersonUserVo;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -26,8 +27,8 @@ public class PersonUserServiceImpl implements PersonUserService {
     private PersonUserMapper personUserMapper;
 
     @Override
-    public List<PersonUser> getRegularUsers(String keyword, Integer userId) {
-        return personUserMapper.getRegularUsers(keyword, userId );
+    public List<PersonUser> getRegularUsers(String keyword, Integer userId,Integer status,Integer number) {
+        return personUserMapper.getRegularUsers(keyword, userId,status,number);
     }
 
     @Override
@@ -66,8 +67,8 @@ public class PersonUserServiceImpl implements PersonUserService {
     }
 
     @Override
-    public List<Agent> acquireOtherThanPersonnel(Integer userId, Integer parentId) {
-        return personUserMapper.acquireOtherThanPersonnel(userId, parentId );
+    public List<Agent> acquireOtherThanPersonnel(Integer userId, Integer parentId,String iphone) {
+        return personUserMapper.acquireOtherThanPersonnel(userId, parentId,iphone);
     }
 
     @Override
@@ -76,24 +77,27 @@ public class PersonUserServiceImpl implements PersonUserService {
     }
 
     @Override
-    public List<PersonUserVo> inquireAboutTheOwnersCourse(Integer campusId) {
-        return personUserMapper.inquireAboutTheOwnersCourse(campusId);
+    public List<PersonUserVo> inquireAboutTheOwnersCourse(Integer campusId,Integer cid) {
+        return personUserMapper.inquireAboutTheOwnersCourse(campusId,cid);
     }
     @Override
     @Transactional
-    public Boolean addPurchaseCourse(PersonUserVo personUserVo) {
+    public Boolean addPurchaseCourse(PersonUserVo personUserVo,HttpServletRequest request) {
         Boolean aBoolean = false;
         lock.lock();
         try {
             aBoolean = personUserMapper.addPurchaseCourse(personUserVo);
             if (aBoolean){
                 Orders orders = personUserMapper.checkOrderStatus(personUserVo.getId());
+                request.setAttribute("orderId", orders.getId());
                 int qty=orders.getNumberOfUse()+1;
                 int number=orders.getTotalQuantity();
                 int rqty=number-qty;
-                if (rqty==0 || rqty< 0){
-                    personUserMapper.modifyOrderStatusOr(orders.getId());
-                }
+
+//                if (rqty==0 || rqty< 0){
+//                    personUserMapper.modifyOrderStatusOr(orders.getId());
+//                }
+
                 Boolean aBoolean1 = personUserMapper.modifyOrderStatus(number,qty,rqty, orders.getId());
                 if (aBoolean1 == null || !aBoolean1) {
                     // 手动触发事务回滚
@@ -114,6 +118,21 @@ public class PersonUserServiceImpl implements PersonUserService {
     @Override
     public List<PersonUserVo> accessExistingCourses(Integer campusId) {
         return personUserMapper.accessExistingCourses(campusId);
+    }
+
+    @Override
+    public Boolean addAudit(Integer id, Integer sex, Integer age, String userName, Integer agent, Integer studentClass,Integer orderId) {
+        return personUserMapper.addAudit(id,sex,age,userName,agent,studentClass,orderId);
+    }
+
+    @Override
+    public Boolean softDeleteUser(Integer[] ids,Integer status) {
+        return personUserMapper.softDeleteUser(ids,status);
+    }
+
+    @Override
+    public List<PersonUser> queryUsersBasedOnMultipleCriteria(String classname, String iphone, String agentName, Integer sex, Integer age, Integer userId,Integer number,Integer status) {
+        return personUserMapper.queryUsersBasedOnMultipleCriteria(classname, iphone, agentName, sex, age, userId,number,status);
     }
 
 }
