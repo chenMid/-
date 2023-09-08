@@ -143,10 +143,7 @@
         WHERE agent_id = (SELECT agent_id FROM sys_user WHERE id = #{userId})
         OR (SELECT agent_id FROM sys_user WHERE id = #{userId}) = '*'
         OR (SELECT agent_id FROM sys_user WHERE id = #{userId}) = '**')
-        AND am.status = #{status}
-        <if test="status!=null and status!=''">
-            AND am.status = #{status}
-        </if>
+        AND am.status = 1
         <if test="name!=null and name!=''">
             AND am.name = #{name}
         </if>
@@ -170,6 +167,13 @@
         WHEN am.delete_time IS NULL AND #{status} != 1 THEN NULL
         ELSE am.update_time
         END DESC
+    </select>
+    <select id="getListAgent" resultType="integer">
+        SELECT COUNT(*) FROM person_common
+        where common_id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </select>
 
 

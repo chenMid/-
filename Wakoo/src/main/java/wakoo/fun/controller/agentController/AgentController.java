@@ -75,6 +75,7 @@ public class AgentController {
                                           String createTime,
                                           String roleId){
         Object userId = request.getAttribute("userId");
+        System.out.println(contactPhone);
         pageNumber = Math.max(pageNumber, 1);
         PageHelper.startPage(pageNumber, pageSize);
         try{
@@ -272,6 +273,10 @@ public class AgentController {
     public MsgVo deleteProxySoftDelete(@RequestBody Map<String, Object> requestBody) {
         List<Integer> idsList = (List<Integer>) requestBody.get("ids");
         Integer status = (Integer) requestBody.get("status");
+        Boolean listAgent = agentService.getListAgent(idsList);
+        if (listAgent){
+            return new MsgVo(403, "该角色下存在用户,无法删除", false);
+        }
 
         Integer[] ids = idsList.toArray(new Integer[0]);
 

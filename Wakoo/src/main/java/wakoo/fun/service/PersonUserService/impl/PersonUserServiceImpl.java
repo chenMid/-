@@ -131,7 +131,7 @@ public class PersonUserServiceImpl implements PersonUserService {
     }
 
     @Override
-    public List<PersonUser> queryUsersBasedOnMultipleCriteria(String classname, String iphone, String agentName, Integer sex, Integer age, Integer userId,Integer number,Integer status) {
+    public List<PersonUser> queryUsersBasedOnMultipleCriteria(String classname, String iphone, String agentName, String sex, Integer age, Integer userId,Integer number,Integer status) {
         return personUserMapper.queryUsersBasedOnMultipleCriteria(classname, iphone, agentName, sex, age, userId,number,status);
     }
 

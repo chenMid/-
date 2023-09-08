@@ -22,6 +22,8 @@ public class PersonUser {
     private String name;
     private Integer sex;
     private Integer age;
+    private Integer[] person;
+    private Integer persons;
 
     @Pattern(regexp = "^(?:(?:\\+|00)86)?1[3-9]\\d{9}$", message = "手机号格式有误")
     @Size(min = 11, max = 11, message = "手机号只能为{11}位")

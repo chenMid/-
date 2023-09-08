@@ -84,7 +84,7 @@
         FROM orders WHERE id=#{ordersId} AND `status`=1
     </select>
     <select id="obtainAContract" resultType="java.util.Map">
-        SELECT auditPaht,auditId FROM audit_submitted_user WHERE userId=#{auditId}
+        SELECT auditPaht,uId FROM audit_submitted_user WHERE userId=#{auditId}
     </select>
 
 </mapper>

@@ -144,7 +144,7 @@
             AND st.name = #{name}
         </if>
         <if test="subclassName != null and subclassName!=''">
-            AND CONCAT(ct.type_name, '-', ct.type_age) = #{subclassName}
+            AND CONCAT(ct.type_name, '-', ct.type_age) LIKE CONCAT('%', #{subclassName}, '%')
         </if>
         <if test="createTime != null and createTime!=''">
             AND os.create_time = #{name}

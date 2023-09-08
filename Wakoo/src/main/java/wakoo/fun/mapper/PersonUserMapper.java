@@ -167,6 +167,6 @@ public interface PersonUserMapper {
      * @param age 年龄
      * @return 对象
      */
-    List<PersonUser> queryUsersBasedOnMultipleCriteria (String classname,String iphone,String agentName,Integer sex,Integer age,Integer userId,Integer number,Integer status);
+    List<PersonUser> queryUsersBasedOnMultipleCriteria (String classname,String iphone,String agentName,String sex,Integer age,Integer userId,Integer number,Integer status);
 
 }

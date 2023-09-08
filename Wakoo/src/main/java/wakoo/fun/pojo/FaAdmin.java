@@ -1,6 +1,10 @@
 package wakoo.fun.pojo;
 
-public class FaAdmin {
+
+import java.io.Serializable;
+import java.util.Collection;
+
+public class FaAdmin implements Serializable {
     private Integer id;
     private String userName,nickName,password,salt,avatar,email,campusId,mobile,loginIp,token,status;
     private int loginFailure;
@@ -194,4 +198,5 @@ public class FaAdmin {
 
     public FaAdmin() {
     }
+
 }

@@ -303,14 +303,17 @@
         <if test="roleName!=null and roleName!=''">
             and se.role_name = #{roleName}
         </if>
-        <if test="name!=null and name!=''">
-            and `name` = #{name}
-        </if>
         <if test="email!=null and email!=''">
             and sr.email = #{email}
         </if>
         <if test="mobile!=null and mobile!=''">
             and sr.mobile = #{mobile}
+        </if>
+        <if test="nickname!=null and nickname!=''">
+            and  sr.nickname = #{nickname}
+        </if>
+        <if test="name!=null and name!=''">
+            and  am.name LIKE CONCAT('%', #{name}, '%')
         </if>
         <if test="status!=null and status!=''">
             and sr.status = #{status}

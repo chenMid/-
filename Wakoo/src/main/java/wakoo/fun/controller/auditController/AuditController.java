@@ -104,13 +104,14 @@ public class AuditController {
         //创建一个map用来存储fileList1
         Map<String, Object> fileList = new HashMap<>(50);
         for (Map<String, String> map : maps) {
+            System.out.println(map);
             //拿到值
             String auditPath = map.get("auditPaht");
             //进行值的分割
             String fileName = auditPath.substring(auditPath.lastIndexOf("/") + 1);
             //创建个map用来存储前端需要的格式
             Map<String, String> fileItem = new HashMap<>(50);
-            fileItem.put("id", map.get("auditId"));
+            fileItem.put("uId", map.get("uId"));
             fileItem.put("name", fileName);
             fileItem.put("url", "https://" + auditPath);
             //存储到fileList1里面

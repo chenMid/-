@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="961ce777-9eea-4b36-967b-75d3418193ab" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../Wakoo/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/WakooApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/WakooApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/config/KaptchaConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/config/LoginInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/config/LoginInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/controller/auditController/AuditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/controller/auditController/AuditController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/controller/faAdminController/FaAdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/controller/faAdminController/FaAdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/controller/kaptchaController/getKaptchaImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/controller/kaptchaController/getKaptchaImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/resources/mappers/AuditMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/resources/mappers/AuditMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/.classpath" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/.settings/org.eclipse.core.resources.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/.settings/org.eclipse.m2e.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/.settings/org.eclipse.wst.common.project.facet.core.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/.settings/org.springframework.ide.eclipse.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/.springBeans" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/src/main/java/user/login/app.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/src/main/java/user/login/base/BaseApiService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/src/main/java/user/login/base/ResponseBase.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/src/main/java/user/login/config/WebMvcConfigurer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/src/main/java/user/login/controller/UserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/src/main/java/user/login/entity/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/src/main/java/user/login/entity/dto/TokenInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/src/main/java/user/login/entity/dto/UserDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/src/main/java/user/login/interceptor/UserInterceptor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/src/main/java/user/login/mapper/UserMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/src/main/java/user/login/mapper/sql/UserSqlProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/src/main/java/user/login/service/UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/src/main/java/user/login/service/impl/UserServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/src/main/java/user/login/utils/JsonUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/src/main/java/user/login/utils/ProductToken.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/src/main/resources/Redis.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/META-INF/maven/com.jspgou/springboot-redis/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/META-INF/maven/com.jspgou/springboot-redis/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/Redis.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/user/login/app.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/user/login/base/BaseApiService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/user/login/base/ResponseBase.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/user/login/config/WebMvcConfigurer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/user/login/controller/UserController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/user/login/entity/User.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/user/login/entity/dto/TokenInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/user/login/entity/dto/UserDto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/user/login/interceptor/UserInterceptor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/user/login/mapper/UserMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/user/login/mapper/sql/UserSqlProvider$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/user/login/mapper/sql/UserSqlProvider$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/user/login/mapper/sql/UserSqlProvider.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/user/login/service/UserService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/user/login/service/impl/UserServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/user/login/utils/JsonUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot-redis/target/classes/user/login/utils/ProductToken.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/docs/doc.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/docs/images/dic.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/docs/images/gzh.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/docs/images/home.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/docs/images/log-details.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/docs/images/log.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/docs/images/login.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/docs/images/menu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/docs/sql/tansci.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/TansciApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/common/WrapMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/common/Wrapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/common/annotation/Log.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/common/aop/LogAspect.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/common/constant/Constants.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/common/constant/Enums.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/common/constant/PayEnum.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/common/exception/BusinessException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/common/exception/ExceptionHandle.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/common/task/ScheduledTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/common/task/TaskApplicationRunner.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/config/AuthorizedConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/config/CorsConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/config/Knife4jConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/config/MybatisPlusConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/config/PaymentConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/config/RestTemplateConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/config/SecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/config/SmsConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/config/WebSocketConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/controller/ApiController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/controller/message/MailController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/controller/message/SmsController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/controller/message/TemplateController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/controller/system/AuthorizedController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/controller/system/LogInfoController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/controller/system/SysDicController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/controller/system/SysMenuController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/controller/system/SysOrgController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/controller/system/SysRoleController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/controller/system/SysUserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/controller/system/TaskConfigController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/controller/system/TaskLogController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/message/Template.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/message/TemplateDetails.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/message/dto/MessageDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/message/dto/SmsTemplateDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/message/dto/TemplateDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/message/dto/TemplateParamDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/message/vo/MessageVo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/payment/dto/PaymentDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/payment/vo/PaymentVo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/LogErrorInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/LogInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/SysDic.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/SysMenu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/SysMenuRole.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/SysOrg.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/SysOrgRole.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/SysRole.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/SysUser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/SysUserOrg.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/SysUserRole.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/TaskConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/TaskLog.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/dto/SysDicDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/dto/SysMenuDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/dto/SysRoleDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/dto/SysUserDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/dto/TaskConfigDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/vo/AuthorizedVo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/vo/SysMenuRoleVo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/domain/system/vo/SysUserVo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/mapper/message/TemplateDetailsMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/mapper/message/TemplateMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/mapper/system/LogErrorInfoMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/mapper/system/LogInfoMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/mapper/system/SysDicMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/mapper/system/SysMenuMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/mapper/system/SysMenuRoleMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/mapper/system/SysOrgMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/mapper/system/SysOrgRoleMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/mapper/system/SysRoleMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/mapper/system/SysUserMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/mapper/system/SysUserOrgMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/mapper/system/SysUserRoleMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/mapper/system/TaskConfigMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/mapper/system/TaskLogMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/security/JWTAccessDeniedHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/security/JWTAuthenticationEntryPoint.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/security/JWTAuthenticationFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/security/JWTAuthorizationFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/security/JWTLogoutSuccessHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/security/UserDetailsServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/message/AliSmsServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/message/MailServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/message/TemplateDetailsServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/message/TemplateServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/message/WebSocketServer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/payment/AliPaymentServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/payment/PayServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/payment/WxPaymentServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/system/AuthorizedServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/system/LogErrorInfoServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/system/LogInfoServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/system/SysDicServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/system/SysMenuRoleServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/system/SysMenuServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/system/SysOrgRoleServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/system/SysOrgServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/system/SysRoleServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/system/SysUserOrgServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/system/SysUserRoleServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/system/SysUserServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/system/TaskConfigServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/system/TaskContextServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/system/TaskLogServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/system/task/TaskTest1ServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/impl/system/task/TaskTest2ServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/message/MailService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/message/SmsService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/message/TemplateDetailsService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/message/TemplateService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/payment/PayService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/payment/PaymentService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/system/AuthorizedService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/system/LogErrorInfoService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/system/LogInfoService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/system/SysDicService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/system/SysMenuRoleService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/system/SysMenuService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/system/SysOrgRoleService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/system/SysOrgService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/system/SysRoleService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/system/SysUserOrgService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/system/SysUserRoleService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/system/SysUserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/system/TaskConfigService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/system/TaskContextService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/system/TaskLogService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/service/system/TaskRegisterService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/utils/HumpConversionUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/utils/IPUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/utils/JwtTokenUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/utils/MessageUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/utils/PayResponseUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/utils/QRCodeUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/utils/SecurityUserUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/utils/SecurityUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/java/com/tansci/utils/UUIDUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/resources/application-dev.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/resources/application-pro.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/resources/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/resources/logback-spring.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/resources/mapper/system/SysDicMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/resources/mapper/system/SysMenuMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/resources/mapper/system/SysOrgMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/resources/mapper/system/SysRoleMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/main/resources/mapper/system/SysUserMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/src/test/java/com/tansci/TansciApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/App.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/api/messageApi.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/api/systemApi.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/assets/image/404.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/assets/image/icon/gitee.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/assets/image/icon/github.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/assets/image/icon/mail.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/assets/image/icon/qq.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/assets/image/icon/sms.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/assets/image/icon/wechat.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/assets/image/icon/weibo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/assets/image/login-bg.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/assets/image/login-left.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/assets/image/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/assets/image/logo.psd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/components/Icon.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/components/MsgTemplate.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/components/SlidingVerify.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/components/Submenu.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/components/Table.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/components/TabsMenu.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/config/config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/layout/Layout.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/router/common.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/router/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/store/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/store/settings.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/styles/element/index.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/styles/index.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/utils/axios.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/utils/utils.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/views/Home.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/views/common/404.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/views/common/500.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/views/common/Login.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/views/common/Main.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/views/message/MessageLog.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/views/message/Template.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/views/system/DicInfo.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/views/system/Log.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/views/system/Menu.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/views/system/Org.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/views/system/Role.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/views/system/User.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/views/task/TaskConfig.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/src/views/task/TaskLog.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tansci-master/tansci-view/vite.config.js" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="E:/学习资料/sofver/apache-maven-3.8.6" />
+        <option name="useMavenConfig" value="true" />
+        <option name="userSettingsFile" value="E:\学习资料\sofver\apache-maven-3.8.6\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2VEJqSx9uJoMqhJUbAifJRHPXd6" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../spring-security-demo-master" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+  </component>
+  <component name="RunManager">
+    <configuration name="AuthApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="microservice-auth-center" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.thtf.auth.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.thtf.auth.AuthApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.AuthApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="961ce777-9eea-4b36-967b-75d3418193ab" name="Changes" comment="" />
+      <created>1694395499499</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1694395499499</updated>
+      <workItem from="1694395502532" duration="6556000" />
+      <workItem from="1694422921392" duration="1451000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

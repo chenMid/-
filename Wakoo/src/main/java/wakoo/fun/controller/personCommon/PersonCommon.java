@@ -72,7 +72,7 @@ public class PersonCommon {
     @ApiOperation(value = "多条件查询普通用户")
     @UserLoginToken
     @GetMapping("/multipleCriteriaAreUsedToQueryCommonUsers")
-    public MsgVo multipleCriteriaAreUsedToQueryCommonUsers(HttpServletRequest request, Integer pageNumber, Integer pageSize, String classname, String iphone, String agentName, Integer sex, Integer age, Integer status) {
+    public MsgVo multipleCriteriaAreUsedToQueryCommonUsers(HttpServletRequest request, Integer pageNumber, Integer pageSize, String classname, String iphone, String agentName, String sex, Integer age, Integer status) {
         Object userId = request.getAttribute("userId");
         List<PersonUser> regularUsers;
         int parentId = 0;
@@ -208,6 +208,9 @@ public class PersonCommon {
             String errorMessage = result.getAllErrors().get(0).getDefaultMessage();
             return new MsgVo(403, errorMessage, false);
         }
+
+
+
         Boolean aBoolean = personUserService.modifyingCommonUser(personUser);
         if (aBoolean) {
             return new MsgVo(200, "修改成功", true);
@@ -270,6 +273,7 @@ public class PersonCommon {
     @SuppressWarnings("unchecked")
     @DeleteMapping("/userSoftDelete")
     public MsgVo userSoftDelete(@RequestBody Map<String, Object> requestBody) {
+
         List<Integer> idsList = (List<Integer>) requestBody.get("ids");
         Integer status = (Integer) requestBody.get("status");
         Integer[] ids = idsList.toArray(new Integer[0]);

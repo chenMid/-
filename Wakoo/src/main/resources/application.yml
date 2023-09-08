@@ -1,11 +1,17 @@
 #端口号
 server:
   port: 8083
+  servlet:
+    session:
+      timeout: 1
+  compression:
+    enabled: true
+
 #数据库连接池
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/wakoohomeJava?useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true
+    url: jdbc:mysql://localhost:3306/wakoohomejava?useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true
     username: root
     password: root
   mvc:
@@ -28,6 +34,12 @@ spring:
         min-idle: 0
         max-wait: 60000
     timeout: 1000
+    loginCode:
+      expiration: 1 #登录验证码过期时间，单位 分钟
+      prefix: login_code #验证码redis的key值前缀
+    cache:
+      redis:
+        time-to-live: 60000
 
 
 #mybatis
@@ -65,4 +77,5 @@ pagehelper:
 
   # 版本号
 version: 1.1.0
+
 

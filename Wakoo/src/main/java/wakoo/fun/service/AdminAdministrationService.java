@@ -248,7 +248,7 @@ public interface AdminAdministrationService {
      * @param userId id
      * @return 返回一个list
      */
-    List<AdminAdministraltion> multiConditionQuery(String username,String roleName,String name,String email,String mobile,Integer status,Integer userId);
+    List<AdminAdministraltion> multiConditionQuery(String name,String nickname,String username,String roleName,String email,String mobile,String status,Integer userId);
 
     /**
      * 获取指定用户

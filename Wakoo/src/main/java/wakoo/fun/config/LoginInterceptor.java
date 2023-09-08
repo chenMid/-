@@ -1,10 +1,7 @@
 package wakoo.fun.config;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -28,6 +25,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
+/**
+ * @author HASEE
+ */
 @Slf4j
 @Component
 public class LoginInterceptor implements HandlerInterceptor {
@@ -70,7 +70,6 @@ public class LoginInterceptor implements HandlerInterceptor {
                     throw new RuntimeException("无token，请重新登录");
                 }
                 // 获取 token 中的 user id
-                String userId;
                 try {
                     Object obj = TokenUtils.getUserInfo(token, "userId");
                     request.setAttribute("userId",obj);
@@ -88,15 +87,17 @@ public class LoginInterceptor implements HandlerInterceptor {
                 Object userInfo = TokenUtils.getUserInfo(token, "userId");
                 assert userInfo != null;
                 Boolean exists = stringRedisTemplate.hasKey(userInfo.toString());
-                String s = stringRedisTemplate.opsForValue().get(userInfo.toString());
-                JsonObject jsonObject = JsonParser.parseString(s).getAsJsonObject();
-                String tokens = jsonObject.get("token").getAsString();
-                if (!tokens.equals(token)){
-                    MsgVo msgVo = new MsgVo(403, "账号已在别处登录，请重新登录", false);
-                    Gson gson = new Gson();
-                    String json = gson.toJson(msgVo);
-                    response.getWriter().write(json);
-                    return false;
+                if (Boolean.TRUE.equals(exists)){
+                    String s = stringRedisTemplate.opsForValue().get(userInfo.toString());
+                    JsonObject jsonObject = JsonParser.parseString(s).getAsJsonObject();
+                    String tokens = jsonObject.get("token").getAsString();
+                    if (!tokens.equals(token)){
+                        MsgVo msgVo = new MsgVo(401, "\u8D26\u53F7\u5DF2\u5728\u522B\u5904\u767B\u5F55\uFF0C\u8BF7\u91CD\u65B0\u767B\u5F55\uFF01", false);
+                        Gson gson = new Gson();
+                        String json = gson.toJson(msgVo);
+                        response.getWriter().write(json);
+                        return false;
+                    }
                 }
                 if (Boolean.TRUE.equals(exists)) {
                     // Token 仍然有效，判断过期时间
@@ -114,7 +115,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
                     if (isExpired) {
                         // Token 已过期，执行自动退出操作
-                        MsgVo msgVo = new MsgVo(403, "身份过期，请重新登录", false);
+                        MsgVo msgVo = new MsgVo(401, "\u8EAB\u4EFD\u8FC7\u671F\uFF0C\u8BF7\u91CD\u65B0\u767B\u5F55\uFF01", false);
                         // 将 MsgVo 对象转换为 JSON 格式的字符串
                         Gson gson = new Gson();
                         String json = gson.toJson(msgVo);
@@ -126,7 +127,7 @@ public class LoginInterceptor implements HandlerInterceptor {
                 } else {
                     // Token 不存在或已被删除，执行自动退出操作
                     response.setCharacterEncoding("UTF-8");
-                    MsgVo msgVo = new MsgVo(403, "身份过期，请重新登录", false);
+                    MsgVo msgVo = new MsgVo(401, "\u8EAB\u4EFD\u8FC7\u671F\uFF0C\u8BF7\u91CD\u65B0\u767B\u5F55\uFF01", false);
                     // 将 MsgVo 对象转换为 JSON 格式的字符串
                     Gson gson = new Gson();
                     String json = gson.toJson(msgVo);

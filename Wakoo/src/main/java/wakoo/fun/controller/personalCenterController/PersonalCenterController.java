@@ -246,10 +246,10 @@ public class PersonalCenterController {
             // 根据返回结果判断是否更新成功
             if (aBoolean) {
                 // 更新成功
-                return new MsgVo(200, "更新成功", true);
+                return new MsgVo(200, "修改成功", true);
             } else {
                 // 更新失败
-                return new MsgVo(500, "更新失败", false);
+                return new MsgVo(500, "修改失败", false);
             }
         } catch (Exception e) {
             // 出现异常，返回错误消息

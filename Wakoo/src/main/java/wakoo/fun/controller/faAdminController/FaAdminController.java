@@ -3,12 +3,16 @@ package wakoo.fun.controller.faAdminController;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.code.kaptcha.Constants;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import wakoo.fun.common.Log;
-import wakoo.fun.controller.kaptchaController.getKaptchaImage;
+import wakoo.fun.config.PassToken;
+import wakoo.fun.controller.kaptchaController.verifyCode;
 import wakoo.fun.dto.User;
 import wakoo.fun.pojo.FaAdminLogin;
 import wakoo.fun.vo.MsgVo;
@@ -31,22 +35,19 @@ import java.util.concurrent.TimeUnit;
 public class FaAdminController {
 
     @Resource
-    private getKaptchaImage asd;
-    @Resource
     private FaAdminService faAdminService;
     @Resource
-    private StringRedisTemplate stringRedisTemplate ;
+    private StringRedisTemplate stringRedisTemplate;
 
     @ApiOperation(value = "登录")
     @Log(modul = "登录", desc = "登录")
-    @PostMapping("/login")
+    @RequestMapping("/login")
     public MsgVo login(@RequestBody User user, HttpServletRequest request) throws JsonProcessingException {
-            // 调用asd的getCaptchaSession方法，获取验证码的session信息，并赋值给captchaSession变量
-            String captchaSession = asd.getCaptchaSession(request);
-            // 打印输出captchaSession的值
-            System.out.println(captchaSession);
-            // 判断captchaSession和用户传入的验证码是否相等，如果不相等
-            if (!captchaSession.equalsIgnoreCase(user.getCaptchaImage())) {
+        System.out.println(user.getKey());
+        String s = stringRedisTemplate.opsForValue().get(user.getKey());
+        // 判断captchaSession和用户传入的验证码是否相等，如果不相等
+        assert s != null;
+        if (!s.equalsIgnoreCase(user.getCaptchaImage())) {
                 // 返回一个带有403状态码、错误提示信息和空数据的MsgVo对象
                 return new MsgVo(403, "验证码错误，请重新输入", null);
             }
@@ -63,6 +64,7 @@ public class FaAdminController {
                     return new MsgVo(403, "密码错误", null);
                 } else {
                     /* 登录成功 */
+                    stringRedisTemplate.delete(user.getKey());
                     request.setAttribute("userName", user.getUserName());
                     // 调用TokenUtils的token方法，传入用户名、密码和用户ID，生成登录凭证token
                     String token = TokenUtils.token(faAdmins.get(0).getUserName(), faAdmins.get(0).getPassword(), faAdmins.get(0).getId());
@@ -71,8 +73,7 @@ public class FaAdminController {
                     ObjectMapper objectMapper = new ObjectMapper();
                     String jsonString = objectMapper.writeValueAsString(tokenJson);
                     assert token != null;
-                    stringRedisTemplate.opsForValue().set(String.valueOf(faAdmins.get(0).getId()), jsonString, 7,TimeUnit.DAYS);
-
+                    stringRedisTemplate.opsForValue().set(String.valueOf(faAdmins.get(0).getId()), jsonString, 7, TimeUnit.DAYS);
                     // 调用faAdminService的UpdToken方法，更新用户的登录凭证token，并返回更新结果
                     Boolean aBoolean = faAdminService.UpdToken(token, user.getUserName());
                     // 判断更新结果是否为真

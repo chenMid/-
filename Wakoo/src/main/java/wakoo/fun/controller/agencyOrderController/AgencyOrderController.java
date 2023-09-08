@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import wakoo.fun.common.Log;
 import wakoo.fun.config.UserLoginToken;
-import wakoo.fun.dto.AdminAdministraltion;
 import wakoo.fun.dto.OrdersDto;
 import wakoo.fun.log.Constants;
 import wakoo.fun.pojo.Agent;
@@ -167,7 +166,6 @@ public class AgencyOrderController {
 
     @ApiOperation(value = "修改回显信息")
     @UserLoginToken
-    @GetMapping("/modifyAgentOrder")
     public MsgVo modifyAgentOrder(Integer id) {
         OrdersDto orderById = ordersService.getOrderById(id);
         if (orderById.getExpiry() == null) {

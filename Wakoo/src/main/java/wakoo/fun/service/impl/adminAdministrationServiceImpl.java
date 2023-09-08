@@ -239,8 +239,8 @@ public class adminAdministrationServiceImpl implements AdminAdministrationServic
     }
 
     @Override
-    public List<AdminAdministraltion> multiConditionQuery(String username, String roleName, String name, String email, String mobile, Integer status, Integer userId) {
-        return adminAdministration.multiConditionQuery(username, roleName, name, email, mobile, status, userId);
+    public List<AdminAdministraltion> multiConditionQuery(String name,String nickname,String username, String roleName, String email, String mobile, String status, Integer userId) {
+        return adminAdministration.multiConditionQuery(name,nickname,username, roleName, email, mobile, status, userId);
     }
 
     @Override

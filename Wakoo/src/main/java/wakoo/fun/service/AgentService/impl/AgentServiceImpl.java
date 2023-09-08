@@ -79,4 +79,9 @@ public class AgentServiceImpl implements AgentService {
     public List<AgentDto> agentMultiConditionQuery(Integer status, String name, String contactPhone, String address, String createTime, String roleId,Integer userId) {
         return agentMapper.agentMultiConditionQuery(status, name, contactPhone, address, createTime, roleId,userId);
     }
+
+    @Override
+    public Boolean getListAgent(List<Integer> idsList) {
+        return agentMapper.getListAgent(idsList)>0;
+    }
 }

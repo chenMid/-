@@ -110,4 +110,11 @@ public interface AgentMapper {
                                             @Param("createTime") String createTime,
                                             @Param("roleId") String roleId,
                                             @Param("userId") Integer userId);
+
+    /**
+     *   多条件查询，变成多条件
+     * @param ids 代理id集合
+     * @return 符
+     */
+    Integer getListAgent(List<Integer> ids);
 }

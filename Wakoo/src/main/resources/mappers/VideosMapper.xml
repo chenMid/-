@@ -94,7 +94,7 @@
             and categories.type_name = #{typeName}
         </if>
         <if test="classTypeName!=null and classTypeName!=''">
-            and CONCAT(class_type.type_name, '-', class_type.type_age) = #{classTypeName}
+            and CONCAT(class_type.type_name, '-', class_type.type_age) LIKE CONCAT('%', #{classTypeName}, '%')
         </if>
         <if test="title!=null and title!=''">
             and videos.title = #{title}

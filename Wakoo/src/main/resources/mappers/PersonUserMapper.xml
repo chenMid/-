@@ -270,7 +270,12 @@
             END
             )
         </if>
-        AND cu.status = #{status}
+        <if test="status == null and status == ''">
+            AND cu.status = 1
+        </if>
+        <if test="status != null and status != ''">
+            AND cu.status = #{status}
+        </if>
         <if test="classname != null and classname != ''">
            and cu.classname = #{classname}
         </if>

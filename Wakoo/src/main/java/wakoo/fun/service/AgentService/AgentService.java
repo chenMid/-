@@ -98,4 +98,11 @@ public interface AgentService {
                                              String createTime,
                                              String roleId,
                                              Integer userId);
+
+    /**
+     *   多条件查询，变成多条件
+     * @param idsList 代理id集合
+     * @return 符
+     */
+    Boolean getListAgent(List<Integer> idsList);
 }
