@@ -28,7 +28,6 @@
         WHERE (sr.agent_id = (SELECT agent_id FROM sys_user WHERE id = #{userId})
             OR (SELECT agent_id FROM sys_user WHERE id = #{userId}) = '*'
             OR (SELECT agent_id FROM sys_user WHERE id = #{userId}) = '**')
-          AND sr.status = 1
           AND (sr.username LIKE CONCAT('%', #{keyword}, '%')
             OR sr.nickname LIKE CONCAT('%', #{keyword}, '%')
             OR sr.email LIKE CONCAT('%', #{keyword}, '%')
@@ -278,25 +277,29 @@
                        AND role_id = 4)
     </select>
     <select id="multiConditionQuery" resultType="wakoo.fun.dto.AdminAdministraltion">
-        SELECT sr.id,
-               sr.username,
-               sr.nickname,
-               sr.campus_id                                                                                 agent_id,
-               sr.email,
-               IFNULL((SELECT am.name FROM agent_management am WHERE am.id = sr.campus_id),
-                      (SELECT am.name FROM agent_management am WHERE am.id = sr.agent_id))               AS `name`,
-               se.role_name,
-               sr.mobile,
-               sr.status,
-               IFNULL((SELECT am.name FROM agent_management am WHERE am.id = sr.agent_id), se.role_name) AS roleFather,
-               sr.logintime
-        FROM sys_user sr
-                 LEFT JOIN agent_management AS am ON am.id = sr.campus_id
-                 INNER JOIN sys_user_role sur ON sur.user_id = sr.id
-                 INNER JOIN sys_role se ON sur.role_id = se.id
-        WHERE (sr.agent_id = (SELECT agent_id FROM sys_user WHERE id = #{userId})
-            OR (SELECT agent_id FROM sys_user WHERE id = #{userId}) = '*'
-            OR (SELECT agent_id FROM sys_user WHERE id = #{userId}) = '**')
+        SELECT
+        sr.id,
+        sr.username,
+        sr.nickname,
+        sr.campus_id AS agent_id,
+        sr.email,
+        am.name AS `name`,
+        se.role_name,
+        sr.mobile,
+        sr.status,
+        IFNULL(am.name, se.role_name) AS roleFather,
+        sr.logintime
+        FROM
+        sys_user sr
+        LEFT JOIN agent_management AS am ON am.id = sr.campus_id OR am.id = sr.agent_id
+        INNER JOIN sys_user_role sur ON sur.user_id = sr.id
+        INNER JOIN sys_role se ON sur.role_id = se.id
+        WHERE
+        (
+        sr.agent_id = (SELECT agent_id FROM sys_user WHERE id = #{userId})
+        OR (SELECT agent_id FROM sys_user WHERE id = #{userId}) = '*'
+        OR (SELECT agent_id FROM sys_user WHERE id = #{userId}) = '**'
+        )
         <if test="username!=null and username!=''">
            and sr.username = #{username}
         </if>
@@ -313,13 +316,10 @@
             and  sr.nickname = #{nickname}
         </if>
         <if test="name!=null and name!=''">
-            and  am.name LIKE CONCAT('%', #{name}, '%')
+            AND am.name like #{name}
         </if>
         <if test="status!=null and status!=''">
             and sr.status = #{status}
-        </if>
-        <if test="status==null and status==''">
-            and sr.status = 1
         </if>
         GROUP BY sr.id
 
@@ -361,7 +361,8 @@
             nickname=#{aUser.nickname},
             password=#{aUser.password},
             agent_id=#{aUser.name},
-            campus_id=#{aUser.agentId}
+            campus_id=#{aUser.agentId},
+            status=#{aUser.status}
         WHERE id = #{aUser.userId}
     </update>
     <update id="updAgentName">

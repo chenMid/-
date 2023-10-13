@@ -48,4 +48,9 @@ public class FaAdminServiceImpl implements FaAdminService {
     public Boolean modifyPersonalInformation(FadminVo fadminVo) {
         return faAdminMapper.modifyPersonalInformation(fadminVo);
     }
+
+    @Override
+    public String getPassword(FadminVo fadminVo) {
+        return faAdminMapper.getPassword(fadminVo.getId());
+    }
 }

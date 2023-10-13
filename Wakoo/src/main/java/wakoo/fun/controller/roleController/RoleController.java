@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import wakoo.fun.common.Log;
 import wakoo.fun.log.Constants;
 import wakoo.fun.service.AdminAdministrationService;
+import wakoo.fun.service.OrdersService.OrdersService;
 import wakoo.fun.utils.RoleUtils;
 import wakoo.fun.vo.AgentIdrId;
 import wakoo.fun.vo.MsgVo;
@@ -48,8 +49,12 @@ public class RoleController {
         pageNumber = Math.max(pageNumber, 1);
 
         Object userId = request.getAttribute("userId");
+        Integer role = adminAdministrationService.getsTheIdOfTheRole((Integer) userId);
+        RoleUtils roleUtils = new RoleUtils();
+        List<AgentIdrId> roles = adminAdministrationService.getRoles();
+        int parentId = roleUtils.getParentId(0, role, roles);
         PageHelper.startPage(pageNumber, pageSize);
-        List<Role> allRole = roleService.getAllRole(keyword, (Integer) userId);
+        List<Role> allRole = roleService.getAllRole(keyword, parentId);
         PageInfo<Role> pageInfo = new PageInfo<>(allRole);
         return new MsgVo(MsgUtils.SUCCESS, pageInfo);
     }

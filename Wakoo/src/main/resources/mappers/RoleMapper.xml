@@ -54,13 +54,11 @@
                update_time
         FROM sys_role
         WHERE
-          id>=#{userId} and(role_code LIKE CONCAT('%', #{keyword}, '%')
+            rid>=#{userId} and(role_code LIKE CONCAT('%', #{keyword}, '%')
             OR role_name LIKE CONCAT('%', #{keyword}, '%')
             OR menus LIKE CONCAT('%', #{keyword}, '%')
             OR create_time LIKE CONCAT('%', #{keyword}, '%')
             OR update_time LIKE CONCAT('%', #{keyword}, '%'))
-
-
     </select>
     <select id="getButton" resultType="wakoo.fun.pojo.ButtonPermissions">
         SELECT id,

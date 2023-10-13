@@ -131,4 +131,5 @@ public interface RoleService {
      * @return 返回父级id
      */
     Integer exampleQueryTheParentIdUnderId(Integer id);
+
 }

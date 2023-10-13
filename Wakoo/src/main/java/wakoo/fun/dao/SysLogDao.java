@@ -28,7 +28,7 @@ public interface SysLogDao {
      *
      * @return 结果集
      */
-    List<LogInfo> queryLog(String userName,String module,String type,String ip,String version,String createTime,Integer roleId,Integer userId);
+    List<LogInfo> queryLog(String keyword,String userName,String module,String type,String ip,String version,String createTime,Integer roleId,Integer userId);
     /**
      * 删除日志
      *
@@ -44,7 +44,7 @@ public interface SysLogDao {
      * @param userName 用户名
      * @return 结果集
      */
-    List<LogErrorInfo> queryErrorLog(Integer roleId,String userName,String ip,String version,String createTime,Integer userId);
+    List<LogErrorInfo> queryErrorLog(String keyword,Integer roleId,String userName,String ip,String version,String createTime,Integer userId);
 
     /**
      * 删除日志

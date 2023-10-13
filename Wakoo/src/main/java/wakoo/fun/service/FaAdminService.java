@@ -53,4 +53,10 @@ public interface FaAdminService {
 
     Boolean modifyPersonalInformation(@Param("fadminVo") FadminVo fadminVo);
 
+    /**
+     * 获取指定密码
+     * @param fadminVo
+     * @return
+     */
+    String getPassword(FadminVo fadminVo);
 }

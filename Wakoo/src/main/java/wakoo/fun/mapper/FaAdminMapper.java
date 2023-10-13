@@ -53,4 +53,6 @@ public interface FaAdminMapper {
      */
 
     Boolean modifyPersonalInformation(@Param("fadminVo") FadminVo fadminVo);
+
+    String getPassword(Integer id);
 }

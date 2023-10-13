@@ -43,25 +43,30 @@ public class FaAdminController {
     @Log(modul = "登录", desc = "登录")
     @RequestMapping("/login")
     public MsgVo login(@RequestBody User user, HttpServletRequest request) throws JsonProcessingException {
-        System.out.println(user.getKey());
-        String s = stringRedisTemplate.opsForValue().get(user.getKey());
-        // 判断captchaSession和用户传入的验证码是否相等，如果不相等
-        assert s != null;
-        if (!s.equalsIgnoreCase(user.getCaptchaImage())) {
+            String s = stringRedisTemplate.opsForValue().get(user.getKey());
+            // 判断captchaSession和用户传入的验证码是否相等，如果不相等
+            if (s == null) {
+                return new MsgVo(403, "验证码过期", null);
+            }
+            if (!s.equalsIgnoreCase(user.getCaptchaImage())) {
                 // 返回一个带有403状态码、错误提示信息和空数据的MsgVo对象
                 return new MsgVo(403, "验证码错误，请重新输入", null);
             }
             // 调用faAdminService的faAdmin方法，传入用户名作为参数，查询用户信息，并赋值给faAdmins变量
             List<FaAdmin> faAdmins = faAdminService.faAdmin(user.getUserName());
-            if ("0".equals(faAdmins.get(0).getStatus())){
-                return new MsgVo(403, "这个用户处于禁用状态，请联系管理员", null);
+            if (faAdmins.isEmpty()){
+                return new MsgVo(403, "用户名或密码错误", null);
+            }else {
+                if ("0".equals(faAdmins.get(0).getStatus())) {
+                    return new MsgVo(403, "这个用户处于禁用状态，请联系管理员", null);
+                }
             }
-            // 判断faAdmins列表是否为空
+        // 判断faAdmins列表是否为空
             if (!faAdmins.isEmpty()) {
                 // 判断faAdmins列表中第一个元素的密码与用户传入的密码是否相等，如果不相等
                 if (!faAdmins.get(0).getPassword().equals(user.getPassword())) {
                     // 返回一个带有403状态码、错误提示信息和空数据的MsgVo对象
-                    return new MsgVo(403, "密码错误", null);
+                    return new MsgVo(403, "用户名或密码错误", null);
                 } else {
                     /* 登录成功 */
                     stringRedisTemplate.delete(user.getKey());

@@ -45,19 +45,19 @@ public class LogController {
     @ApiOperation(value = "获取日志")
     @UserLoginToken
     @GetMapping("/getLog")
-    public MsgVo getLog(HttpServletRequest request, Integer pageSize, Integer pageNumber,String module,String type,String userName,String ip,String version,String createTime){
-        return getLogInfo(request, pageSize, pageNumber, false,module, type , userName , ip, version , createTime);
+    public MsgVo getLog(HttpServletRequest request,String keyword,Integer pageSize, Integer pageNumber,String module,String type,String userName,String ip,String version,String createTime){
+        return getLogInfo(request,keyword, pageSize, pageNumber, false,module, type , userName , ip, version , createTime);
     }
 
 
     @ApiOperation(value = "获取异常日志")
     @UserLoginToken
     @GetMapping("/getErrorLog")
-    public MsgVo getErrorLog(HttpServletRequest request,Integer pageSize, Integer pageNumber,String module,String type,String userName,String ip,String version,String createTime){
-        return getLogInfo(request, pageSize, pageNumber, true, module, type , userName , ip, version , createTime );
+    public MsgVo getErrorLog(HttpServletRequest request,String keyword,Integer pageSize, Integer pageNumber,String module,String type,String userName,String ip,String version,String createTime){
+        return getLogInfo(request, keyword,pageSize, pageNumber, true, module, type , userName , ip, version , createTime );
     }
 
-    private MsgVo getLogInfo(HttpServletRequest request , Integer pageSize, Integer pageNumber, boolean isErrorLog,String module,String type,String userName,String ip,String version,String createTime) {
+    private MsgVo getLogInfo(HttpServletRequest request ,String keyword,Integer pageSize, Integer pageNumber, boolean isErrorLog,String module,String type,String userName,String ip,String version,String createTime) {
         // 分页配置
         pageNumber = Math.max(pageNumber, 1);
 
@@ -73,9 +73,9 @@ public class LogController {
         // 查询日志或异常日志
         List<?> logList;
         if (isErrorLog) {
-            logList = sysLogDao.queryErrorLog(parentId,userName,ip,version,createTime,userId);
+            logList = sysLogDao.queryErrorLog(keyword,parentId,userName,ip,version,createTime,userId);
         } else {
-            logList = sysLogDao.queryLog(userName, module, type, ip, version, createTime,parentId,userId);
+            logList = sysLogDao.queryLog(keyword,userName, module, type, ip, version, createTime,parentId,userId);
         }
 
         PageInfo<?> pageInfo = new PageInfo<>(logList);

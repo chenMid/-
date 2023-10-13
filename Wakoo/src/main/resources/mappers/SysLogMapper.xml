@@ -75,6 +75,15 @@
             <if test="createTime != null and createTime!=''">
                 AND create_time LIKE #{createTime}
             </if>
+            <if test="keyword!=null and keyword!=''">
+                or user_name LIKE CONCAT('%',#{keyword}, '%')
+                or id LIKE CONCAT('%',#{keyword}, '%')
+                or `module` LIKE CONCAT('%',#{keyword}, '%')
+                or `type`LIKE CONCAT('%',#{keyword}, '%')
+                or `ip` LIKE CONCAT('%',#{keyword}, '%')
+                or `version` LIKE CONCAT('%',#{keyword}, '%')
+                or create_time LIKE CONCAT('%',#{keyword}, '%')
+            </if>
         </where>
     </select>
     <select id="queryErrorLog" resultType="wakoo.fun.log.LogErrorInfo">

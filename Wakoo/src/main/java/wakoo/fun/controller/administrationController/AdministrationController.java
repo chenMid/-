@@ -331,7 +331,11 @@ public class AdministrationController {
                 admininistraltionDto.setName(theAgentId);
             }
         }
-        admininistraltionDto.setPassword(HashUtils.hash(admininistraltionDto.getPassword()));
+        String mobile = admininistraltionDto.getMobile();
+        if (admininistraltionDto.getPassword()==null|| Objects.equals(admininistraltionDto.getPassword(), "")){
+            String lastSixDigits = mobile.substring(mobile.length() - 6);
+            admininistraltionDto.setPassword(lastSixDigits);
+        }
         // 调用adminAdministrationService的isUserAdmin方法，传入administrationDto参数，判断用户是否为管理员，并将结果赋值给userAdmin变量
         userAdmin = adminAdministrationService.isUserAdmin(admininistraltionDto);
 
@@ -362,7 +366,6 @@ public class AdministrationController {
 
     @ApiOperation(value = "获取指定用户信息")
     @UserLoginToken
-    @Log(modul = "回显", type = Constants.SELECT, desc = "回显")
     @GetMapping("/getIsAdmin")
     public MsgVo getIsAdmin(Integer userId) {
         // 调用adminAdministrationService的getAll方法，传入userId作为参数，获取特定用户的详细信息，并赋值给all变量
@@ -420,7 +423,7 @@ public class AdministrationController {
         if (password != null) {
             // 检查是否修改了密码
             // 更新密码为哈希值
-            updAdminDto.setPassword(HashUtils.hash(password));
+            updAdminDto.setPassword(password);
         } else {
             // 如果密码未被修改，则保持原密码不变
             updAdminDto.setPassword(faAdmin.getPassword());

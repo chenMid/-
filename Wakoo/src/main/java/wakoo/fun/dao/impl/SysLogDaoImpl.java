@@ -25,8 +25,8 @@ public class SysLogDaoImpl implements SysLogDao {
     }
 
     @Override
-    public List<LogInfo> queryLog(String userName, String module, String type, String ip, String version, String createTime,Integer roleId,Integer userId) {
-        return sysLogMapper.queryLog(userName, module, type, ip, version, createTime,roleId,userId);
+    public List<LogInfo> queryLog(String keyword,String userName, String module, String type, String ip, String version, String createTime,Integer roleId,Integer userId) {
+        return sysLogMapper.queryLog(keyword,userName, module, type, ip, version, createTime,roleId,userId);
     }
 
     @Override
@@ -35,8 +35,8 @@ public class SysLogDaoImpl implements SysLogDao {
     }
 
     @Override
-    public List<LogErrorInfo> queryErrorLog(Integer roleId,String userName,String ip,String version,String createTime,Integer userId) {
-        return sysLogMapper.queryErrorLog( roleId, userName, ip , version ,createTime,userId);
+    public List<LogErrorInfo> queryErrorLog(String keyword,Integer roleId,String userName,String ip,String version,String createTime,Integer userId) {
+        return sysLogMapper.queryErrorLog( keyword,roleId, userName, ip , version ,createTime,userId);
     }
 
     @Override

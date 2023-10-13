@@ -16,6 +16,7 @@ import wakoo.fun.vo.MsgVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 /**退出
  * @author HASEE
@@ -63,8 +64,9 @@ public class quitController {
     public MsgVo modifyPersonalInformation(HttpServletRequest request,@RequestBody FadminVo fadminVo) {
         Object userId = request.getAttribute("userId");
         fadminVo.setId((Integer) userId);
-        if (fadminVo.getPassword().length()<6){
-            return new MsgVo(403,"请输出6位密码",false);
+        if (fadminVo.getPassword()==null || Objects.equals(fadminVo.getPassword(), "")){
+            String password = faAdminService.getPassword(fadminVo);
+            fadminVo.setPassword(password);
         }
         Boolean aBoolean = faAdminService.modifyPersonalInformation(fadminVo);
         if (aBoolean){

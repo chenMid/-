@@ -180,7 +180,11 @@ public class PersonalCenterController {
                 return new MsgVo(403, errorMessage, false);
             }
             Integer orderNumber = advertService.getOrderNumber();
-            carousel.setOrderNumber(orderNumber+1);
+            if (orderNumber==null){
+                carousel.setOrderNumber(1);
+            }else {
+                carousel.setOrderNumber(orderNumber+1);
+            }
             // 添加轮播图
             Boolean isSuccess = advertService.addCarousel(carousel);
 

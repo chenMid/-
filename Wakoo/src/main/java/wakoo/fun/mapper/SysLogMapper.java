@@ -29,7 +29,7 @@ public interface SysLogMapper {
      *
      * @return 结果集
      */
-    List<LogInfo> queryLog(@Param("userName") String userName, @Param("module") String module, @Param("type") String type, @Param("ip") String ip, @Param("version") String version, @Param("createTime") String createTime, @Param("roleId") Integer roleId, @Param("userId") Integer userId);
+    List<LogInfo> queryLog(@Param("keyword") String keyword,@Param("userName") String userName, @Param("module") String module, @Param("type") String type, @Param("ip") String ip, @Param("version") String version, @Param("createTime") String createTime, @Param("roleId") Integer roleId, @Param("userId") Integer userId);
 
     /**
      * 删除日志
@@ -46,7 +46,7 @@ public interface SysLogMapper {
      * @param userName 用户名
      * @return 结果集
      */
-    List<LogErrorInfo> queryErrorLog(@Param("roleId") Integer roleId, @Param("userName") String userName, @Param("ip") String ip, @Param("version") String version, @Param("createTime") String createTime, @Param("userId") Integer userId);
+    List<LogErrorInfo> queryErrorLog(@Param("keyword") String keyword, @Param("roleId") Integer roleId, @Param("userName") String userName, @Param("ip") String ip, @Param("version") String version, @Param("createTime") String createTime, @Param("userId") Integer userId);
 
     /**
      * 删除日志

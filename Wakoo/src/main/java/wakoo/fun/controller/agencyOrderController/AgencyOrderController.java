@@ -166,6 +166,7 @@ public class AgencyOrderController {
 
     @ApiOperation(value = "修改回显信息")
     @UserLoginToken
+    @GetMapping("/modifyAgentOrder")
     public MsgVo modifyAgentOrder(Integer id) {
         OrdersDto orderById = ordersService.getOrderById(id);
         if (orderById.getExpiry() == null) {
