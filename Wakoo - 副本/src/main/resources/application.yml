@@ -1,0 +1,81 @@
+#端口号
+server:
+  port: 8083
+  servlet:
+    session:
+      timeout: 1
+  compression:
+    enabled: true
+
+#数据库连接池
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wakoohomejava?useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true
+    username: root
+    password: root
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  servlet:
+    multipart:
+      max-file-size: 1000MB
+      max-request-size: 1000MB
+      enabled: true
+  redis:
+    port: 6379
+    host: 192.168.21.135
+    password:
+    database: 15
+    jedis:
+      pool:
+        max-active: 100
+        max-idle: 8
+        min-idle: 0
+        max-wait: 60000
+    timeout: 1000
+    loginCode:
+      expiration: 1 #登录验证码过期时间，单位 分钟
+      prefix: login_code #验证码redis的key值前缀
+    cache:
+      redis:
+        time-to-live: 60000
+
+
+#mybatis
+mybatis:
+  type-aliases-package: wakoo.fun.pojo
+  mapper-locations: classpath:/mappers/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+#映射
+upload:
+  file:
+    location: file:\\er\\
+    path: /code/**
+#七牛
+qiniu:
+  access-key: qEcvaGP-gpW6BypGf0w75uEgbZgwpQMcbJxyDU75
+  secret-key: LKK0Sl38yKWV3hjc2vZ6nkoxGIqpiI-LL36uEMox
+  bucket-name: wkimage123
+  bucket-names: 2023.6.21编程分类视频及图片/test/
+  domain: cdn.wakoohome.com
+pagehelper:
+  # 设置方言，此处指定 MySQL 数据库
+  helper-dialect: mysql
+  # 是否启动合理化，默认是 false。
+  # 启用合理化时，如果pageNum<1会查询第一页，如果pageNum>pages（最大页数）会查询最后一页。
+  # 禁用合理化时，如果pageNum<1或pageNum>pages会返回空数据
+  reasonable: true
+  # 是否支持接口参数来传递分页参数，默认false
+  support-methods-arguments: true
+  # 为了支持startPage(Object params)方法，增加了该参数来配置参数映射，用于从对象中根据属性名取值
+  params: count=countSql
+  # 默认值为 false，当该参数设置为 true 时，如果 pageSize=0 或者 RowBounds.limit = 0 就会查询出全部的结果（相当于没有执行分页查询，但是返回结果仍然是 Page 类型）
+  page-size-zero: true
+
+  # 版本号
+version: 1.1.0
+
+

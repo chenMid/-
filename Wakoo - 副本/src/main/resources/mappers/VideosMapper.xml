@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wakoo.fun.mapper.VideosMapper">
+    <insert id="addVideo">
+        insert into videos(class_type_id,
+                           video_url,
+                           title,
+                           video_image_url,
+                           which,
+                           video_introduction,
+                           video_length,
+                           create_time)
+            value (#{videosVo.classTypeName},#{videosVo.videoUrl},#{videosVo.title},#{videosVo.videoImageUrl},#{videosVo.which},#{videosVo.videoIntroduction},#{videosVo.videoLength},NOW())
+    </insert>
+    <update id="modifyTheCourseVideo">
+        UPDATE videos
+        SET class_type_id      =#{videosVo.classTypeName},
+            video_length=#{videosVo.videoLength},
+            title=#{videosVo.title},
+            which              =#{videosVo.which},
+            video_image_url    =#{videosVo.videoImageUrl},
+            video_url          =#{videosVo.videoUrl},
+            video_introduction =#{videosVo.videoIntroduction}
+        WHERE id = #{videosVo.id}
+    </update>
+    <delete id="deleteVideo">
+        DELETE FROM videos
+        WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="getAllVideos" resultType="wakoo.fun.pojo.Videos">
+        SELECT videos.id,
+               categories.type_name,
+               CONCAT(class_type.type_name, '-', class_type.type_age) AS class_type_name,
+               videos.which,
+               videos.title,
+               videos.video_image_url,
+               videos.video_length
+        FROM videos
+                 LEFT JOIN class_type ON videos.class_type_id = class_type.id
+                 LEFT JOIN categories ON categories.id = class_type.class_ftype_id
+        WHERE categories.type_name LIKE CONCAT('%', #{keyword}, '%')
+           OR CONCAT(class_type.type_name, '-', class_type.type_age) LIKE CONCAT('%', #{keyword}, '%')
+           OR videos.title LIKE CONCAT('%', #{keyword}, '%')
+           OR videos.video_length LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY categories.type_name, class_type_name, videos.which
+    </select>
+    <select id="getfTypeDto" resultType="wakoo.fun.dto.CategoryDto">
+        SELECT id, type_name
+        FROM categories
+    </select>
+    <select id="getAllSubclass" resultType="wakoo.fun.vo.SubclassVo">
+        SELECT id, CONCAT(type_name, '-', type_age) class_type_name
+        from class_type
+        WHERE class_ftype_id = #{fid}
+        ORDER BY class_type_name
+    </select>
+    <select id="queryParentLevel" resultType="java.lang.Integer">
+        select id
+        from class_type
+        WHERE class_ftype_id = #{id}
+          AND type_name = #{typeName}
+          AND type_age = #{typeAge}
+    </select>
+    <select id="exampleModifyTheCommandOutput" resultType="wakoo.fun.dto.VideosDto">
+        SELECT vs.id,
+               cs.id            type_name,
+               vs.class_type_id classTypeName,
+               vs.title,
+               vs.which,
+               vs.video_image_url,
+               vs.video_url,
+               vs.video_introduction
+        FROM videos vs
+                 LEFT JOIN class_type ct ON vs.class_type_id = ct.id
+                 LEFT JOIN categories cs ON cs.id = ct.class_ftype_id
+        WHERE vs.id = #{specifiedEcho}
+    </select>
+    <select id="queryVideosBasedOnMultipleCriteria" resultType="wakoo.fun.pojo.Videos">
+        SELECT videos.id,
+        categories.type_name,
+        CONCAT(class_type.type_name, '-', class_type.type_age) AS class_type_name,
+        videos.which,
+        videos.title,
+        videos.video_image_url,
+        videos.video_length
+        FROM videos
+        LEFT JOIN class_type ON videos.class_type_id = class_type.id
+        LEFT JOIN categories ON categories.id = class_type.class_ftype_id
+        WHERE 1=1
+        <if test="typeName!=null and typeName!=''">
+            and categories.type_name = #{typeName}
+        </if>
+        <if test="classTypeName!=null and classTypeName!=''">
+            and CONCAT(class_type.type_name, '-', class_type.type_age) LIKE CONCAT('%', #{classTypeName}, '%')
+        </if>
+        <if test="title!=null and title!=''">
+            and videos.title = #{title}
+        </if>
+        <if test="videoLength!=null and videoLength!=''">
+            and videos.video_length = #{videoLength}
+        </if>
+        <if test="which!=null and which!=''">
+            and videos.which = #{which}
+        </if>
+        ORDER BY categories.type_name, class_type_name, videos.which
+    </select>
+</mapper>
