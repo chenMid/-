@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wakoo.fun.mapper.DistrictMapper">
+
+    <resultMap id="BaseResultMap" type="wakoo.fun.utils.District">
+        <result column="CODE" property="code" jdbcType="VARCHAR"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="PARENT_CODE" property="parentCode" jdbcType="VARCHAR"/>
+        <result column="FULL_NAME" property="fullName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        CODE,NAME,PARENT_CODE,FULL_NAME
+    </sql>
+
+    <!--查询所有省份-->
+    <select id="queryProvince" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        district_info
+        where
+        PARENT_CODE=1
+    </select>
+
+    <!--查询城市或地区-->
+    <select id="queryCity" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        district_info
+        where
+        PARENT_CODE=#{code}
+    </select>
+
+    <!--通过code查询地区信息-->
+    <select id="queryByCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        district_info
+        where
+        CODE=#{code}
+    </select>
+    <!--查询全表-->
+    <select id="queryDistrictList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM district_info
+    </select>
+    <!--根据code编码查询-->
+    <select id="queryByCodeList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        FROM district_info
+        where
+        CODE in
+        <foreach collection="codeList" item="codes" open="(" separator="," close=")">
+            #{codes}
+        </foreach>
+    </select>
+    <!--根据父级code编码查询-->
+    <select id="queryByParentCodes" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        FROM district_info
+        where PARENT_CODE in
+        <foreach collection="codeList" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </select>
+    <!--查询省/市-->
+    <select id="queryProvinceAndCity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        FROM district_info
+        where
+        PARENT_CODE =1 or PARENT_CODE LIKE "%0000";
+    </select>
+    <!--查询省下第一个市-->
+    <select id="queryFirstCity" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        district_info
+        where
+        PARENT_CODE=#{code}
+        order by `code` limit 1
+    </select>
+
+    <insert id="insertSelective" parameterType="wakoo.fun.utils.District">
+        insert into district_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null">
+                CODE,
+            </if>
+            <if test="name != null">
+                NAME,
+            </if>
+            <if test="parentCode != null">
+                PARENT_CODE,
+            </if>
+            <if test="fullName != null">
+                FULL_NAME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="parentCode != null">
+                #{parentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="fullName != null">
+                #{fullName,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateSelective" parameterType="wakoo.fun.utils.District">
+        update district_info
+        <set>
+            <if test="code != null">
+                CODE = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                NAME = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="parentCode != null">
+                PARENT_CODE = #{parentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="fullName != null">
+                FULL_NAME = #{fullName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where CODE = #{code,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="delByCode" parameterType="java.lang.String">
+        delete from district_info where CODE = #{code,jdbcType=VARCHAR}
+    </delete>
+
+    <!--根据地域名字查询-->
+    <select id="allDistrictByNames" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        FROM district_info
+        where name in
+        <foreach collection="districtNames" item="districtName" separator="," open="(" close=")">
+            #{districtName}
+        </foreach>
+
+    </select>
+
+</mapper>

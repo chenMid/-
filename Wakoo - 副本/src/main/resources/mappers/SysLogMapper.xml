@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wakoo.fun.mapper.SysLogMapper">
+
+    <resultMap id="log_info_map" type="wakoo.fun.log.LogInfo">
+        <id property="id" column="id"/>
+        <result property="module" column="module"/>
+        <result property="type" column="type"/>
+        <result property="message" column="message"/>
+        <result property="reqParam" column="req_param"/>
+        <result property="resParam" column="res_param"/>
+        <result property="takeUpTime" column="take_up_time"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="method" column="method"/>
+        <result property="uri" column="uri"/>
+        <result property="ip" column="ip"/>
+        <result property="version" column="version"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <insert id="save">
+        INSERT INTO log_info (id, `module`, `type`, message, req_param, res_param, take_up_time, user_id, user_name,
+                              `method`, uri, ip, version, create_time)
+        VALUES (#{sysLog.id}, #{sysLog.module}, #{sysLog.type}, #{sysLog.message}, #{sysLog.reqParam},
+                #{sysLog.resParam}, #{sysLog.takeUpTime}, #{sysLog.userId}, #{sysLog.userName}, #{sysLog.method},
+                #{sysLog.uri}, #{sysLog.ip}, #{sysLog.version}, #{sysLog.createTime})
+    </insert>
+    <insert id="error">
+        INSERT INTO log_error_info (id, req_param, `name`, message, user_id, user_name, `method`, uri, ip, version,
+                                    create_time)
+        VALUES (#{sysLog.id}, #{sysLog.reqParam}, #{sysLog.name}, #{sysLog.message}, #{sysLog.userId},
+                #{sysLog.userName}, #{sysLog.method}, #{sysLog.uri}, #{sysLog.ip}, #{sysLog.version},
+                #{sysLog.createTime})
+    </insert>
+    <delete id="delLog">
+        DELETE FROM log_info
+        WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="delErrorLog">
+        DELETE FROM log_error_info
+        WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="queryLog" resultMap="log_info_map">
+        SELECT id, `module`, `type`, message, take_up_time, user_id, user_name, uri, ip, version, create_time
+        FROM log_info
+        <where>
+            <if test="roleId==2">
+                AND id IN (SELECT id FROM sys_user WHERE agent_id IN (SELECT agent_id FROM sys_user WHERE id=#{userId}))
+            </if>
+            <if test="roleId==3">
+                and id=#{userId}
+            </if>
+            <if test="userName != null and userName!=''">
+                AND user_name LIKE #{userName}
+            </if>
+            <if test="module != null and module!=''">
+                AND `module` LIKE CONCAT('%', #{module}, '%')
+            </if>
+            <if test="type != null and type!=''">
+                AND `type` LIKE CONCAT('%', #{type}, '%')
+            </if>
+            <if test="ip != null and ip!=''">
+                AND ip LIKE #{ip}
+            </if>
+            <if test="version != null and version!=''">
+                AND version LIKE #{version}
+            </if>
+            <if test="createTime != null and createTime!=''">
+                AND create_time LIKE #{createTime}
+            </if>
+            <if test="keyword!=null and keyword!=''">
+                or user_name LIKE CONCAT('%',#{keyword}, '%')
+                or id LIKE CONCAT('%',#{keyword}, '%')
+                or `module` LIKE CONCAT('%',#{keyword}, '%')
+                or `type`LIKE CONCAT('%',#{keyword}, '%')
+                or `ip` LIKE CONCAT('%',#{keyword}, '%')
+                or `version` LIKE CONCAT('%',#{keyword}, '%')
+                or create_time LIKE CONCAT('%',#{keyword}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="queryErrorLog" resultType="wakoo.fun.log.LogErrorInfo">
+        SELECT id, user_id, user_name, uri, ip, version, create_time
+        FROM log_error_info
+        <where>
+            <if test="roleId==2">
+                AND id IN (SELECT id FROM sys_user WHERE agent_id IN (SELECT agent_id FROM sys_user WHERE id=#{userId}))
+            </if>
+            <if test="roleId==3">
+                AND id = #{userId}
+            </if>
+            <if test="userName != null and userName!=''">
+                AND user_name = #{userName}
+            </if>
+            <if test="ip != null and ip!=''">
+                AND `ip` = #{ip}
+            </if>
+            <if test="version != null and version!=''">
+                AND `version` = #{version}
+            </if>
+            <if test="createTime != null and createTime!=''">
+                AND create_time = #{createTime}
+            </if>
+        </where>
+    </select>
+    <select id="detailLog" resultType="wakoo.fun.log.LogInfo">
+        SELECT id,
+               `module`,
+               `type`,
+               message,
+               req_param,
+               res_param,
+               take_up_time,
+               user_id,
+               user_name,
+               `method`,
+               uri,
+               ip,
+               version,
+               create_time
+        FROM log_info
+        WHERE id = #{logId}
+    </select>
+    <select id="detailExceptionLog" resultType="wakoo.fun.log.LogErrorInfo">
+        SELECT id, req_param, `name`, message, user_id, user_name, `method`, uri, ip, version,
+               create_time
+        FROM log_error_info
+        WHERE id=#{logErrorId}
+    </select>
+</mapper>
