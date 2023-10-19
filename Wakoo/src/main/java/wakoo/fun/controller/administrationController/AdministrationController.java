@@ -179,7 +179,7 @@ public class AdministrationController {
         return new MsgVo(MsgUtils.SUCCESS, map);
     }
 
-    @ApiOperation(value = "管理员所属总理")
+    @ApiOperation(value = "管理员所属总代")
     @ApiResponses({@ApiResponse(responseCode = "500", description = "请联系管理员"), @ApiResponse(responseCode = "200", description = "响应成功")})
     @UserLoginToken
     @GetMapping("/getAgentManagement")
@@ -388,6 +388,7 @@ public class AdministrationController {
         // 检查是否存在重复的用户名、邮箱或手机号
         List<UpdAdminDto> updAdminDtoList = adminAdministrationService.isUpdAdminDto(updAdminDto);
         FaAdmin faAdmin = adminAdministrationService.getFaAdmin(updAdminDto.getUserId());
+        System.out.println(faAdmin.getPassword()+"11111111111111111111111111");
         String username = updAdminDto.getUsername();
         if (username != null && !username.equals(faAdmin.getUserName())) {
             // 检查是否修改了用户名，并检查是否重复
@@ -420,13 +421,15 @@ public class AdministrationController {
         }
 
         String password = updAdminDto.getPassword();
-        if (password != null) {
+        System.out.println(password);
+        if ("".equals(password) || null == password) {
+            // 如果密码未被修改，则保持原密码不变
+            updAdminDto.setPassword(faAdmin.getPassword());
+        } else {
             // 检查是否修改了密码
             // 更新密码为哈希值
             updAdminDto.setPassword(password);
-        } else {
-            // 如果密码未被修改，则保持原密码不变
-            updAdminDto.setPassword(faAdmin.getPassword());
+
         }
 
         // 更新用户角色
