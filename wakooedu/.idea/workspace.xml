@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d38daa54-3643-4f8d-b3c4-bd8795d1be94" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/controller/administrationController/AdministrationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/controller/administrationController/AdministrationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/controller/agencyOrderController/AgencyOrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/controller/agencyOrderController/AgencyOrderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/controller/faAdminController/FaAdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/controller/faAdminController/FaAdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/controller/logController/LogController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/controller/logController/LogController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/controller/personalCenterController/PersonalCenterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/controller/personalCenterController/PersonalCenterController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/controller/quitController/quitController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/controller/quitController/quitController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/dao/SysLogDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/dao/SysLogDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/dao/impl/SysLogDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/dao/impl/SysLogDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/dto/UpdAdminDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/dto/UpdAdminDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/mapper/FaAdminMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/mapper/FaAdminMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/mapper/SysLogMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/mapper/SysLogMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/service/FaAdminService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/service/FaAdminService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/service/impl/FaAdminServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/java/wakoo/fun/service/impl/FaAdminServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/resources/mappers/AdministrationMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/resources/mappers/AdministrationMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/resources/mappers/FaAdminMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/resources/mappers/FaAdminMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Wakoo/src/main/resources/mappers/SysLogMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Wakoo/src/main/resources/mappers/SysLogMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../microservice-auth-center04-master/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../microservice-auth-center04-master/.idea/workspace.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="E:/学习资料/sofver/apache-maven-3.8.6" />
+        <option name="useMavenConfig" value="true" />
+        <option name="userSettingsFile" value="E:\学习资料\sofver\apache-maven-3.8.6\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2VPqfgWZRLeUYClofKX6WqVjpbx" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+  </component>
+  <component name="RunManager">
+    <configuration name="WakooeduApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="wakooedu" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="wakooedu.com.WakooeduApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d38daa54-3643-4f8d-b3c4-bd8795d1be94" name="Changes" comment="" />
+      <created>1694748167982</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1694748167982</updated>
+      <workItem from="1694748170421" duration="3702000" />
+      <workItem from="1696813247545" duration="7000" />
+      <workItem from="1696985571660" duration="775000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
