@@ -30,11 +30,11 @@
         INNER JOIN common_user cu ON cu.id = us.person_name
         <where>
             <if test="roleId==4">
-               and us.agent IN(SELECT person_id from person_common WHERE common_id=(SELECT campus_id FROM sys_user WHERE id=#{id})
+               and us.agent IN(SELECT common_id from person_common WHERE common_id=(SELECT campus_id FROM sys_user WHERE id=#{id})
                 )
             </if>
             <if test="roleId==3">
-               and us.agent IN(SELECT person_id FROM person_common WHERE common_id in(SELECT campus_id from sys_user WHERE agent_id=(SELECT agent_id FROM sys_user WHERE id=#{id})
+               and us.person_name IN(SELECT person_id FROM person_common WHERE common_id in(SELECT campus_id from sys_user WHERE agent_id=(SELECT agent_id FROM sys_user WHERE id=#{id})
                 ))
             </if>
             <if test="personName!=null and personName!=''">

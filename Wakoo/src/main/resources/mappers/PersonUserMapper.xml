@@ -163,14 +163,18 @@
     <select id="acquireOtherThanPersonnel" resultType="wakoo.fun.pojo.Agent">
         SELECT id, `name`
         FROM agent_management am
-        WHERE id in (SELECT campus_id FROM sys_user WHERE agent_id = (SELECT agent_id FROM sys_user WHERE id =
-        #{userId})
-        )
+
         <if test="parentId==1">
-            OR id in (SELECT agent_id FROM user_agent_role)
+            WHERE id in (SELECT campus_id FROM sys_user WHERE agent_id = (SELECT agent_id FROM sys_user WHERE id =
+            #{userId})
+            )
+            OR `status`=1 AND id in (SELECT agent_id FROM user_agent_role)
         </if>
         <if test="parentId!=1">
-            OR id in (SELECT agent_id FROM user_agent_role WHERE user_id = #{userId})
+            WHERE am.status=1 and id in (SELECT campus_id FROM sys_user WHERE agent_id = (SELECT agent_id FROM sys_user WHERE id =
+            #{userId})
+            )
+            OR `status`=1 AND id in (SELECT agent_id FROM user_agent_role WHERE user_id = #{userId})
         </if>
         <if test="iphone!=null and iphone!=''">
             AND id NOT IN(SELECT common_id FROM person_common WHERE person_id in(SELECT id FROM common_user WHERE
@@ -293,5 +297,8 @@
         </if>
         GROUP BY cu.id, cu.classname, cu.`password`, cu.sex, cu.age, cu.iphone, cu.image, cu.create_time,
         cu.update_time
+    </select>
+    <select id="getRegularUsersTwo" resultType="wakoo.fun.pojo.PersonUser">
+
     </select>
 </mapper>

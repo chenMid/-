@@ -68,7 +68,10 @@ public class AgencyOrderController {
         for (Orders orders : allAgentInformation) {
             if (orders.getExpiry() != null) {
                 // 若orders的expiry属性不为null，调用calculateDaysDifference方法计算expiry与当前日期的天数差，并将结果赋值给s
-                String s = calculateDaysDifference(orders.getExpiry());
+                String s = calculateDaysDifference(orders.getExpiry(),orders.getId());
+                if (s.contains("已过期")){
+                    orders.setStatus("2");
+                }
                 // 将s设置为orders的expiry属性
                 orders.setExpiry(s);
             } else {
@@ -175,13 +178,13 @@ public class AgencyOrderController {
         } else {
             // 获取当前时间
             orderById.setSelect("0");
-            String s = calculateDaysDifference(orderById.getExpiry());
+            String s = calculateDaysDifference(orderById.getExpiry(),null);
             orderById.setOutExpiry(s);
         }
         return new MsgVo(200, "请求成功", orderById);
     }
 
-    public static String calculateDaysDifference(String expiryDateStr) {
+    public String calculateDaysDifference(String expiryDateStr,Integer id) {
         // 获取当前日期和时间
         LocalDateTime currentDateTime = LocalDateTime.now();
         // 解析订单到期日期和时间
@@ -190,7 +193,11 @@ public class AgencyOrderController {
         long daysDifference = ChronoUnit.DAYS.between(currentDateTime.toLocalDate(), expiryDateTime.toLocalDate());
 
         if (daysDifference <= 0) {
-            return "已过期 " + Math.abs(daysDifference) + " 天";
+            if (id==null){
+                return "已过期 " + Math.abs(daysDifference) + " 天";
+            }
+            Boolean aBoolean = ordersService.alterTheState(id);
+            return aBoolean?"已过期 " + Math.abs(daysDifference) + " 天":"false";
         } else {
             return "距离到期还有 " + daysDifference + " 天";
         }
@@ -202,18 +209,18 @@ public class AgencyOrderController {
     @Log(modul = "代理订单页面-修改订单", type = Constants.UPDATE, desc = "操作修改按钮")
     @PutMapping("/modifyOrder")
     public MsgVo modifyOrder(@RequestBody OrdersDto ordersDto) {
-        if (ordersDto.getExpiry().isEmpty()) {
-            ordersDto.setExpiry(null);
-        }
-        // 修改订单信息
-        Boolean aBoolean = ordersService.modifyOrderInformation(ordersDto);
-        if (aBoolean) {
-            // 返回一个包含成功信息的MsgVo对象
-            return new MsgVo(200, "修改成功", true);
-        }
+            if (ordersDto.getExpiry().isEmpty()) {
+                ordersDto.setExpiry(null);
+            }
 
-        // 返回一个包含失败信息的MsgVo对象
-        return new MsgVo(403, "修改失败", false);
+            // 修改订单信息
+            Boolean aBoolean = ordersService.modifyOrderInformation(ordersDto);
+            if (aBoolean) {
+                // 返回一个包含成功信息的MsgVo对象
+                return new MsgVo(200, "修改成功", true);
+            }
+            // 返回一个包含失败信息的MsgVo对象
+            return new MsgVo(403, "修改失败", false);
     }
 
     @ApiOperation(value = "删除订单信息")

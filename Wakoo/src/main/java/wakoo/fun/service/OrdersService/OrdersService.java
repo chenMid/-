@@ -91,4 +91,12 @@ public interface OrdersService {
                                      @Param("createTime") String createTime,
                                      @Param("status") String status,
                                      @Param("userId") Integer userId);
+
+    /**
+     * 修改订单状态
+     *
+     * @param id 订单id
+     * @return true
+     */
+    Boolean alterTheState(Integer id);
 }

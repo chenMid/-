@@ -23,6 +23,7 @@ public interface PersonUserMapper {
      * @param keyword 搜索关键字
      */
     List<PersonUser> getRegularUsers(String keyword, Integer userId,Integer status,Integer number);
+    List<PersonUser> getRegularUsersTwo(String keyword, Integer userId,Integer status,Integer number);
 
     /**
      * 查询指定信息

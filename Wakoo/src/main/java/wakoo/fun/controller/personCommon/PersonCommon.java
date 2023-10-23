@@ -59,9 +59,10 @@ public class PersonCommon {
         List<AgentIdrId> roles = adminAdministrationService.getRoles();
         parentId = roleUtils.getParentId(parentId, rId, roles);
         PageHelper.startPage(pageNumber, pageSize);
+        System.out.println(parentId+"总代");
         if (parentId == 3) {
             regularUsers = personUserService.getRegularUsers(keyword, (Integer) userId, status, 3);
-        } else {
+        } else{
             regularUsers = personUserService.getRegularUsers(keyword, (Integer) userId, status, 1);
         }
         PageInfo<PersonUser> pageInfo = new PageInfo<>(regularUsers);

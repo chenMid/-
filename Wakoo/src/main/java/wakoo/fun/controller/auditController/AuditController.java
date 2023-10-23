@@ -80,6 +80,7 @@ public class AuditController {
         Integer rId = ordersService.returnsTheParentId((Integer) userId);
         List<Audit> list;
         parentId = roleUtils.getParentId(parentId, rId, roles);
+        System.out.println(parentId+"总代+代理");
         if (parentId == 2) {
             list = auditDao.getAuditInformation(personName, sex, age, personUser, agent, studentClass, createTime, status, 3, (Integer) userId);
         } else if (parentId == 3) {
@@ -160,7 +161,7 @@ public class AuditController {
                     int rqty = number - qty;
                     auditDao.addLessonsToUsers(Integer.parseInt(assignedAudit.getPersonName()), Integer.parseInt(assignedAudit.getStudentClass()));
                     personUserMapper.modifyOrderStatus(number, qty, rqty, assignedAudit.getOrderId());
-                    Boolean aBoolean = auditDao.modifyAuditOrder(audit.getId(), audit.getStatus());
+                    Boolean aBoolean = auditDao.modifyAuditOrder(audit.getId(), 1);
                     if (aBoolean) {
                         return new MsgVo(200, "修改成功", true);
                     }
@@ -173,7 +174,7 @@ public class AuditController {
                     int number = orders.getTotalQuantity();
                     int rqty = number - qty;
                     personUserMapper.modifyOrderStatus(number, qty, rqty, assignedAudit.getOrderId());
-                    auditDao.deletesASpecifiedUserCourse(Integer.parseInt(assignedAudit.getAgent()), Integer.parseInt(assignedAudit.getStudentClass()));
+                    auditDao.deletesASpecifiedUserCourse(Integer.parseInt(assignedAudit.getPersonName()), Integer.parseInt(assignedAudit.getStudentClass()));
                     Boolean aBoolean = auditDao.modifyAuditOrder(audit.getId(), 0);
                     if (aBoolean) {
                         return new MsgVo(200, "修改成功", true);

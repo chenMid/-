@@ -20,6 +20,7 @@ public interface PersonUserService {
      * @return 返回结果
      */
     List<PersonUser> getRegularUsers(String keyword, Integer userId,Integer status,Integer number);
+    List<PersonUser> getRegularUsersTwo(String keyword, Integer userId,Integer status,Integer number);
 
     /**
      *  查询指定信息

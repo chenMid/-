@@ -67,4 +67,9 @@ public class OrdersServiceImpl implements OrdersService {
     public List<Orders> multiConditionQuery(String name, String subclassName, String createTime, String status, Integer userId) {
         return ordersMapper.multiConditionQuery(name, subclassName, createTime, status, userId);
     }
+
+    @Override
+    public Boolean alterTheState(Integer id) {
+        return ordersMapper.alterTheState(id);
+    }
 }

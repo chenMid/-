@@ -32,6 +32,11 @@ public class PersonUserServiceImpl implements PersonUserService {
     }
 
     @Override
+    public List<PersonUser> getRegularUsersTwo(String keyword, Integer userId, Integer status, Integer number) {
+        return personUserMapper.getRegularUsersTwo(keyword, userId,status,number);
+    }
+
+    @Override
     public Agent getPersonUserByUserIdAnd(Integer id) {
         return personUserMapper.getPersonUserByUserIdAnd(id);
     }
